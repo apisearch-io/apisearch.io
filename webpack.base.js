@@ -45,6 +45,6 @@ module.exports = {
         extensions: ['.json', '.js', '.sass']
     },
     plugins: [
-        new ExtractTextPlugin('../sass/styles.css')
+        new ExtractTextPlugin('../css/styles.css')
     ]
 };
