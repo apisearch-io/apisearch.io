@@ -273,48 +273,95 @@
                             has never been that easy.
                         </p>
                     </div>
-
-                    <div class="col-12 mt-5 mb-5">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="o-card card">
-                                    <div class="card-body">
-                                        <h3 class="o-title--h3 o-title--bold">
-                                            <span class="o-title__orderListNumber">1</span>
-                                            Index your data
-                                        </h3>
-                                        <p class="o-title__complement o-title__complement--sm">
-                                            By using our <a target="_blank" href="http://docs.apisearch.io/api-client.html">API clients</a>
-                                            or importing it with our<a href="http://admin.apisearch.io">administration panel</a>
-                                            with many different data types.
-                                        </p>
-                                    </div>
-                                </div>
+                </div>
+            </div>
+            <div class="container-fluid mt-5 mb-5">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="o-card card">
+                            <div class="card-body">
+                                <h3 class="o-title--h3 o-title--bold">
+                                    <span class="o-title__orderListNumber">1</span>
+                                    Index your data
+                                </h3>
+                                <p class="o-title__complement o-title__complement--sm">
+                                    By using our <a target="_blank" href="http://docs.apisearch.io/api-client.html">API clients</a>
+                                    or importing it with our <a href="http://admin.apisearch.io">administration panel</a>
+                                    with many different data types.
+                                </p>
+<pre class="c-code c-code--grey"><code>
+// Create the instance<br>
+const ui = apisearchUI({<br>
+    appId: '21abc4',<br>
+    index: '23j5tg',<br>
+    token: '1cc7a3e0-bda5-11e7'<br>
+});<br>
+<br>
+// Add your widgets<br>
+ui.addWidgets(<br>
+    ui.widgets.simpleSearch({<br>
+        target: '.search-container'<br>
+    }),<br>
+    ui.widgets.result({<br>
+        target: '.result-container',<br>
+    })<br>
+);<br>
+<br>
+// Initialize it!<br>
+ui.init();</code></pre>
                             </div>
-                            <div class="col-4">
-                                <div class="o-card card">
-                                    <div class="card-body">
-                                        <h3 class="o-title--h3 o-title--bold">
-                                            <span class="o-title__orderListNumber">2</span>
-                                            Build your search
-                                        </h3>
-                                        <p class="o-title__complement o-title__complement--sm">
-                    
-                                        </p>
-                                    </div>
-                                </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="o-card card">
+                            <div class="card-body">
+                                <h3 class="o-title--h3 o-title--bold">
+                                    <span class="o-title__orderListNumber">2</span>
+                                    Build your search
+                                </h3>
+                                <p class="o-title__complement o-title__complement--sm">
+                                    Using our user interface Javascript libraries
+                                    like <a href="http://github.com/apisearch-io/javascript-ui">Apisearch UI</a>
+                                    or <a href="#">Carousel UI</a>.
+                                </p>
+<pre class="c-code c-code--grey"><code>
+// Create the instance<br>
+const ui = apisearchUI({<br>
+    appId: '21abc4',<br>
+    index: '23j5tg',<br>
+    token: '1cc7a3e0-bda5-11e7'<br>
+});<br>
+<br>
+// Add your widgets<br>
+ui.addWidgets(<br>
+    ui.widgets.simpleSearch({<br>
+        target: '.search-container'<br>
+    }),<br>
+    ui.widgets.result({<br>
+        target: '.result-container',<br>
+    })<br>
+);<br>
+<br>
+// Initialize it!<br>
+ui.init();</code></pre>
                             </div>
-                            <div class="col-4">
-                                <div class="o-card card">
-                                    <div class="card-body">
-                                        <h3 class="o-title--h3 o-title--bold">
-                                            <span class="o-title__orderListNumber">3</span>
-                                            And be cool!
-                                        </h3>
-                                        <p class="o-title__complement o-title__complement--sm">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="o-card card">
+                            <div class="card-body">
+                                <h3 class="o-title--h3 o-title--bold">
+                                    <span class="o-title__orderListNumber">3</span>
+                                    Ready for production!
+                                </h3>
+                                <p class="o-title__complement o-title__complement--sm">
+                                    Start searching your products and increase your
+                                    site conversion.
+                                </p>
 
-                                        </p>
-                                    </div>
+                                <div class="as-integrationDemo">
+                                    <div class="as-integrationDemo__searchBox"></div>
+                                    <div class="as-integrationDemo__results"></div>
                                 </div>
                             </div>
                         </div>
