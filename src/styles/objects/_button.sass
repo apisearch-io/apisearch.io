@@ -34,7 +34,6 @@
     color: white!important
     +background-gradient(#00c3b5, #1fdea6)
 
-
   &--xs
     padding: 0 8px
     height: 24px
@@ -51,8 +50,22 @@
     line-height: 36px
     font-size: .9rem
 
+  &--xl
+    height: 55px
+    line-height: 55px
+    padding: 0 35px
+    font-size: 20px
+    border-radius: .4rem
+
   &--capitalize
     text-transform: initial
+
+  &--animated
+    transition: transform ease-in-out 75ms
+    &:hover
+      transform: scale(1.07)
+    &:focus
+      transform: scale(.98)
 
 a.o-button
   &:hover

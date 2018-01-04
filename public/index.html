@@ -39,14 +39,14 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="c-navbar navbar navbar-expand-md fixed-top">
+    <nav class="c-navbar navbar navbar-expand-md fixed-top" id="primaryNavbar">
         <a class="c-navbar__brand navbar-brand" href=".">
             <img src="http://apisearch.io/public/images/favicons/favicon-32x32.png"
                 class="d-inline-block align-top"
                 alt="Apisearch logo"
             >
             <img src="http://apisearch.io/public/images/logo-.png"
-                class="d-none d-sm-inline-block"
+                class="d-sm-inline-block"
                 height="15"
                 alt="Logo Apisearch"
             >
@@ -59,7 +59,21 @@
             aria-expanded="false"
             aria-label="Toggle navigation"
         >
-            <span class="navbar-toggler-icon"></span>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 id="burgerSidebarMenu"
+                 viewBox="0 0 30 30"
+                 width="30"
+                 height="30"
+                 focusable="false"
+            >
+                <title>Menu</title>
+                <path stroke="#54edc0"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-miterlimit="10"
+                      d="M4 7h22M4 15h22M4 23h22"
+                ></path>
+            </svg>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
@@ -82,11 +96,11 @@
                 </li>
             </ul>
             <ul class="c-navbar__nav navbar-nav my-2 my-lg-0">
-                <li class="c-navbar__navItem nav-item">
+                <li class="c-navbar__navItem nav-item mr-sm-2">
                     <a class="nav-link" href="http://admin.apisearch.io/login">Login</a>
                 </li>
                 <li class="c-navbar__navItem nav-item">
-                    <a class="o-button o-button--md o-button--capitalize o-button--gradientGreen nav-link" href="#">
+                    <a class="o-button o-button--md o-button--capitalize o-button--gradientGreen o-button--animated nav-link" href="#">
                         Free trial
                     </a>
                 </li>
@@ -103,7 +117,7 @@
             <div class="">
                 <h1 class="o-title">Welcome to the next<wbr> search generation!</h1>
                 <p>Create your own customized search using our awesome tools</p>
-                <a href="#" class="o-button o-button--gradientGreen o-button--capitalize">
+                <a href="#" class="o-button o-button--gradientGreen o-button--capitalize o-button--animated">
                     Get started for free :)
                 </a>
             </div>
@@ -231,6 +245,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-12 text-center mt-5 mb-5">
+                                <a href="#" class="o-button o-button--primary o-button--capitalize o-button--animated">
+                                    Learn more about features
+                                    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -263,10 +286,11 @@
                             Sign up for free or talk with a sales person
                             <br>
                             <br>
-                            <a href="#" class="o-button o-button--primary">
+                            <a href="#" class="o-button o-button--primary o-button--xl o-button--animated">
                                 Sign up
                             </a>
-                            <a href="#" class="o-button o-button--gradientGreen">
+                            &nbsp;&nbsp;
+                            <a href="#" class="o-button o-button--gradientGreen o-button--xl o-button--animated">
                                 Contact us
                             </a>
                         </p>
@@ -398,11 +422,11 @@
         <section class="row">
             <div class="col-12 text-center mb-5 mt-3">
                 <img src="http://apisearch.io/public/images/favicons/apple-icon-144x144.png"
-                     class="d-inline-block align-top"
+                     class="c-footer__logo d-inline-block align-top"
                      alt="Apisearch logo"
                      height="42px"
                 >
-                <p class="c-footer__copyright">2017 Apisearch &copy; Puntmig Development</p>
+                <p class="c-footer__copyright">2018 Apisearch &copy; Puntmig Development</p>
             </div>
         </section>
         <section class="row">
@@ -450,5 +474,7 @@
     </footer>
     <!-- /Footer -->
 
+    <!-- Scripts -->
+    <script src="assets/js/app.js"></script>
 </body>
 </html>

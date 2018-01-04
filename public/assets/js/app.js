@@ -73,7 +73,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_styles_index_sass___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_styles_index_sass__);
 
 
-console.log('Hello, world!');
+(function() {
+    window
+        .addEventListener('scroll', () => {
+            let navbar = document.querySelector('#primaryNavbar');
+
+            if (window.pageYOffset > 10) {
+                navbar.classList.add('c-navbar--scroll');
+            } else {
+                navbar.classList.remove('c-navbar--scroll');
+            }
+        })
+    ;
+})();
 
 /***/ }),
 /* 1 */
