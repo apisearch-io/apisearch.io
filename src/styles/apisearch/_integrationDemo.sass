@@ -1,25 +1,70 @@
 .as-integrationDemo
   & .as-simpleSearch
+    position: relative
+    margin-bottom: 1rem
+    &:before
+      font-family: FontAwesome
+      content: "\f002"
+      position: absolute
+      left: 1rem
+      color: rgba(0, 123, 255, 0.54)
+      top: 50%
+      -webkit-transform: translateY(-50%)
+      -moz-transform: translateY(-50%)
+      -ms-transform: translateY(-50%)
+      -o-transform: translateY(-50%)
+      transform: translateY(-50%)
+
     &__input
-      margin-bottom: 1rem
       outline: none
       width: 100%
       border-radius: 5rem
       border: none
       box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.18)
-      padding: .5rem 1rem
+      padding: .5rem 1rem .5rem 2.5rem
       color: #515151
+    &__clearSearch
+      cursor: pointer
+      color: darkgrey
+      position: absolute
+      right: 1rem
+      top: 50%
+      -webkit-transform: translateY(-50%)
+      -moz-transform: translateY(-50%)
+      -ms-transform: translateY(-50%)
+      -o-transform: translateY(-50%)
+      transform: translateY(-50%)
+      &:hover
+        color: #8c8c8c
+
   & .as-result
     &__itemsList
       & > ul
+        border-radius: .5rem
+        box-shadow: 0 1px 7px 0 rgba(0, 0, 0, 0.26)
         list-style: none
         margin: 0
         padding: 0
         & > li
-          padding: .5rem
-          border-radius: .3rem
+          padding: 1rem
           background: #fafafa
-          margin-bottom: .5rem
+          border-bottom: 1px solid #e0eeff
+          overflow: hidden
+          -o-text-overflow: ellipsis
+          text-overflow: ellipsis
+          white-space: nowrap
+          width: 100%
+          &:nth-of-type(odd)
+            background: #f4f9ff
+          &:first-child
+            -webkit-border-radius: .5rem .5rem 0 0
+            -moz-border-radius: .5rem .5rem 0 0
+            border-radius: .5rem .5rem 0 0
+          &:last-child
+            border-bottom: none
+            -webkit-border-radius: 0 0 .5rem .5rem
+            -moz-border-radius: 0 0 .5rem .5rem
+            border-radius: 0 0 .5rem .5rem
           & > img
             -webkit-border-radius: .3rem
             -moz-border-radius: .3rem

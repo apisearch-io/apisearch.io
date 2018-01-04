@@ -30,16 +30,30 @@ const integrationsApisearchDemo = () => {
     ui.addWidgets(
         ui.widgets.simpleSearch({
             target: '.as-integrationDemo__searchBox',
+            template: {
+                clearSearch: '<i class="fa fa-times-circle" aria-hidden="true"></i>'
+            }
         }),
         ui.widgets.result({
             target: '.as-integrationDemo__results',
             itemsPerPage: 3,
+            promote: [
+                { id: 'album', type: 'purpose-mw0002885819' },
+                { id: 'album', type: 'crazy-love-mw0000828548' },
+                { id: 'album', type: 'classic-queen-mw0000085540' },
+            ],
             template: {
                 itemsList: `<ul>
                     {{#items}} 
                     <li>
                         <img src="{{metadata.img}}" height="40px">
                         {{metadata.title}}
+                    </li> 
+                    {{/items}}
+                    {{^items}} 
+                    <li>
+                        <i class="fa fa-meh-o" aria-hidden="true"></i>
+                        No results
                     </li> 
                     {{/items}}
                 </ul>`,
