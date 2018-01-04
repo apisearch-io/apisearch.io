@@ -97,6 +97,51 @@ const addNavbarClassOnScroll = () => {
     ;
 };
 
+const homeInitialDemo = () => {
+    let ui = __WEBPACK_IMPORTED_MODULE_2_apisearch_ui___default()({
+        appId: '54725861',
+        index: '66777162',
+        token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
+    });
+
+    ui.addWidgets(
+        ui.widgets.simpleSearch({
+            target: '.as-homeDemo__searchBox',
+            template: {
+                clearSearch: '<i class="fa fa-times-circle" aria-hidden="true"></i>'
+            }
+        }),
+        ui.widgets.result({
+            target: '.as-homeDemo__result',
+            itemsPerPage: 5,
+            promote: [
+                { id: 'album', type: 'purpose-mw0002885819' },
+                { id: 'album', type: 'crazy-love-mw0000828548' },
+                { id: 'album', type: 'classic-queen-mw0000085540' },
+            ],
+            template: {
+                itemsList: `<ul>
+                    {{#items}} 
+                    <li>
+                        <img src="{{metadata.img}}" height="40px">
+                        {{metadata.title}}
+                    </li> 
+                    {{/items}}
+                    {{^items}} 
+                    <li>
+                        <i class="fa fa-meh-o" aria-hidden="true"></i>
+                        No results
+                    </li> 
+                    {{/items}}
+                </ul>`,
+            }
+        })
+    );
+
+    // Initialize it!
+    ui.init();
+};
+
 const integrationsApisearchDemo = () => {
     let ui = __WEBPACK_IMPORTED_MODULE_2_apisearch_ui___default()({
         appId: '54725861',
@@ -147,7 +192,8 @@ const integrationsApisearchDemo = () => {
         .querySelectorAll('code')
         .forEach(block => __WEBPACK_IMPORTED_MODULE_1_highlight_js___default.a.highlightBlock(block))
     ;
-    integrationsApisearchDemo();
+    homeInitialDemo();
+    window.setTimeout(() => integrationsApisearchDemo(), 300);
     addNavbarClassOnScroll();
 })();
 
