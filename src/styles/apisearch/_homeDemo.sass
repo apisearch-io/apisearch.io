@@ -1,17 +1,18 @@
 .c-homeDemo
   position: absolute
   top: 50%
-  right: 10%
+  right: 3rem
   //transform: perspective(273px) rotateY(-4deg) rotateX(4deg) translateY(-50%)
   transform: perspective(100px) rotateY(-1deg) rotateX(2deg) translateY(-50%)
-  box-shadow: 20px 17px 20px rgba(0, 0, 0, 0.11)
+  box-shadow: 13px 20px 5rem 0 rgba(0, 0, 0, 0.4)
   width: 29rem
   height: 28.5rem
   border-radius: .3rem
   background: #fff
   border: 1px solid #e9e9e9
 
-  & .as-homeDemo__searchBox
+  & .as-homeDemo__searchBox,
+  & .as-homeDemo__genreFilter
     padding: 1rem
 
   & .as-simpleSearch
@@ -40,7 +41,8 @@
       border: 1px solid #f0f0f0
     &__clearSearch
       cursor: pointer
-      color: darkgrey
+      font-size: 1.1rem
+      color: lightgrey
       position: absolute
       right: 1rem
       top: 50%
@@ -52,6 +54,13 @@
       &:hover
         color: #8c8c8c
 
+  & .as-multipleFilter
+    &__itemsList
+      text-align: center
+    &__item
+      display: inline-block
+      &:first-child
+        margin-right: 1rem
   & .as-result
     &__itemsList
       & > ul

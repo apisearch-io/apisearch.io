@@ -111,9 +111,31 @@ const homeInitialDemo = () => {
                 clearSearch: '<i class="fa fa-times-circle" aria-hidden="true"></i>'
             }
         }),
+        ui.widgets.multipleFilter({
+            target: '.as-homeDemo__genreFilter',
+            name: 'genre',
+            filterField: 'genre_id',
+            aggregationField: 'genre_data',
+            applicationType: 8,
+            fetchLimit: 2,
+            viewLimit: 2,
+            sortBy: ['_count', 'desc'],
+            template: {
+                item: `
+                    <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
+                    <label for="filter_{{values.id}}">{{{values.name}}} ({{n}})</label>
+                `,
+            },
+            classNames: {
+                container: 'panel',
+                top: 'panel-heading',
+                item: 'panel-block',
+                showMoreContainer: 'panel-block'
+            }
+        }),
         ui.widgets.result({
             target: '.as-homeDemo__result',
-            itemsPerPage: 5,
+            itemsPerPage: 4,
             promote: [
                 { id: 'album', type: 'purpose-mw0002885819' },
                 { id: 'album', type: 'crazy-love-mw0000828548' },
