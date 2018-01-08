@@ -28,24 +28,24 @@ const resultTemplate = `
 `;
 
 const regularFilterItemTemplate = `
-    <li class="filter-item {{#isActive}}active{{/isActive}}">
-        <span class="item-content">
+    <li class="{{#isActive}}as-multipleFilter__item--active{{/isActive}}">
+        <span class="as-multipleFilter__itemContent">
             <i class="{{#isActive}}fa fa-check-square{{/isActive}}{{^isActive}}fa fa-square-o{{/isActive}}"></i>
-            <span class="item-text">{{values.name}}</span>
+            <span class="as-multipleFilter__itemText">{{values.name}}</span>
         </span>
-        <span class="count">{{n}}</span>
+        <span class="as-multipleFilter__itemCount">{{n}}</span>
     </li>
 `;
 
 const ratingFilterItemTemplate = `
-    <li class="filter-item {{#isActive}}active{{/isActive}}">
-        <span class="item-content">{{{values.name}}}</span>
-        <span class="count">{{n}}</span>
+    <li class="{{#isActive}}as-multipleFilter__item--active{{/isActive}}">
+        <span class="as-multipleFilter__itemStars">{{{values.name}}}</span>
+        <span class="as-multipleFilter__itemCount">{{n}}</span>
     </li>
 `;
 
 const authorsFilterItemTemplate = `
-    <div class="filter-item {{#isActive}}active{{/isActive}}">
+    <div class="{{#isActive}}as-multipleFilter__item--active{{/isActive}}">
         <span class="item-content">
             {{#values.img}}<img class="item-image" src="{{values.img}}"/>{{/values.img}}
             {{^values.img}}<img class="item-image" src="http://apisearch.io/public/images/no-cover.jpg">{{/values.img}}
@@ -107,6 +107,9 @@ mainDemo.addWidgets(
         template: {
             top: '<h2 class="title"><i class="fa fa-angle-down"></i>&nbsp;Year</h2>',
             item: regularFilterItemTemplate
+        },
+        classNames: {
+            container: 'as-multipleFilter--inverted'
         }
     }),
     multipleFilter({

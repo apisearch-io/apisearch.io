@@ -23,3 +23,24 @@
   color: transparent
   -webkit-background-clip: text
   background-clip: text
+
+@mixin scrollbar($color)
+  &::-webkit-scrollbar
+    width: 14px
+    height: 18px
+  &::-webkit-scrollbar-track
+    background: transparent
+    -webkit-border-radius: 5rem
+  &::-webkit-scrollbar-thumb
+    height: 6px
+    border: 4px solid rgba(0, 0, 0, 0)
+    background-clip: padding-box
+    background-color: $color
+    outline: 1px solid slategrey
+    -webkit-border-radius: 10px
+  &::-webkit-scrollbar-button
+    width: 0
+    height: 0
+    display: none
+  &::-webkit-scrollbar-corner
+    background-color: transparent

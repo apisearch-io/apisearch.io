@@ -1,5 +1,5 @@
 .as-mainDemo
-  max-width: 60rem
+  max-width: 64rem
   margin: 0 auto
   font-size: .8rem
   position: relative
@@ -7,6 +7,7 @@
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.18)
 
   &__content
+    max-height: 30rem
     background: linear-gradient(0deg,#f0f1f9,#f2f8ff)
 
   &__header
@@ -29,7 +30,12 @@
     font-weight: 100
 
   &__filters
-    //background: #1a1a27
+    overflow-y: scroll
+    +scrollbar(rgba(43, 222, 168, 0.23))
+
+  &__searchYearFilter,
+  &__searchGenreFilter
+    margin-bottom: 1.5rem
 
   & .as-simpleSearch
     position: absolute
@@ -80,21 +86,66 @@
     font-size: .8rem
 
   & .as-multipleFilter
+    &--inverted
+      box-shadow: 0 0 0 0.5rem #e7edfb
+      border-radius: .1px
+      background: #e7edfb
     &__top
       margin-top: 1rem
       h2
         font-weight: 600
         font-size: 1rem
-
     &__item
+      position: relative
+      height: 1.5rem
       cursor: pointer
+      &--active
+        color: #2196F3
+        font-weight: bold
+        & .as-multipleFilter__itemCount
+          background: #2196F3
+          color: white
+          padding: 0 .2rem
       li
+        height: inherit
+        line-height: 1.5rem
         list-style: none
+    &__itemContent
+      overflow: hidden
+      display: inline-block
+      -o-text-overflow: ellipsis
+      text-overflow: ellipsis
+      white-space: nowrap
+      width: 5rem
+    &__itemCount
+      position: absolute
+      right: 0
+      top: 50%
+      transform: translateY(-50%)
+      font-size: .6rem
+      height: 1rem
+      line-height: 1rem
+      border-radius: .2rem
+    &__itemStars
+      .fa
+        +text-gradient(#38c1b4,#1ee6d3 80%)
+        margin-right: .2rem
+        &:nth-child(2)
+          +text-gradient(#56eec0,#57eebf 80%)
+        &:nth-child(3)
+          +text-gradient(#67f0ac,#81f38d 80%)
+        &:nth-child(4)
+          +text-gradient(#a0f668,#e6fd13 80%)
+        &:nth-child(5)
+          +text-gradient(#e6fd13,#e6fd13 80%)
+        &.grey
+          color: #e0e0e0
 
     img
       max-width: 10px
 
   & .as-result
+    padding-bottom: 2.5rem
     &__album
       width: 100%
       background: no-repeat 50%
@@ -137,13 +188,13 @@
       color: #fff
       background: linear-gradient(0deg,rgba(0,0,0,.85) 5%,rgba(0,0,0,.66) 20%,transparent)
       padding: .5rem
+      border-radius: 0 0 .3rem .3rem
 
   & .as-information
     margin: 1rem 0
     font-size: .8rem
     color: #14202e
   & .as-showMore
-    +background-gradient(#00c3b5,#1fdea6)
     margin-top: .5rem
     cursor: pointer
     border: none!important
@@ -156,9 +207,11 @@
     background: #fff
     border-radius: 4px
     font-size: 10px
-    font-weight: 600
     text-transform: uppercase
     letter-spacing: .025em
+    background: linear-gradient(90deg,#00c3b5,#1fdea6)
+    font-weight: 600
+    color: white
   & .as-pagination
     position: absolute
     bottom: .5rem
@@ -168,3 +221,17 @@
     margin: auto
     width: 90%
     text-align: center
+    &__item
+      display: inline-block
+      padding: .3rem
+      border-radius: .1rem
+      margin: .3rem
+      color: #000
+      cursor: pointer
+      line-height: 1rem
+      height: 1.5rem
+      &:hover
+        background: #b8defd
+      &--active
+        background: linear-gradient(90deg,#00c3b5,#1fdea6)
+        color: white
