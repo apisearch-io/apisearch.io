@@ -1,0 +1,170 @@
+.as-mainDemo
+  max-width: 60rem
+  margin: 0 auto
+  font-size: .8rem
+  position: relative
+  border-radius: .5rem
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.18)
+
+  &__content
+    background: linear-gradient(0deg,#f0f1f9,#f2f8ff)
+
+  &__header
+    height: 3.6rem
+    position: relative
+    background: linear-gradient(90deg,#00c3b5,#1fdea6)
+    border-radius: .5rem .5rem 0 0
+
+  &__image
+    margin-right: .5rem
+    height: 17px
+
+  &__title
+    height: inherit
+    line-height: 3.6rem
+    color: #fff
+    font-size: .8rem
+    text-transform: uppercase
+    letter-spacing: .2rem
+    font-weight: 100
+
+  &__filters
+    //background: #1a1a27
+
+  & .as-simpleSearch
+    position: absolute
+    width: 90%
+    right: 0
+    left: 0
+    top: 50%
+    transform: translateY(-50%)
+    height: 2.3rem
+    line-height: 2.5rem
+    margin: 0 auto
+    &__input
+      outline: none
+      font-size: .9rem
+      border-radius: 5rem
+      padding: 0 1rem
+      border: 1px solid #e6e6e6
+      width: 100%
+      height: inherit
+      color: #8c8c8c
+      box-shadow: 1px 1px 9px 1px rgba(0,0,0,.07)
+    &__clearSearch
+      font-size: 1rem
+      cursor: pointer
+      color: #a9a9a9
+      position: absolute
+      right: 1rem
+      top: 50%
+      -webkit-transform: translateY(-50%)
+      -moz-transform: translateY(-50%)
+      -ms-transform: translateY(-50%)
+      -o-transform: translateY(-50%)
+      transform: translateY(-50%)
+  & .as-clearFilters
+    transition: all .1s ease-in-out
+    position: absolute
+    right: 1rem
+    padding: 0 .6rem
+    background: rgba(46,46,46,.11)
+    top: 50%
+    transform: translateY(-50%)
+    border-radius: 2rem
+    height: 2.1rem
+    line-height: 2.2rem
+    cursor: pointer
+    color: #fff
+    text-transform: uppercase
+    font-size: .8rem
+
+  & .as-multipleFilter
+    &__top
+      margin-top: 1rem
+      h2
+        font-weight: 600
+        font-size: 1rem
+
+    &__item
+      cursor: pointer
+      li
+        list-style: none
+
+    img
+      max-width: 10px
+
+  & .as-result
+    &__album
+      width: 100%
+      background: no-repeat 50%
+      background-size: cover
+      position: relative
+      height: 11rem
+      border-radius: .3rem
+      box-shadow: 0 0 1px 1px hsla(0,0%,70%,.58)
+      cursor: pointer
+      transition: all .1s ease-in-out
+    &__albumRating
+      position: absolute
+      top: .3rem
+      left: .3rem
+      background: #fff
+      height: 1.2rem
+      border-radius: .2rem
+      font-size: .8rem
+      line-height: 1.3rem
+      padding: 0 .2rem
+      box-shadow: 0 0 6px 0 hsla(0,0%,5%,.4)
+    &__albumYear
+      position: absolute
+      top: .3rem
+      right: .3rem
+      height: 1.2rem
+      border-radius: .2rem
+      font-size: .8rem
+      line-height: 1.3rem
+      color: #fff
+      padding: 0 .2rem
+      text-shadow: 0 0 6px #000
+    &__albumTitle
+      text-shadow: 0 0 6px #000
+      position: absolute
+      left: 0
+      bottom: 0
+      right: 0
+      font-size: 1rem
+      color: #fff
+      background: linear-gradient(0deg,rgba(0,0,0,.85) 5%,rgba(0,0,0,.66) 20%,transparent)
+      padding: .5rem
+
+  & .as-information
+    margin: 1rem 0
+    font-size: .8rem
+    color: #14202e
+  & .as-showMore
+    +background-gradient(#00c3b5,#1fdea6)
+    margin-top: .5rem
+    cursor: pointer
+    border: none!important
+    white-space: nowrap
+    display: inline-block
+    height: 20px
+    line-height: 20px
+    padding: 0 12px
+    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08)
+    background: #fff
+    border-radius: 4px
+    font-size: 10px
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: .025em
+  & .as-pagination
+    position: absolute
+    bottom: .5rem
+    background: transparent
+    right: 0
+    left: 0
+    margin: auto
+    width: 90%
+    text-align: center

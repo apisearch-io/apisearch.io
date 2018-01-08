@@ -101,48 +101,54 @@
 
 <!-- Main -->
 <main role="main">
-    <section class="o-section">
-        <div class="apisearch apisearch-main-demo">
-            <article>
-                <!-- Header -->
-                <header class="header">
-                    <div class="logo">
-                                    <span class="demo-logo">
-                                        <img src="public/images/ico-apisearch.png" alt="Icon apisearch"/>
-                                    </span>
-                        <span class="demo-title">api music</span>
+    <section class="o-section o-section--paddingTop-md">
+        <div class="container">
+            <h1 class="o-title o-title--h1 o-title--center">
+                Unreal search experience
+            </h1>
+            <p class="o-title__complement o-title__complement--center">
+                Right back to your website
+            </p>
+
+            <div class="row mt-5">
+                <article class="col-12 as-mainDemo">
+                    <!-- Header -->
+                    <header class="row as-mainDemo__header">
+                        <!-- Logo -->
+                        <div class="as-mainDemo__logo col-3">
+                            <img class="as-mainDemo__image" src="http://apisearch.io/public/images/ico-apisearch.png" alt="Icon apisearch"/>
+                            <span class="as-mainDemo__title">API Music</span>
+                        </div>
+                        <!-- Search input -->
+                        <div class="as-mainDemo__searchInput col-6"></div>
+                        <!-- clear filters button -->
+                        <div class="as-mainDemo__clearFilters col-3"></div>
+                    </header>
+                    <!-- /Header -->
+
+                    <div class="row as-mainDemo__content">
+                        <aside class="col-2 as-mainDemo__filters">
+                            <div class="as-mainDemo__searchGenreFilter"></div>
+                            <div class="as-mainDemo__searchYearFilter"></div>
+                            <div class="as-mainDemo__searchRatingFilter"></div>
+                        </aside>
+
+                        <div class="col-8 as-mainDemo__albums">
+                            <div class="as-mainDemo__searchInformation"></div>
+                            <div class="as-mainDemo__searchResults"></div>
+                            <div class="as-mainDemo__searchPagination"></div>
+                        </div>
+
+                        <aside class="col-2 as-mainDemo__filters">
+                            <div class="as-mainDemo__searchAuthorFilter"></div>
+                        </aside>
+
+                        <div class="loading">
+                            <span class="spinner"></span>
+                        </div>
                     </div>
-
-                    <!-- Search input -->
-                    <div class="main-demo-search-input"></div>
-
-                    <!-- clear filters button -->
-                    <div class="main-demo-clear-filters"></div>
-                </header>
-                <!-- /Header -->
-
-                <div class="content">
-                    <aside class="filters">
-                        <div class="main-demo-search-genreFilter"></div>
-                        <div class="main-demo-search-yearFilter"></div>
-                        <div class="main-demo-search-ratingFilter"></div>
-                    </aside>
-
-                    <div class="albums">
-                        <div class="main-demo-search-information result-count"></div>
-                        <div class="main-demo-search-results"></div>
-                        <div class="main-demo-search-pagination"></div>
-                    </div>
-
-                    <aside class="filters">
-                        <div class="main-demo-search-authorFilter"></div>
-                    </aside>
-
-                    <div class="loading">
-                        <span class="spinner"></span>
-                    </div>
-                </div>
-            </article>
+                </article>
+            </div>
         </div>
     </section>
 </main>
