@@ -1,13 +1,49 @@
 .o-section
+  position: relative
   padding-top: 3rem
   padding-bottom: 4rem
 
-  &--padding-top-bottom
-    padding-top: 7rem
-    padding-bottom: 7rem
+  &--topShadow
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.13)
 
   &--inverted
     background: #edfffe
 
-  &--topShadow
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.13)
+  &--misalignedTop
+    overflow: hidden
+    &::before
+      content: ''
+      //box-shadow: 0 5px 3rem rgba(0, 0, 0, 0.058)
+      position: relative
+      width: 130%
+      left: -5rem
+      height: 9rem
+      background: #ffffff
+      top: -7rem
+      display: block
+      transform: rotate(4deg)
+
+  &--misalignedBottom
+    overflow: hidden
+    &::after
+      content: ''
+      position: relative
+      width: 130%
+      left: -5rem
+      height: 9rem
+      background: #ffffff
+      bottom: -8rem
+      display: block
+      transform: rotate(-4deg)
+
+  &--paddingTop
+    &-md
+      padding-top: 5rem
+    &-lg
+      padding-top: 10rem
+
+  &--paddingBottom
+    &-md
+      padding-bottom: 5rem
+    &-lg
+      padding-bottom: 10rem
