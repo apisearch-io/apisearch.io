@@ -138,7 +138,7 @@
                             What is Apisearch?
                         </h1>
                         <p class="o-title__complement o-title__complement--center">
-                            Out of the box search engine for your bussiness
+                            Out of the box search engine for your business
                         </p>
 
                         <div class="c-whatIs row">
@@ -151,8 +151,7 @@
                                     <div class="card-body">
                                         <h2 class="c-whatIs__title">Search API</h2>
                                         <p class="c-whatIs__copy">
-                                            Apisearch is a full text search engine based on top of
-                                            Elasticsearch that aims to be the reading model of all your data.
+                                            Use our custom API.<br><br>We develop, maintain and document plugins for your project and many other programming languages and frameworks.
                                         </p>
                                     </div>
                                 </div>
@@ -161,13 +160,12 @@
                                 <div class="c-whatIs__iconBezel"></div>
                                 <div class="c-whatIs__card card">
                                     <div class="c-whatIs__icon">
-                                        <i class="fa fa-magic" aria-hidden="true"></i>
+                                        <i class="fa fa-globe" aria-hidden="true"></i>
                                     </div>
                                     <div class="card-body">
                                         <h2 class="c-whatIs__title">Worldwide data cluster</h2>
                                         <p class="c-whatIs__copy">
-                                            Apisearch is a full text search engine based on top of
-                                            Elasticsearch that aims to be the reading model of all your data.
+                                            We have many distributed datacenters all around the world.<br><br>Place your data close to yous users, and serve it fast. Very fast.
                                         </p>
                                     </div>
                                 </div>
@@ -176,13 +174,13 @@
                                 <div class="c-whatIs__iconBezel"></div>
                                 <div class="c-whatIs__card card">
                                     <div class="c-whatIs__icon">
-                                        <i class="fa fa-server" aria-hidden="true"></i>
+                                        <i class="fa fa-gift" aria-hidden="true"></i>
                                     </div>
                                     <div class="card-body">
                                         <h2 class="c-whatIs__title">Product best friend</h2>
                                         <p class="c-whatIs__copy">
-                                            Apisearch is a full text search engine based on top of
-                                            Elasticsearch that aims to be the reading model of all your data.
+                                            Make your users reach what they are looking for the fastest possible way.<br><br>
+                                            1 click is always better than 2 clicks.
                                         </p>
                                     </div>
                                 </div>
@@ -222,7 +220,7 @@
                                     <div class="c-features__cardBody card-body">
                                         <div class="row">
                                             <div class="col-3">
-                                                <i class="c-features__image fa fa-rocket" aria-hidden="true"></i>
+                                                <i class="c-features__image fa fa-underline" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-9">
                                                 <h2 class="c-features__title">Typo tolerance</h2>
@@ -240,7 +238,7 @@
                                     <div class="c-features__cardBody card-body">
                                         <div class="row">
                                             <div class="col-3">
-                                                <i class="c-features__image fa fa-rocket" aria-hidden="true"></i>
+                                                <i class="c-features__image fa fa-check-square" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-9">
                                                 <h2 class="c-features__title">Filters and Aggregations</h2>
@@ -257,7 +255,7 @@
                                     <div class="c-features__cardBody card-body">
                                         <div class="row">
                                             <div class="col-3">
-                                                <i class="c-features__image fa fa-rocket" aria-hidden="true"></i>
+                                                <i class="c-features__image fa fa-map-marker" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-9">
                                                 <h2 class="c-features__title">Geo search</h2>
@@ -274,7 +272,7 @@
                                     <div class="c-features__cardBody card-body">
                                         <div class="row">
                                             <div class="col-3">
-                                                <i class="c-features__image fa fa-rocket" aria-hidden="true"></i>
+                                                <i class="c-features__image fa fa-line-chart" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-9">
                                                 <h2 class="c-features__title">Search analytics</h2>
@@ -289,7 +287,7 @@
                                     <div class="c-features__cardBody card-body">
                                         <div class="row">
                                             <div class="col-3">
-                                                <i class="c-features__image fa fa-rocket" aria-hidden="true"></i>
+                                                <i class="c-features__image fa fa-users" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-9">
                                                 <h2 class="c-features__title">Customizable user experience</h2>
@@ -304,7 +302,7 @@
                                     <div class="c-features__cardBody card-body">
                                         <div class="row">
                                             <div class="col-3">
-                                                <i class="c-features__image fa fa-rocket" aria-hidden="true"></i>
+                                                <i class="c-features__image fa fa-server" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-9">
                                                 <h2 class="c-features__title">Premium infrastructure</h2>
@@ -361,11 +359,21 @@
                                     with many different data types.
                                 </p>
 <pre class="c-code c-code--grey"><code>
+// Configure the instance<br>
+$repository->setCredentials(<br>
+    new RepositoryReference(<br>
+        '21abc4',<br>
+        '23j5tg'<br>
+    ),<br>
+    '1cc7a3e0-bda5-11e7'<br>
+);<br><br>
+// Create your entity<br>
 $album = new Album(<br>
-	'768f6d-d78s9',<br>
-	'Album name',<br>
-	'Album description'<br>
-);<br>
+    '768f6d-d78s9',<br>
+    'Album name',<br>
+    'Album description'<br>
+);<br><br>
+// Save it!<br>
 $repository->addObject($album);<br>
 $repository->flush();</code></pre>
                             </div>

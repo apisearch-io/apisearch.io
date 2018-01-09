@@ -27689,7 +27689,7 @@ integrationsUI.addWidgets(
     }),
     integrationsUI.widgets.result({
         target: '.as-integrationDemo__results',
-        itemsPerPage: 3,
+        itemsPerPage: 4,
         promote: [
             { id: 'album', type: 'purpose-mw0002885819' },
             { id: 'album', type: 'crazy-love-mw0000828548' },
