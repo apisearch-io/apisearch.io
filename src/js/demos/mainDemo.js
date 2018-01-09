@@ -4,7 +4,7 @@ const resultTemplate = `
     <div class="row">
         {{#items}}
         <div class="col-6 col-sm-4 mb-3">
-            <div class="as-result__album" style="background-image: url('{{metadata.img}}')">
+            <div class="as-result__album" style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}http://apisearch.io/public/images/no-cover.jpg{{/metadata.img}}')">
                 <span class="as-result__albumTitle">{{metadata.title}}</span>
                 <span class="as-result__albumYear">{{indexed_metadata.year}}</span>
                 
@@ -45,13 +45,13 @@ const ratingFilterItemTemplate = `
 `;
 
 const authorsFilterItemTemplate = `
-    <div class="{{#isActive}}as-multipleFilter__item--active{{/isActive}}">
-        <span class="item-content">
-            {{#values.img}}<img class="item-image" src="{{values.img}}"/>{{/values.img}}
-            {{^values.img}}<img class="item-image" src="http://apisearch.io/public/images/no-cover.jpg">{{/values.img}}
-            <span class="item-text">{{values.name}}</span>
+    <li class="{{#isActive}}as-multipleFilter__item--active{{/isActive}}">
+        <span class="as-multipleFilter__itemContent">
+            {{#values.img}}<img class="as-multipleFilter__itemImage" src="{{values.img}}"/>{{/values.img}}
+            {{^values.img}}<img class="as-multipleFilter__itemImage" src="http://apisearch.io/public/images/no-cover.jpg">{{/values.img}}
+            <span class="as-multipleFilter__itemText">{{values.name}}</span>
         </span>
-    </div>
+    </li>
 `;
 
 /**

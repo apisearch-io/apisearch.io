@@ -6,10 +6,13 @@
   border-radius: .5rem
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.18)
 
+  /*
+   * General
+   */
   &__content
     max-height: 30rem
+    min-height: 30rem
     background: linear-gradient(0deg,#f0f1f9,#f2f8ff)
-
   &__header
     height: 3.6rem
     position: relative
@@ -37,6 +40,9 @@
   &__searchGenreFilter
     margin-bottom: 1.5rem
 
+  /*
+   * Apisearch components
+   */
   & .as-simpleSearch
     position: absolute
     width: 90%
@@ -52,6 +58,7 @@
       font-size: .9rem
       border-radius: 5rem
       padding: 0 1rem
+      letter-spacing: 1px
       border: 1px solid #e6e6e6
       width: 100%
       height: inherit
@@ -77,72 +84,12 @@
     background: rgba(46,46,46,.11)
     top: 50%
     transform: translateY(-50%)
-    border-radius: 2rem
-    height: 2.1rem
+    border-radius: .3rem
+    height: 2.2rem
     line-height: 2.2rem
     cursor: pointer
     color: #fff
-    text-transform: uppercase
     font-size: .8rem
-
-  & .as-multipleFilter
-    &--inverted
-      box-shadow: 0 0 0 0.5rem #e7edfb
-      border-radius: .1px
-      background: #e7edfb
-    &__top
-      margin-top: 1rem
-      h2
-        font-weight: 600
-        font-size: 1rem
-    &__item
-      position: relative
-      height: 1.5rem
-      cursor: pointer
-      &--active
-        color: #2196F3
-        font-weight: bold
-        & .as-multipleFilter__itemCount
-          background: #2196F3
-          color: white
-          padding: 0 .2rem
-      li
-        height: inherit
-        line-height: 1.5rem
-        list-style: none
-    &__itemContent
-      overflow: hidden
-      display: inline-block
-      -o-text-overflow: ellipsis
-      text-overflow: ellipsis
-      white-space: nowrap
-      width: 5rem
-    &__itemCount
-      position: absolute
-      right: 0
-      top: 50%
-      transform: translateY(-50%)
-      font-size: .6rem
-      height: 1rem
-      line-height: 1rem
-      border-radius: .2rem
-    &__itemStars
-      .fa
-        +text-gradient(#38c1b4,#1ee6d3 80%)
-        margin-right: .2rem
-        &:nth-child(2)
-          +text-gradient(#38c1b4,#1ee6d3 80%)
-        &:nth-child(3)
-          +text-gradient(#38c1b4,#1ee6d3 80%)
-        &:nth-child(4)
-          +text-gradient(#38c1b4,#1ee6d3 80%)
-        &:nth-child(5)
-          +text-gradient(#38c1b4,#1ee6d3 80%)
-        &.grey
-          color: #e0e0e0
-
-    img
-      max-width: 10px
 
   & .as-result
     padding-bottom: 2.5rem
@@ -153,9 +100,13 @@
       position: relative
       height: 11rem
       border-radius: .3rem
-      box-shadow: 0 0 1px 1px hsla(0,0%,70%,.58)
+      box-shadow: 0 2px 10px 1px rgba(0, 0, 0, 0.21)
       cursor: pointer
       transition: all .1s ease-in-out
+      &:hover
+        transform: translateY(-.2rem) scale(1.02)
+        transform-origin: center
+        box-shadow: 0 2px 6px 1px rgba(0,0,0,.12)
     &__albumRating
       position: absolute
       top: .3rem
@@ -167,6 +118,8 @@
       line-height: 1.3rem
       padding: 0 .2rem
       box-shadow: 0 0 6px 0 hsla(0,0%,5%,.4)
+      & .fa
+        color: #2bd8a6
     &__albumYear
       position: absolute
       top: .3rem
@@ -235,3 +188,90 @@
       &--active
         background: linear-gradient(90deg,#00c3b5,#1fdea6)
         color: white
+
+  /*
+   * Apisearch filter component
+   */
+  & .as-multipleFilter
+    &--inverted
+      box-shadow: 0 0 0 0.5rem #e7edfb
+      border-radius: .1px
+      background: #e7edfb
+    &__top
+      margin-top: 1rem
+      h2
+        font-weight: 600
+        font-size: 1rem
+    &__item
+      position: relative
+      height: 1.5rem
+      cursor: pointer
+      &--active
+        color: #2196F3
+        font-weight: bold
+        & .as-multipleFilter__itemCount
+          background: #2196F3
+          color: white
+          padding: 0 .2rem
+      li
+        height: inherit
+        line-height: 1.5rem
+        list-style: none
+    &__itemContent
+      overflow: hidden
+      display: inline-block
+      -o-text-overflow: ellipsis
+      text-overflow: ellipsis
+      white-space: nowrap
+      width: 5rem
+    &__itemCount
+      position: absolute
+      right: 0
+      top: 50%
+      transform: translateY(-50%)
+      font-size: .6rem
+      height: 1rem
+      line-height: 1rem
+      border-radius: .2rem
+    &__itemStars
+      .fa
+        margin-right: .2rem
+        &:first-child
+          +text-gradient(#00c4b5,#04c8b2 80%)
+        &:nth-child(2)
+          +text-gradient(#06c9b2,#29d3b6 80%)
+        &:nth-child(3)
+          +text-gradient(#0acdaf,#17d8aa 80%)
+        &:nth-child(4)
+          +text-gradient(#1ad9a9,#1edda7 80%)
+        &:nth-child(5)
+          +text-gradient(#13e0a7,#01f1ab 80%)
+      .fa.grey
+        margin-right: .2rem
+        color: #e0e0e0!important
+        background-image: none
+        -webkit-background-clip: initial
+        background-clip: initial
+
+  & .as-mainDemo__searchAuthorFilter
+    & .as-multipleFilter
+      padding-top: .5rem
+      &__item
+        margin-top: .7rem
+        margin-bottom: .7rem
+        display: block
+        height: 2rem
+        &--active
+          & .as-multipleFilter__itemContent
+            background: #e7edfb
+      &__itemImage
+        width: 2rem
+        height: 2rem
+        border-radius: 5rem
+        box-shadow: 0 1px 10px rgba(0, 0, 0, 0.18)
+      &__itemContent
+        width: 8.5rem
+        padding: .2rem
+        border-radius: 5rem
+
+
