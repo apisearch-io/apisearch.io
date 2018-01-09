@@ -12,7 +12,11 @@
   &__content
     max-height: 30rem
     min-height: 30rem
-    background: linear-gradient(0deg,#f0f1f9,#f2f8ff)
+    background: linear-gradient(0deg,#f5f6ff,#f7fbff)
+    border-radius: 0 0 .4rem .4rem
+    @media(max-width: 768px)
+      max-height: 26rem
+      min-height: 26rem
   &__header
     height: 3.6rem
     position: relative
@@ -93,6 +97,12 @@
 
   & .as-result
     padding-bottom: 2.5rem
+    &__itemsList
+      @media(max-width: 576px)
+        & > .row > div
+          &:nth-child(5),
+          &:nth-child(6)
+            display: none
     &__album
       width: 100%
       background: no-repeat 50%
@@ -107,6 +117,8 @@
         transform: translateY(-.2rem) scale(1.02)
         transform-origin: center
         box-shadow: 0 2px 6px 1px rgba(0,0,0,.12)
+      @media(max-width: 768px)
+        height: 9rem
     &__albumRating
       position: absolute
       top: .3rem
@@ -166,6 +178,7 @@
     font-weight: 600
     color: white
   & .as-pagination
+    padding: 0
     position: absolute
     bottom: .5rem
     background: transparent
