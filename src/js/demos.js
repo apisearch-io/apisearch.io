@@ -1,6 +1,7 @@
 import integrationsUI from "./demos/integrationDemo";
 import homeUI from "./demos/homeDemo";
 import mainDemo from "./demos/mainDemo";
+import filtersDemo from "./demos/filtersDemo";
 
 /**
  * Demos
@@ -21,6 +22,9 @@ const initDemos = () => {
      */
     if (document.querySelector('.as-mainDemo')) {
         window.setTimeout(() => mainDemo.init());
+    }
+    if (document.querySelector('.as-filteredSearch')) {
+        window.setTimeout(() => filtersDemo.init(), 500);
     }
 };
 
