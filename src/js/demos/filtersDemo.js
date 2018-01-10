@@ -3,7 +3,7 @@ import apisearchUI from "apisearch-ui";
 const resultTemplate = ` 
     <div class="row">
         {{#items}}
-        <div class="col-6 col-sm-4 mb-3">
+        <div class="col-12 col-sm-6 col-md-4 mb-3">
             <div class="as-result__album" style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}http://apisearch.io/public/images/no-cover.jpg{{/metadata.img}}')">
                 <span class="as-result__albumTitle">{{metadata.title}}</span>
                 <span class="as-result__albumYear">{{indexed_metadata.year}}</span>

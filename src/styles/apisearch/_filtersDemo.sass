@@ -4,6 +4,7 @@
     &__itemsList
       @media(max-width: 576px)
         & > .row > div
+          &:nth-child(4),
           &:nth-child(5),
           &:nth-child(6)
             display: none
@@ -119,6 +120,8 @@
       text-overflow: ellipsis
       white-space: nowrap
       width: 13.5rem
+      @media(max-width: 576px)
+        width: 8.5rem
     &__itemCount
       position: absolute
       right: 0
@@ -128,25 +131,6 @@
       height: 1rem
       line-height: 1rem
       border-radius: .2rem
-    &__itemStars
-      .fa
-      margin-right: .2rem
-      &:first-child
-        +text-gradient(#00c4b5,#04c8b2 80%)
-      &:nth-child(2)
-        +text-gradient(#06c9b2,#29d3b6 80%)
-      &:nth-child(3)
-        +text-gradient(#0acdaf,#17d8aa 80%)
-      &:nth-child(4)
-        +text-gradient(#1ad9a9,#1edda7 80%)
-      &:nth-child(5)
-        +text-gradient(#13e0a7,#01f1ab 80%)
-      .fa.grey
-        margin-right: .2rem
-        color: #e0e0e0!important
-        background-image: none
-        -webkit-background-clip: initial
-        background-clip: initial
   & .as-filtersDemo__authorsFilter
     & .as-multipleFilter
       &__item
