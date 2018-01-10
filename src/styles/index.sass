@@ -11,7 +11,8 @@
 @import "components/jumbotron"
 @import "components/homeSlider"
 @import "components/whatIs"
-@import "components/features"
+@import "components/homeFeatures"
+@import "components/productFeatures"
 @import "components/code"
 @import "components/footer"
 
@@ -25,6 +26,7 @@
 @import "apisearch/integrationDemo"
 @import "apisearch/homeDemo"
 @import "apisearch/mainDemo"
+@import "apisearch/filtersDemo"
 
 
 // objects
@@ -41,6 +43,9 @@ body
 main.navbar-is-open
   filter: blur(2px) brightness(90%)
 
-.container-fluid.h-maxWidth--1500
+.container-fluid
   position: relative
-  max-width: 1500px
+  &.h-maxWidth--1500
+    max-width: 1500px
+  &.h-maxWidth--1300
+    max-width: 1300px

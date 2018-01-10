@@ -154,6 +154,13 @@
       background: linear-gradient(0deg,rgba(0,0,0,.85) 5%,rgba(0,0,0,.66) 20%,transparent)
       padding: .5rem
       border-radius: 0 0 .3rem .3rem
+    &__notFound
+      font-size: 1.2rem
+      text-align: center
+    &__notFoundEmoji
+      display: block
+      text-align: center
+      font-size: 6rem
 
   & .as-information
     margin: 1rem 0
@@ -201,6 +208,7 @@
       &--active
         background: linear-gradient(90deg,#00c3b5,#1fdea6)
         color: white
+
 
   /*
    * Apisearch filter component
@@ -266,7 +274,8 @@
         -webkit-background-clip: initial
         background-clip: initial
 
-  & .as-mainDemo__searchAuthorFilter
+
+  &__searchAuthorFilter
     & .as-multipleFilter
       padding-top: .5rem
       &__item
@@ -286,5 +295,38 @@
         width: 8.5rem
         padding: .2rem
         border-radius: 5rem
+
+  &__loader
+    position: absolute
+    z-index: 999
+    background: #fdfdff
+    opacity: 1
+    left: 0
+    right: 0
+    width: 100%
+    height: 30rem
+    border-radius: 0 0 .4rem .4rem
+    -webkit-transition: all ease-in-out 300ms
+    -moz-transition: all ease-in-out 300ms
+    -o-transition: all ease-in-out 300ms
+    transition: all ease-in-out 300ms
+    &.hide
+      opacity: 0
+      z-index: -99
+    & .spinner
+      display: block
+      height: 3.5rem
+      width: 3.5rem
+      background-size: contain
+      background-repeat: no-repeat
+      background-image: url(https://d3ki9tyy5l5ruj.cloudfront.net/obj/38193453c0386e2c22076395d1992519115b4e2c/sp.png)
+      opacity: .5
+      top: 39%
+      position: absolute
+      transform: translateY(-50%)
+      left: 0
+      right: 0
+      margin: auto
+      animation: spin 750ms linear infinite
 
 

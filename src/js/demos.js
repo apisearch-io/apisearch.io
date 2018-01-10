@@ -23,7 +23,7 @@ const initDemos = () => {
     if (document.querySelector('.as-mainDemo')) {
         window.setTimeout(() => mainDemo.init());
     }
-    if (document.querySelector('.as-filteredSearch')) {
+    if (document.querySelector('.as-filtersDemo')) {
         window.setTimeout(() => filtersDemo.init(), 500);
     }
 };

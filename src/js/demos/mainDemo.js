@@ -19,10 +19,8 @@ const resultTemplate = `
     </div>
     {{^items}}
     <div class="as-result__notFound">
-        <span class="as-result__notFoundCopy">
-            <span class="as-result__notFoundEmoji">😲</span>
-            <span class="as-result__notFoundText">No results found</span>
-        </span>
+        <span class="as-result__notFoundEmoji">😲</span>
+        <span class="as-result__notFoundText">No results found</span>
     </div>
     {{/items}}
 `;
@@ -64,7 +62,7 @@ export const mainDemo = apisearchUI({
 });
 
 mainDemo.store.on('render', function() {
-    document.querySelector('.loading').classList.add('hide');
+    document.querySelector('.as-mainDemo__loader').classList.add('hide');
 });
 
 const {
@@ -168,12 +166,12 @@ mainDemo.addWidgets(
         target: '.as-mainDemo__searchResults',
         itemsPerPage: 6,
         promote: [
-            { id: 'album', type: 'purpose-mw0002885819' },
-            { id: 'album', type: 'crazy-love-mw0000828548' },
-            { id: 'album', type: 'classic-queen-mw0000085540' },
-            { id: 'album', type: '21-mw0002080092' },
-            { id: 'album', type: '4-mw0002136254' },
-            { id: 'album', type: 'michael-mw0002079107' }
+            { type: 'album', id: 'purpose-mw0002885819' },
+            { type: 'album', id: 'crazy-love-mw0000828548' },
+            { type: 'album', id: 'classic-queen-mw0000085540' },
+            { type: 'album', id: '21-mw0002080092' },
+            { type: 'album', id: '4-mw0002136254' },
+            { type: 'album', id: 'michael-mw0002079107' }
         ],
         template: {
             itemsList: resultTemplate

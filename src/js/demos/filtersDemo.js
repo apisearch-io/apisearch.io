@@ -63,7 +63,7 @@ const {
 
 filtersDemo.addWidgets(
     multipleFilter({
-        target: '.as-filteredSearch__authorsFilter',
+        target: '.as-filtersDemo__authorsFilter',
         name: 'author',
         filterField: 'author_id',
         aggregationField: 'author_data',
@@ -82,7 +82,7 @@ filtersDemo.addWidgets(
         }
     }),
     multipleFilter({
-        target: '.as-filteredSearch__genreFilter',
+        target: '.as-filtersDemo__genreFilter',
         name: 'genre',
         filterField: 'genre_id',
         aggregationField: 'genre_data',
@@ -100,7 +100,7 @@ filtersDemo.addWidgets(
         }
     }),
     result({
-        target: '.as-filteredSearch__result',
+        target: '.as-filtersDemo__result',
         itemsPerPage: 6,
         promote: [
             { type: 'album', id: 'purpose-mw0002885819' },
