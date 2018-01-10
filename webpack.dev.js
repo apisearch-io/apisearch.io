@@ -10,7 +10,7 @@ const browserConfig = merge(baseConfig, {
     devtool: 'source-map',
     target: 'web',
     output: {
-        path: path.resolve(__dirname, 'public/assets/js'),
+        path: path.resolve(__dirname, 'assets/js'),
         filename: 'app.js'
     }
 });

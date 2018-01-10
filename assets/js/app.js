@@ -27636,7 +27636,7 @@ module.exports = function(hljs) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__demos_integrationDemo__ = __webpack_require__(183);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__demos_homeDemo__ = __webpack_require__(184);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__demos_mainDemo__ = __webpack_require__(185);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__demos_filtersDemo__ = __webpack_require__(191);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__demos_filtersDemo__ = __webpack_require__(186);
 
 
 
@@ -28000,12 +28000,7 @@ mainDemo.addWidgets(
 /* harmony default export */ __webpack_exports__["a"] = (mainDemo);
 
 /***/ }),
-/* 186 */,
-/* 187 */,
-/* 188 */,
-/* 189 */,
-/* 190 */,
-/* 191 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
