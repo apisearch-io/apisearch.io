@@ -27682,7 +27682,11 @@ const initDemos = () => {
 let integrationsUI = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     appId: '54725861',
     index: '66777162',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
+    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    options: {
+        protocol: 'https',
+        endpoint: 'apisearch.global.ssl.fastly.net'
+    }
 });
 
 integrationsUI.addWidgets(
@@ -27733,7 +27737,11 @@ integrationsUI.addWidgets(
 let homeUI = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     appId: '54725861',
     index: '66777162',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
+    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    options: {
+        protocol: 'https',
+        endpoint: 'apisearch.global.ssl.fastly.net'
+    }
 });
 
 homeUI.addWidgets(
@@ -27861,7 +27869,11 @@ const authorsFilterItemTemplate = `
 const mainDemo = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     appId: '54725861',
     index: '66777162',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
+    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    options: {
+        protocol: 'https',
+        endpoint: 'apisearch.global.ssl.fastly.net'
+    }
 });
 /* unused harmony export mainDemo */
 
@@ -28059,7 +28071,11 @@ const authorsFilterItemTemplate = `
 let filtersDemo = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     appId: '54725861',
     index: '66777162',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
+    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    options: {
+        protocol: 'https',
+        endpoint: 'apisearch.global.ssl.fastly.net'
+    }
 });
 
 const {

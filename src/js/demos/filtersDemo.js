@@ -53,7 +53,11 @@ const authorsFilterItemTemplate = `
 let filtersDemo = apisearchUI({
     appId: '54725861',
     index: '66777162',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
+    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    options: {
+        protocol: 'https',
+        endpoint: 'apisearch.global.ssl.fastly.net'
+    }
 });
 
 const {
