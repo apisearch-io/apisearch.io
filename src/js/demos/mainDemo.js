@@ -4,7 +4,7 @@ const resultTemplate = `
     <div class="row">
         {{#items}}
         <div class="col-6 col-sm-4 mb-3">
-            <div class="as-result__album" style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/no-cover.jpg{{/metadata.img}}')">
+            <div class="as-result__album" style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.img}}')">
                 <span class="as-result__albumTitle">{{metadata.title}}</span>
                 <span class="as-result__albumYear">{{indexed_metadata.year}}</span>
                 
