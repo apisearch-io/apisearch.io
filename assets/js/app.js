@@ -27815,7 +27815,7 @@ const resultTemplate = `
     <div class="row">
         {{#items}}
         <div class="col-6 col-sm-4 mb-3">
-            <div class="as-result__album" style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}http://apisearch.io/public/images/no-cover.jpg{{/metadata.img}}')">
+            <div class="as-result__album" style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/no-cover.jpg{{/metadata.img}}')">
                 <span class="as-result__albumTitle">{{metadata.title}}</span>
                 <span class="as-result__albumYear">{{indexed_metadata.year}}</span>
                 
@@ -28022,7 +28022,7 @@ const resultTemplate = `
     <div class="row">
         {{#items}}
         <div class="col-12 col-sm-6 col-md-4 mb-3">
-            <div class="as-result__album" style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}http://apisearch.io/public/images/no-cover.jpg{{/metadata.img}}')">
+            <div class="as-result__album" style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/no-cover.jpg{{/metadata.img}}')">
                 <span class="as-result__albumTitle">{{metadata.title}}</span>
                 <span class="as-result__albumYear">{{indexed_metadata.year}}</span>
                 
@@ -28059,7 +28059,7 @@ const authorsFilterItemTemplate = `
     <li class="{{#isActive}}as-multipleFilter__item--active{{/isActive}}">
         <span class="as-multipleFilter__itemContent">
             {{#values.img}}<img class="as-multipleFilter__itemImage" src="{{values.img}}"/>{{/values.img}}
-            {{^values.img}}<img class="as-multipleFilter__itemImage" src="http://apisearch.io/public/images/no-cover.jpg">{{/values.img}}
+            {{^values.img}}<img class="as-multipleFilter__itemImage" src="https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/no-cover.jpg">{{/values.img}}
             <span class="as-multipleFilter__itemText">{{values.name}}</span>
         </span>
     </li>
