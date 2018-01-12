@@ -27650,10 +27650,10 @@ const initDemos = () => {
      * Home
      */
     if (document.querySelector('.as-homeDemo')) {
-        window.setTimeout(() => __WEBPACK_IMPORTED_MODULE_1__demos_homeDemo__["a" /* default */].init(), 300);
+        window.setTimeout(() => __WEBPACK_IMPORTED_MODULE_1__demos_homeDemo__["a" /* default */].init());
     }
     if (document.querySelector('.as-integrationDemo')) {
-        window.setTimeout(() => __WEBPACK_IMPORTED_MODULE_0__demos_integrationDemo__["a" /* default */].init(), 500);
+        window.setTimeout(() => __WEBPACK_IMPORTED_MODULE_0__demos_integrationDemo__["a" /* default */].init(), 1000);
     }
 
     /**
@@ -27663,7 +27663,7 @@ const initDemos = () => {
         window.setTimeout(() => __WEBPACK_IMPORTED_MODULE_2__demos_mainDemo__["a" /* default */].init());
     }
     if (document.querySelector('.as-filtersDemo')) {
-        window.setTimeout(() => __WEBPACK_IMPORTED_MODULE_3__demos_filtersDemo__["a" /* default */].init(), 500);
+        window.setTimeout(() => __WEBPACK_IMPORTED_MODULE_3__demos_filtersDemo__["a" /* default */].init(), 1000);
     }
 };
 
@@ -27747,7 +27747,8 @@ let homeUI = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
         protocol: 'https',
-        endpoint: 'apisearch.global.ssl.fastly.net'
+        endpoint: 'apisearch.global.ssl.fastly.net',
+        overrideQueries: false
     }
 });
 
@@ -27886,7 +27887,8 @@ const mainDemo = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
         protocol: 'https',
-        endpoint: 'apisearch.global.ssl.fastly.net'
+        endpoint: 'apisearch.global.ssl.fastly.net',
+        overrideQueries: false
     }
 });
 /* unused harmony export mainDemo */
