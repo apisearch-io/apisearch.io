@@ -11,10 +11,10 @@ const initDemos = () => {
      * Home
      */
     if (document.querySelector('.as-homeDemo')) {
-        window.setTimeout(() => homeUI.init(), 300);
+        window.setTimeout(() => homeUI.init());
     }
     if (document.querySelector('.as-integrationDemo')) {
-        window.setTimeout(() => integrationsUI.init(), 500);
+        window.setTimeout(() => integrationsUI.init(), 1000);
     }
 
     /**
@@ -24,7 +24,7 @@ const initDemos = () => {
         window.setTimeout(() => mainDemo.init());
     }
     if (document.querySelector('.as-filtersDemo')) {
-        window.setTimeout(() => filtersDemo.init(), 500);
+        window.setTimeout(() => filtersDemo.init(), 1000);
     }
 };
 
