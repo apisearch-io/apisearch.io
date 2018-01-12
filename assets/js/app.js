@@ -27700,16 +27700,23 @@ integrationsUI.addWidgets(
         target: '.as-integrationDemo__results',
         itemsPerPage: 4,
         promote: [
-            { id: 'album', type: 'purpose-mw0002885819' },
-            { id: 'album', type: 'crazy-love-mw0000828548' },
-            { id: 'album', type: 'classic-queen-mw0000085540' },
+            { type: 'album', id: 'purpose-mw0002885819' },
+            { type: 'album', id: 'crazy-love-mw0000828548' },
+            { type: 'album', id: 'classic-queen-mw0000085540' },
+            { type: 'album', id: '21-mw0002080092' },
         ],
         template: {
             itemsList: `<ul>
                 {{#items}} 
                 <li>
                     <img src="{{metadata.img}}" height="40px">
-                    {{metadata.title}}
+                    <span class="ml-3">{{metadata.title}}</span>
+                    <span style="color: #777777; font-size: .8rem">({{indexed_metadata.year}})</span>
+                    {{#indexed_metadata.rating}}
+                        <span class="as-result__albumRating pull-right">
+                            <i class="fa fa-star mr-1"></i>{{indexed_metadata.rating}}
+                        </span>
+                    {{/indexed_metadata.rating}}
                 </li> 
                 {{/items}}
                 {{^items}} 
@@ -27778,16 +27785,23 @@ homeUI.addWidgets(
         target: '.as-homeDemo__result',
         itemsPerPage: 4,
         promote: [
-            { id: 'album', type: 'purpose-mw0002885819' },
-            { id: 'album', type: 'crazy-love-mw0000828548' },
-            { id: 'album', type: 'classic-queen-mw0000085540' },
+            { type: 'album', id: 'purpose-mw0002885819' },
+            { type: 'album', id: 'crazy-love-mw0000828548' },
+            { type: 'album', id: 'classic-queen-mw0000085540' },
+            { type: 'album', id: '21-mw0002080092' },
         ],
         template: {
             itemsList: `<ul>
                     {{#items}} 
                     <li>
                         <img src="{{metadata.img}}" height="40px">
-                        {{metadata.title}}
+                        <span class="ml-3">{{metadata.title}}</span>
+                        <span style="color: #777777; font-size: .8rem">({{indexed_metadata.year}})</span>
+                        {{#indexed_metadata.rating}}
+                            <span class="as-result__albumRating pull-right">
+                                <i class="fa fa-star mr-1"></i>{{indexed_metadata.rating}}
+                            </span>
+                        {{/indexed_metadata.rating}}
                     </li> 
                     {{/items}}
                     {{^items}} 
