@@ -28270,11 +28270,7 @@ const initDemos = () => {
 let integrationsUI = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     appId: '54725861',
     indexId: '66777162',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
-    options: {
-        protocol: 'https',
-        endpoint: 'apisearch.global.ssl.fastly.net'
-    }
+    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
 });
 
 integrationsUI.addWidgets(
@@ -28334,8 +28330,6 @@ let homeUI = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     indexId: '66777162',
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
-        protocol: 'https',
-        endpoint: 'apisearch.global.ssl.fastly.net',
         overrideQueries: false
     }
 });
@@ -28474,8 +28468,6 @@ const mainDemo = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     indexId: '66777162',
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
-        protocol: 'https',
-        endpoint: 'apisearch.global.ssl.fastly.net',
         overrideQueries: false
     }
 });
@@ -28675,11 +28667,7 @@ const authorsFilterItemTemplate = `
 let filtersDemo = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
     appId: '54725861',
     indexId: '66777162',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
-    options: {
-        protocol: 'https',
-        endpoint: 'apisearch.global.ssl.fastly.net'
-    }
+    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
 });
 
 const {
