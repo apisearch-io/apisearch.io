@@ -37,7 +37,7 @@
     "yargs": "^8.0.2"
   },
   "dependencies": {
-    "apisearch-ui": "^0.1.24",
+    "apisearch-ui": "^0.2.0",
     "bootstrap": "4.0.0-beta.2",
     "highlight.js": "^9.12.0"
   }

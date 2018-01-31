@@ -7,7 +7,7 @@ let integrationsUI = apisearchUI({
 });
 
 integrationsUI.addWidgets(
-    integrationsUI.widgets.simpleSearch({
+    integrationsUI.widgets.searchInput({
         target: '.as-integrationDemo__searchBox',
         template: {
             clearSearch: '<i class="fa fa-times-circle" aria-hidden="true"></i>'

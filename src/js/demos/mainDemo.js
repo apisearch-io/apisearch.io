@@ -69,7 +69,7 @@ mainDemo.store.on('render', function() {
 });
 
 const {
-    simpleSearch,
+    searchInput,
     result,
     information,
     multipleFilter,
@@ -78,7 +78,7 @@ const {
 } = mainDemo.widgets;
 
 mainDemo.addWidgets(
-    simpleSearch({
+    searchInput({
         target: '.as-mainDemo__searchInput',
         placeholder: 'Search any album...',
         template: {
