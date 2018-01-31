@@ -406,19 +406,19 @@ $repository->flush();</code></pre>
                                 <p class="o-title__complement o-title__complement--sm">
                                     Using our user interface Javascript libraries
                                     like <a href="http://github.com/apisearch-io/javascript-ui">Apisearch UI</a>
-                                    or <a href="#">Carousel UI</a>.
+                                    or <a href="http://github.com/apisearch-io/autocomplete-ui">Autocomplete UI</a>.
                                 </p>
 <pre class="c-code c-code--grey"><code>
 // Create the instance<br>
 const ui = apisearchUI({<br>
     appId: '21abc4',<br>
-    index: '23j5tg',<br>
+    indexId: '23j5tg',<br>
     token: '1cc7a3e0-bda5-11e7'<br>
 });<br>
 <br>
 // Add your widgets<br>
 ui.addWidgets(<br>
-    ui.widgets.simpleSearch({<br>
+    ui.widgets.searchInput({<br>
         target: '.search-container'<br>
     }),<br>
     ui.widgets.result({<br>
