@@ -78,6 +78,12 @@
                     <a class="nav-link" href="./product.html">Product</a>
                 </li>
                 <li class="c-navbar__navItem nav-item">
+                    <a class="nav-link" href="./pricing.html">Pricing</a>
+                </li>
+                <li class="c-navbar__navItem nav-item">
+                    <a class="nav-link" href="./about-us.html">About us</a>
+                </li>
+                <li class="c-navbar__navItem nav-item">
                     <a class="nav-link"
                        target="_blank"
                        href="http://docs.apisearch.io">
@@ -104,12 +110,13 @@
     <!-- Main -->
     <main role="main">
         <!-- Jumbotron -->
-        <section class="c-jumbotron c-jumbotron--overflow-hidden jumbotron">
+        <section class="c-jumbotron c-jumbotron--overflow-hidden jumbotron"
+                 style="background-image: url('assets/media/computer-image.jpeg')"
+        >
             <div class="c-homeSlider container-fluid h-maxWidth--1500">
                 <div class="row">
                     <div class="col-12 col-md-6 mr-sm-auto">
                         <h1 class="c-homeSlider__title">
-                            <i class="d-none d-md-inline-block fa fa-search" aria-hidden="true"></i>
                             Welcome to the next<wbr> search generation!
                         </h1>
                         <p class="d-none d-md-block c-homeSlider__complement">
@@ -130,12 +137,13 @@
                     </div>
                 </div>
             </div>
+            <div class="o-overlay"></div>
         </section>
         <!-- /Jumbotron -->
 
         <!-- What is Apisearch -->
         <section class="o-section o-section--topShadow o-section--paddingTop-md">
-            <div class="container">
+            <div class="o-section__container container">
                 <div class="row">
                     <div class="col-12">
                         <h1 class="o-title o-title--h1 o-title--center">
@@ -154,9 +162,11 @@
                                         <i class="fa fa-magic" aria-hidden="true"></i>
                                     </div>
                                     <div class="card-body">
-                                        <h2 class="c-whatIs__title">Search API</h2>
+                                        <h2 class="c-whatIs__title">Hosted search API</h2>
                                         <p class="c-whatIs__copy">
-                                            Use our custom API.<br><br>We develop, maintain and document plugins for your project and many other programming languages and frameworks.
+                                            Think like it's an extension
+                                            of your current database that let's your
+                                            users search your products faster and better!
                                         </p>
                                     </div>
                                 </div>
@@ -184,8 +194,9 @@
                                     <div class="card-body">
                                         <h2 class="c-whatIs__title">Product best friend</h2>
                                         <p class="c-whatIs__copy">
-                                            Make your users reach what they are looking for the fastest possible way.<br><br>
-                                            1 click is always better than 2 clicks.
+                                            It will help you increase your sales,
+                                            making your users reach what they are looking for
+                                            the fastest possible way.
                                         </p>
                                     </div>
                                 </div>
@@ -208,7 +219,7 @@
 
         <!-- Features -->
         <section class="o-section o-section--inverted o-section--misalignedTop o-section--misalignedBottom">
-            <div class="container">
+            <div class="o-section__container container">
                 <div class="row">
                     <div class="col-12">
                         <h1 class="o-title o-title--h1 o-title--center">
@@ -232,7 +243,7 @@
                                             <div class="col-9">
                                                 <h2 class="c-homeFeatures__title">Typo tolerance</h2>
                                                 <p class="c-homeFeatures__copy">
-                                                    Apesearch will find your user's search even if the
+                                                    Apisearch will find your user's search even if the
                                                     query has a typo.
                                                 </p>
                                             </div>
@@ -250,7 +261,7 @@
                                                 </span>
                                             </div>
                                             <div class="col-9">
-                                                <h2 class="c-homeFeatures__title">Filters and Aggregations</h2>
+                                                <h2 class="c-homeFeatures__title">Filters and Facets</h2>
                                                 <p class="c-homeFeatures__copy">
                                                     Group your data by specific attributes to make it easy refine their searches.
                                                 </p>
@@ -347,7 +358,7 @@
 
         <!-- Easy integration -->
         <section class="o-section">
-            <div class="container mb-5">
+            <div class="o-section__container container mb-5">
                 <div class="row">
                     <div class="col-12">
                         <h1 class="o-title o-title--h1 o-title--center">
@@ -517,7 +528,7 @@ ui.init();</code></pre>
 
         <!-- Call to action -->
         <section class="o-section o-section--paddingBottom-lg">
-            <div class="container">
+            <div class="o-section__container container">
                 <div class="row">
                     <div class="col-12 col-md-8 mr-md-auto ml-md-auto">
                         <div class="o-card o-card--b-radius-lg o-card--pd card">
