@@ -3,12 +3,31 @@
   padding-top: 3rem
   padding-bottom: 4rem
 
+  &__container
+    z-index: 9
+    position: relative
+
   &--topShadow
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.13)
 
   &--inverted
     //background: #edfffe
     background: linear-gradient(0deg,#f0f1f9,#f2f8ffe0)
+
+  &--withBackgroundImage
+    background-repeat: no-repeat
+    background-position: center
+    &::before
+      content: ''
+      z-index: 0
+      position: absolute
+      width: 100%
+      height: 100%
+      top: 0
+      right: 0
+      left: 0
+      bottom: 0
+      +background-gradient(rgba(0, 0, 0, 0.29), rgba(0, 0, 0, 0.29))
 
   &--misalignedTop
     overflow: hidden
@@ -40,7 +59,8 @@
 
   &--shadowDivision
     overflow: hidden
-    &:before
+    &:after
+      z-index: 0
       content: ''
       width: 127%
       left: -5rem

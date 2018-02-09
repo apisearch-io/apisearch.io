@@ -5,9 +5,11 @@
   //box-shadow: 0 0 11px 1px rgba(0, 0, 0, 0.05)
   //background: linear-gradient(40deg,#e8f3ff,#fff)
   //box-shadow: 0 0 11px 1px rgba(0,0,0,.05)
-  background: transparent
+  background: linear-gradient(180deg,rgba(0, 0, 0, 0.27),rgba(0, 0, 0, 0))
 
-  .home-page &
+  .home-page &,
+  .product-page &,
+  .about-us-page &
     @media(min-width: 768px)
       .c-navbar__collapse .c-navbar__nav:first-child .c-navbar__navItem a
         color: white
@@ -18,7 +20,9 @@
   &--scroll
     background: white
     box-shadow: 0 3px 14px rgba(0, 0, 0, 0.12)
-    .home-page &
+    .home-page &,
+    .product-page &,
+    .about-us-page &
       .c-navbar__collapse .c-navbar__nav:first-child .c-navbar__navItem a
         color: #212629
       img
@@ -32,6 +36,8 @@
     &--active
       font-weight: 600
     & a
+      padding-right: .6rem!important
+      padding-left: .6rem!important
       color: #212629
       &:hover
         font-weight: 600
