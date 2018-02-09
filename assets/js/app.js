@@ -27750,6 +27750,7 @@ let homeUI = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
 homeUI.addWidgets(
     homeUI.widgets.searchInput({
         target: '.as-homeDemo__searchBox',
+        autofocus: true,
         template: {
             clearSearch: '<i class="fa fa-times-circle" aria-hidden="true"></i>'
         }

@@ -12,6 +12,7 @@ let homeUI = apisearchUI({
 homeUI.addWidgets(
     homeUI.widgets.searchInput({
         target: '.as-homeDemo__searchBox',
+        autofocus: true,
         template: {
             clearSearch: '<i class="fa fa-times-circle" aria-hidden="true"></i>'
         }
