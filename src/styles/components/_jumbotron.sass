@@ -1,7 +1,7 @@
 .c-jumbotron
   position: relative
   padding-top: 12rem
-  min-height: 80vh
+  min-height: 55rem
   margin-bottom: 0
   padding-bottom: 0
   -webkit-border-radius: 0
@@ -10,6 +10,9 @@
   background-size: cover
   background-repeat: no-repeat
   background-position: center
+
+  @media(max-width: 768px)
+    min-height: 42rem
 
   &--overflow-hidden
     overflow: hidden
