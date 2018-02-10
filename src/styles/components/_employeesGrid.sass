@@ -1,0 +1,35 @@
+.c-employeesGrid
+  &__employee
+    &Image
+      width: 50%
+      border-radius: 15rem
+      display: block
+      box-shadow: 0 2px 1rem 1px rgba(0, 0, 0, 0.26)
+      margin: 0 auto 1rem
+    &Name
+      text-align: center
+      font-weight: 600
+    &Job
+      color: grey
+      text-align: center
+    &Description
+    &Links
+      margin-right: 0
+      margin-left: 0
+      height: 3rem
+      line-height: 3rem
+      border-top: 1px solid #f9f5f5
+      text-align: center
+      & a
+        line-height: inherit
+        height: inherit
+        display: block
+        & > .fa
+          font-size: 1.2rem
+          +text-gradient(#01dbcf,#13ffb8)
+        &:hover > .fa
+          +text-gradient(#08c7bc,#00ffb3)
+    &Link
+      border-right: 1px solid #f9f5f5
+      &:last-child
+        border-right: none
