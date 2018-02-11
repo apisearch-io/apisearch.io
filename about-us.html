@@ -124,7 +124,7 @@
                 </p>
 
                 <div class="c-employeesGrid row mt-5">
-                    <div class="col-12 col-sm-4">
+                    <div class="col-12 col-md-4">
                         <div class="c-employeesGrid__employee o-card o-card--b-radius-lg mb-3 card">
                             <div class="card-body">
                                 <img class="c-employeesGrid__employeeImage"
@@ -156,7 +156,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-4">
+                    <div class="col-12 col-md-4">
                         <div class="c-employeesGrid__employee o-card o-card--b-radius-lg mb-3 card">
                             <div class="card-body">
                                 <img class="c-employeesGrid__employeeImage"
@@ -188,7 +188,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-4">
+                    <div class="col-12 col-md-4">
                         <div class="c-employeesGrid__employee o-card o-card--b-radius-lg mb-3 card">
                             <div class="card-body">
                                 <img class="c-employeesGrid__employeeImage"
@@ -236,9 +236,10 @@
                 <div class="row mt-5">
                     <div class="col-12 col-sm-8 ml-auto mr-auto">
                         <p class="text-center">
-                            We're a young company founded in 2017,
+                            We're a young company founded in 2016 in Barcelona,
                             Our mission? help people improve their site user experience
-                            and so their conversion rate putting to their disposal a search API.
+                            and so their conversion rate and sales putting to their disposal a search an extensive
+                            and well documented search API, a world wide data cluster, and a lots of useful resources.
                         </p>
                     </div>
                 </div>
@@ -248,7 +249,7 @@
 
         <!-- Location -->
         <section class="o-section">
-            <div class="o-section__container container-fluid" style="min-height: 30rem">
+            <div class="o-section__container container-fluid">
                 <h1 class="o-title o-title--h1 o-title--center">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                     Location
@@ -257,6 +258,7 @@
                 <p class="o-title__complement o-title__complement--center">
                     Want acoffee? come to meet us! :)
                 </p>
+                <div id="map"></div>
             </div>
         </section>
         <!-- Location -->
@@ -451,6 +453,22 @@
     <script src='https://cdn.slaask.com/chat.js'></script>
     <script>
         _slaask.init('b9b1effd3fe923ccb72ec64790aa63a2');
+    </script>
+    <script>
+        function initMap() {
+            var uluru = {lat: -25.363, lng: 131.044};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 4,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFIgvr5VxBJN6LyBShNPFb3KKrsXEg6v0&callback=initMap">
     </script>
 </body>
 </html>
