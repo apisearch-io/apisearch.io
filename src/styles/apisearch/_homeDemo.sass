@@ -1,15 +1,16 @@
 .as-homeDemo
   position: absolute
-  top: 50%
+  top: 0
   right: 3rem
-  //transform: perspective(273px) rotateY(-4deg) rotateX(4deg) translateY(-50%)
-  transform: perspective(100px) rotateY(-1deg) rotateX(2deg) translateY(-50%)
-  box-shadow: 13px 20px 4rem 0 rgba(0, 0, 0, 0.57)
+  //transform: perspective(100px) rotateY(-1deg) rotateX(2deg) translateY(-50%)
+  box-shadow: 0 6px 3rem 0 rgba(0, 0, 0, 0.33)
   width: 29rem
   height: 28.5rem
   border-radius: .3rem
   background: #fff
   border: 1px solid #e9e9e9
+  @media(min-width: 768px)
+    +floating-animation(8s)
   @media(max-width: 769px)
     top: 10rem
 

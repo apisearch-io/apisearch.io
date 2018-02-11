@@ -45,11 +45,16 @@
   &::-webkit-scrollbar-corner
     background-color: transparent
 
-/*
- * Spinner animation
- */
-@keyframes spin
-  0%
-    transform: rotate(0deg)
-  100%
-    transform: rotate(360deg)
+@mixin floating-animation($speed)
+  -webkit-animation-name: floating
+  -webkit-animation-duration: $speed
+  -webkit-animation-iteration-count: infinite
+  -webkit-animation-timing-function: ease-in-out
+  -moz-animation-name: floating
+  -moz-animation-duration: $speed
+  -moz-animation-iteration-count: infinite
+  -moz-animation-timing-function: ease-in-out
+  animation-name: floating
+  animation-duration: $speed
+  animation-iteration-count: infinite
+  animation-timing-function: ease-in-out
