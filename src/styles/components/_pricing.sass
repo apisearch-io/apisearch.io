@@ -13,18 +13,22 @@
       display: block
       z-index: 0
       transform: skewY(-4deg)
+    &:hover
+      box-shadow: 0 5px 2rem 1px rgba(0, 0, 0, 0.15)
     &--community
+      margin-top: 2rem
       &:before
-        +background-gradient(#71baff,#34a1ff)
+        +background-gradient(#0ee6a9,#00b0c3)
     &--standard
       &:before
-        +background-gradient(#34a1ff,#159bff)
+        +background-gradient(#00b0c3,#159bff)
     &--pro
       &:before
-        +background-gradient(#159bff,#0380dd)
+        +background-gradient(#159bff,#0070ff)
     &--enterprise
+      margin-top: 2rem
       &:before
-        +background-gradient(#0380dd,#006fc4)
+        +background-gradient(#0070ff,#0005c2)
 
   &__optionHeader
     border-radius: .8rem .8rem 0 0
@@ -54,7 +58,7 @@
     padding: 0
   &__optionFeature
     border-bottom: 1px solid rgba(3, 169, 244, 0.1)
-    height: 3rem
+    min-height: 3rem
     line-height: 3rem
     padding: 0 1.5rem
     &:nth-child(odd)
