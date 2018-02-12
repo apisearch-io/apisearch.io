@@ -1,0 +1,24 @@
+.c-detailedPricing
+  &__section
+    margin-bottom: 2.5rem
+  &__sectionTitle
+    font-weight: 600
+    margin-bottom: 1rem
+  &__featuresList
+    margin: 0 0 1rem
+    padding: 0
+  &__feature
+    height: 2.5rem
+    line-height: 2.5rem
+    padding: 0
+    border-bottom: 1px solid rgba(3,169,244,.1)
+    &:nth-child(odd)
+      background: linear-gradient(90deg,rgba(3,169,244,0),rgba(3,169,244,.05),rgba(3,169,244,0))
+  &__featureTitle
+    font-weight: 400
+  &__featureAvailability
+    text-align: center
+    & > .fa.fa-check
+      +text-gradient(#00c3b5,#1fdea6)
+    & > .fa.fa-minus
+      color: rgba(0, 153, 255, 0.33)
