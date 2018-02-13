@@ -10006,6 +10006,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_styles_index_sass___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_styles_index_sass__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__js_dom__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_js_demos__ = __webpack_require__(182);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__js_faqs__ = __webpack_require__(187);
+
 
 
 
@@ -10017,6 +10019,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     Object(__WEBPACK_IMPORTED_MODULE_1__js_dom__["c" /* codeHighlights */])();
 
     Object(__WEBPACK_IMPORTED_MODULE_2_js_demos__["a" /* default */])();
+
+    if (document.querySelector('#apisearchFaqsSearchInput')) {
+        window.setTimeout(() => __WEBPACK_IMPORTED_MODULE_3__js_faqs__["a" /* default */].init());
+    }
 })();
 
 /***/ }),
@@ -28147,6 +28153,69 @@ filtersDemo.addWidgets(
 );
 
 /* harmony default export */ __webpack_exports__["a"] = (filtersDemo);
+
+/***/ }),
+/* 187 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_apisearch_ui__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_apisearch_ui__);
+
+
+let faqsUI = __WEBPACK_IMPORTED_MODULE_0_apisearch_ui___default()({
+    appId: 'e68d3c8b',
+    indexId: 'd3755f6e',
+    token: '5ca4008c-aac3-4059-8d50-5692befceb73',
+    options: {
+        endpoint: "http://localhost:8999"
+    }
+});
+
+faqsUI.addWidgets(
+    faqsUI.widgets.searchInput({
+        target: '#apisearchFaqsSearchInput',
+        autofocus: true
+    }),
+    faqsUI.widgets.multipleFilter({
+        target: '.c-faqs__topicsFilter',
+        name: 'topic',
+        filterField: 'topic',
+        template: {
+            item: '{{values.name}}'
+        }
+    }),
+    faqsUI.widgets.pagination({
+        target: '.c-faqs__pagination'
+    }),
+    faqsUI.widgets.result({
+        target: '.c-faqs__result',
+        itemsPerPage: 8,
+        highlightsEnabled: true,
+        template: {
+            itemsList: `
+                <ul class="c-faqs__resultList row">
+                {{#items}}
+                    <li class="col-12 col-sm-6">
+                        <div class="c-faqs__resultItem">
+                            <h4 class="c-faqs__resultItemQuestion">
+                                {{#highlights.question}}{{{highlights.question}}}{{/highlights.question}}
+                                {{^highlights.question}}{{{metadata.question}}}{{/highlights.question}}
+                            </h4>
+                            <p class="c-faqs__resultItemAnswer">
+                                {{#highlights.answer}}{{{highlights.answer}}}{{/highlights.answer}}
+                                {{^highlights.answer}}{{{metadata.answer}}}{{/highlights.answer}}
+                            </p>
+                        </div>
+                    </li>
+                {{/items}}
+                </ul>
+            `
+        }
+    })
+);
+
+/* harmony default export */ __webpack_exports__["a"] = (faqsUI);
 
 /***/ })
 /******/ ]);
