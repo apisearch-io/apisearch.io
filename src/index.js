@@ -6,6 +6,7 @@ import {
     codeHighlights
 } from "./js/dom";
 import initDemos from "js/demos";
+import faqsUI from "./js/faqs";
 
 (function() {
     burgerAction();
@@ -13,4 +14,8 @@ import initDemos from "js/demos";
     codeHighlights();
 
     initDemos();
+
+    if (document.querySelector('#apisearchFaqsSearchInput')) {
+        window.setTimeout(() => faqsUI.init());
+    }
 })();

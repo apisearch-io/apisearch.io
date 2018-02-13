@@ -1,0 +1,72 @@
+header:
+    metadata: [question, answer]
+    indexed_metadata: [topic]
+    searchable_metadata: [question, answer, topic]
+
+#
+# Create a Project related FAQS
+#
+item_1:
+    id: 1
+    type: faq
+    question: What is Apisearch?
+    answer: "Once you’ve been logged in <a href='https://admin.apisearch.io'>Apisearch panel</a>, you can create a new app."
+    topic: "Create a project"
+item_2:
+    id: 2
+    type: faq
+    question: Where can I signup in Apisearch?
+    answer: "You can create as many apps as you want. Each app represents a different repository, so for example, if you have 2 different e-commerce, each one with a closed set of products, you should use two different apps."
+    topic: "Create a project"
+item_3:
+    id: 3
+    type: faq
+    question: How can I create a new app?
+    answer: "By default, by creating a new app the system will generate 3 tokens for you. These tokens cannot be deleted, and only can be regenerated if they are compromised.<br>Each one of them have an specific purpose. Visit token chapter for more information."
+    topic: "Create a project"
+item_4:
+    id: 4
+    type: faq
+    question: How many apps can I create?
+    answer: "You can create as many apps as you want. Each app represents a different repository, so for example, if you have 2 different e-commerce, each one with a closed set of products, you should use two different apps."
+    topic: "Create a project"
+item_5:
+    id: 5
+    type: faq
+    question: How can I get some tokens?
+    answer: "By default, by creating a new app the system will generate 3 tokens for you. These tokens cannot be deleted, and only can be regenerated if they are compromised.<br>Each one of them have an specific purpose. Visit token chapter for more information."
+    topic: "Create a project"
+item_6:
+    id: 6
+    type: faq
+    question: Can I generate more than one token?
+    answer: "In fact, you should. Each one of your tokens will be assigned one or several endpoint permissions. It means that, for example, you should use read-only tokens in your UI snippets, restricting any write operation. Then, in your backend projects, you can have another private token with write permissions."
+    topic: "Create a project"
+item_7:
+    id: 7
+    type: faq
+    question: Someone stole one of my tokens. Can I change them?
+    answer: "You can. In your Apisearch administration panel, under your app section, you will find where to manage your tokens."
+    topic: "Creating a project"
+item_8:
+    id: 8
+    type: faq
+    question: If I lose my data, can I recover it?
+    answer:
+    topic: "Create a project"
+
+#
+# Admin panel related FAQS
+#
+item_10:
+    id: 10
+    type: faq
+    question: How can I export my index?
+    answer: "Todo"
+    topic: "Admin panel"
+item_11:
+    id: 11
+    type: faq
+    question: How can I import my index?
+    answer: "Todo"
+    topic: "Admin panel"

@@ -112,8 +112,8 @@
 
     <!-- Hero -->
     <section
-            class="o-section o-section--paddingTop-md o-section--inverted o-section--withBackgroundImage"
-            style="background-image: url('assets/media/pricing-image.jpg')"
+        class="o-section o-section--paddingTop-md o-section--inverted o-section--withBackgroundImage"
+        style="background-image: url('assets/media/faqs-image.jpeg')"
     >
         <div class="o-section__container container">
             <h1 class="o-title o-title--h1 o-title--center o-title--inverted">
@@ -122,7 +122,7 @@
             <input
                 id="apisearchFaqsSearchInput"
                 class="c-faqs__searchInput"
-                type="text"
+                type="search"
                 placeholder="Search any question"
             />
         </div>
@@ -133,11 +133,14 @@
     <section class="o-section" style="min-height: 40rem">
         <div class="o-section__container container">
             <div class="row mt-5">
-                <div class="col-12 col-sm-4">
-                    Filters
+                <div class="col-12">
+                    <div class="c-faqs__topicsFilter"></div>
                 </div>
-                <div class="col-12 col-sm-8">
-                    <h2>Frequent questions</h2>
+                <div class="col-12">
+                    <div class="c-faqs__result"></div>
+                </div>
+                <div class="col-12">
+                    <div class="c-faqs__pagination"></div>
                 </div>
             </div>
         </div>
@@ -326,22 +329,6 @@
 <script src='https://cdn.slaask.com/chat.js'></script>
 <script>
     _slaask.init('b9b1effd3fe923ccb72ec64790aa63a2');
-</script>
-<script>
-    function initMap() {
-        var uluru = {lat: -25.363, lng: 131.044};
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 4,
-            center: uluru
-        });
-        var marker = new google.maps.Marker({
-            position: uluru,
-            map: map
-        });
-    }
-</script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFIgvr5VxBJN6LyBShNPFb3KKrsXEg6v0&callback=initMap">
 </script>
 </body>
 </html>
