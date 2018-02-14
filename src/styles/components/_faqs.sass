@@ -61,26 +61,41 @@
     text-align: center
     margin-bottom: 2rem
     & .as-multipleFilter
-      &__itemsList
-        background: white
-        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.16)
-        padding: 1rem
-        max-width: 45rem
-        margin: 0 auto
-        border-radius: .3rem
       &__item
+        text-transform: uppercase
+        letter-spacing: .1rem
         cursor: pointer
         margin-right: 1rem
         background: white
-        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.16)
+        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.22)
         display: inline-block
         border-radius: .3rem
         padding: .2rem 1rem
         &--active
           font-weight: 600
           color: white
-          background: linear-gradient(90deg,#00c3b5,#1fdea6)
+          +background-gradient(#00c3b5,#1fdea6)
 
 
   &__pagination
     text-align: center
+    & .as-pagination
+      list-style: none
+      display: inline-block
+      background: white
+      box-shadow: 0 1px 5px 0 rgba(0,0,0,.22)
+      border-radius: .3rem
+      padding: .4rem .2rem
+      &__item
+        height: 2rem
+        min-width: 2rem
+        text-align: center
+        line-height: 2rem
+        margin: 0 .2rem
+        display: inline-block
+        border-radius: .3rem
+        cursor: pointer
+        &--active
+          color: white
+          font-weight: 600
+          +background-gradient(#00c3b5,#1fdea6)
