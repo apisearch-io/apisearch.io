@@ -1,12 +1,9 @@
 import apisearchUI from "apisearch-ui";
 
 let faqsUI = apisearchUI({
-    appId: 'e68d3c8b',
-    indexId: 'd3755f6e',
-    token: '5ca4008c-aac3-4059-8d50-5692befceb73',
-    options: {
-        endpoint: "http://localhost:8999"
-    }
+    appId: '4186e76c',
+    indexId: '0d2ca7b4',
+    token: 'e3aee575-2b0a-4a95-b0ce-88fa316c4eff'
 });
 
 faqsUI.addWidgets(
