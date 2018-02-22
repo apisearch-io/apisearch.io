@@ -37,8 +37,13 @@
     "yargs": "^8.0.2"
   },
   "dependencies": {
+    "apisearch": "^0.1.22",
     "apisearch-ui": "^0.2.0",
     "bootstrap": "4.0.0-beta.2",
-    "highlight.js": "^9.12.0"
+    "highlight.js": "^9.12.0",
+    "jquery": "^3.3.1",
+    "lodash": "^4.17.5",
+    "popper.js": "^1.12.9",
+    "react": "^16.2.0"
   }
 }
