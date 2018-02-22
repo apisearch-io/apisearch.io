@@ -18,11 +18,12 @@ let albumsArray = [
     'doo-wops-hooligans-mw0002043948', 'sinatra-best-of-the-best-mw0002208487', 'junk-of-the-heart-mw0002185184',
     'get-lucky-mw0002542006', 'beetlebum-mw0000921064', 'nevermind-mw0000185616',
     'this-is-all-yours-mw0002689881', 'a-state-of-trance-classics-vol-7-mw0002441429', 'sgt-peppers-lonely-hearts-club-band-mw0000649874',
-    'Interstellar [Original Motion Picture Soundtrack]', 'zombie-mw0000885922', 'she-wolf-mw0001762399'
+    'interstellar-original-motion-picture-soundtrack-mw0002770179', 'zombie-mw0000885922', 'she-wolf-mw0001762399'
 ];
 
 export default class MachineLearningDemo {
     constructor() {
+        this.trainCounter = 0;
         this.albumsArray = albumsArray;
         this.api = apisearch(credentials);
         this.ui = apisearchUI(credentials);
@@ -40,19 +41,30 @@ export default class MachineLearningDemo {
         let availableAlbums = [...this.albumsArray],
             randomAlbums = [];
 
+        if (availableAlbums.length < 3) {
+            console.log('no more choices')
+        }
+
         for(let i = 0; i < 3; i++) {
             let randomAlbumIndex = Math.floor(
-                Math.random() * this.albumsArray.length
+                Math.random() * availableAlbums.length
             );
 
-            availableAlbums.splice(randomAlbumIndex, 1);
             randomAlbums = [
                 ...randomAlbums,
                 availableAlbums[randomAlbumIndex]
-            ]
+            ];
+
+            // delete used album
+            availableAlbums.splice(randomAlbumIndex, 1);
         }
 
+        // add updated albums array
+        // without the used albums
         this.albumsArray = availableAlbums;
+
+        // Check if Apisearch is ready to show suggestions
+        this.canShowSuggestions();
 
         return randomAlbums;
     }
@@ -68,7 +80,7 @@ export default class MachineLearningDemo {
         let compiled = template(
             `<% if (items.length !== 0) { %>
                 <% items.forEach(function(item) { %>
-                <div class="col-4">
+                <div class="col-12 col-sm-4 mb-3 mb-sm-0">
                     <div class="c-machineLearning__album c-machineLearning__album--choice">
                         <h4 class="c-machineLearning__albumTitle"><%= item.metadata.title %></h4>
                         <img src="<%= item.metadata.img %>">
@@ -84,11 +96,16 @@ export default class MachineLearningDemo {
 
             // add like event
             document
-                .querySelectorAll('.c-machineLearning__album')
+                .querySelectorAll('.c-machineLearning__album--choice')
                 .forEach(item =>
-                    item.addEventListener('click', () =>
-                        setTimeout(() => item.classList.add('c-machineLearning__album--liked'), 75)
-                    )
+                    item.addEventListener('click', () => {
+                        setTimeout(() => item.classList.add('c-machineLearning__album--liked'), 75);
+
+                        // reprint new choices
+                        setTimeout(() => this.printChoices(
+                            this.pickThreeRandomAlbums()
+                        ), 500);
+                    })
                 )
         });
     };
@@ -98,19 +115,23 @@ export default class MachineLearningDemo {
         let query = this.api
             .query
             .createMatchAll()
-            .setResultSize(6)
+            .setResultSize(4)
         ;
 
         let compiled = template(
             `<% if (items.length !== 0) { %>
-                <% items.forEach(function(item) { %>
-                <div class="col-2">
-                    <div class="c-machineLearning__album c-machineLearning__album--suggestion">
-                        <h4 class="c-machineLearning__albumTitle"><%= item.metadata.title %></h4>
-                        <img src="<%= item.metadata.img %>">
+                <div class="col-12 col-sm-8 ml-auto mr-auto">
+                    <div class="row">
+                        <% items.forEach(function(item) { %>
+                        <div class="col-6 col-sm-3 mt-4">
+                            <div class="c-machineLearning__album c-machineLearning__album--suggestion">
+                                <h4 class="c-machineLearning__albumTitle"><%= item.metadata.title %></h4>
+                                <img src="<%= item.metadata.img %>">
+                            </div>
+                        </div>
+                        <% }) %>
                     </div>
                 </div>
-                <% }) %>
             <% } %>`
         );
 
@@ -124,25 +145,28 @@ export default class MachineLearningDemo {
 
         ui.addWidgets(
             ui.widgets.searchInput({
-                target: '#apisearchMachineLearningSearchInput'
+                target: '#apisearchMachineLearningSearchInput',
+                placeholder: 'Search an album...'
             }),
             ui.widgets.result({
                 target: '#apisearchMachineLearningSearchResults',
-                itemsPerPage: 12,
+                itemsPerPage: 8,
                 template: {
                     itemsList:
-                        `<div class="row">
-                            {{#items}}
-                                <div class="col-2 mt-4">
-                                    <div class="c-machineLearning__album c-machineLearning__album--suggestion">
-                                        <h4 class="c-machineLearning__albumTitle">{{metadata.title}}</h4>
-                                        <img src="{{metadata.img}}">
+                        `<div class="col-12 col-sm-8 ml-auto mr-auto">
+                            <div class="row">
+                                {{#items}}
+                                    <div class="col-6 col-sm-3 mt-4">
+                                        <div class="c-machineLearning__album c-machineLearning__album--suggestion">
+                                            <h4 class="c-machineLearning__albumTitle">{{metadata.title}}</h4>
+                                            <img src="{{metadata.img}}">
+                                        </div>
                                     </div>
-                                </div>
-                            {{/items}}
-                            {{^items}}
-                                <div class="col-12 mt-4">No result</div>
-                            {{/items}}
+                                {{/items}}
+                                {{^items}}
+                                    <div class="col-12 mt-4">No result</div>
+                                {{/items}}
+                            </div>
                         </div>`
                 }
             })
@@ -150,4 +174,32 @@ export default class MachineLearningDemo {
 
         ui.init();
     };
+
+    canShowSuggestions() {
+        if (this.trainCounter === 3) {
+            document
+                .querySelector('#apisearchShowSuggestions')
+                    .classList
+                    .remove('c-machineLearning__showSuggestions--hidden')
+            ;
+            this.showSuggestionsAction()
+        }
+
+        this.trainCounter = this.trainCounter + 1;
+    }
+
+    showSuggestionsAction() {
+        document
+            .querySelector('#apisearchShowSuggestionsButton')
+            .addEventListener('click', function() {
+                document
+                    .querySelector('#apisearchShowSuggestions')
+                    .classList
+                    .add('c-machineLearning__showSuggestions--hidden');
+
+                document
+                    .querySelectorAll('.c-machineLearning__block')
+                    .forEach(item => item.classList.remove('c-machineLearning__block--hidden'))
+            })
+    }
 }

@@ -111,7 +111,7 @@
 <main role="main">
     <!-- Introduction -->
     <section
-        class="o-section o-section--paddingTop-md"
+        class="o-section o-section--paddingTop-md o-section--shadowDivision o-section--inverted"
     >
         <div class="o-section__container container">
             <div class="row my-5">
@@ -130,39 +130,67 @@
                         <div class="row">
 
                             <div class="col-12 c-machineLearning__block">
-                                <h3 class="c-machineLearning__blockTitle">
-                                    Choose the album you like most:
+                                <h3 class="c-machineLearning__blockTitle mt-3">
+                                   Choose your preferred album
                                 </h3>
                                 <p class="c-machineLearning__blockText">
-                                    Train your custom albums brain choosing one of this options
+                                    Let Apisearch's brain learn from your likes, so he will
+                                    be more effective on your searches
                                 </p>
-                                <div class="row" id="apisearchMachineLearningChoices"></div>
+                                <div class="row mt-5" id="apisearchMachineLearningChoices">
+                                    <div class="c-machineLearning__loading">
+                                        <span class="spinner"></span>
+                                        <span class="loading-text">Loading content...</span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="col-12 my-5 c-machineLearning__block">
+                            <div
+                                id="apisearchShowSuggestions"
+                                class="col-12 c-machineLearning__showSuggestions c-machineLearning__showSuggestions--hidden"
+                            >
+                                <button
+                                    id="apisearchShowSuggestionsButton"
+                                    class="o-button o-button--capitalize o-button--gradientBlue"
+                                >
+                                    See suggestions
+                                </button>
+                                <button
+                                        class="o-button o-button--capitalize o-button--simple"
+                                >
+                                    or keep training
+                                </button>
+                            </div>
+
+                            <!-- Suggestions -->
+                            <div class="col-12 my-5 c-machineLearning__block c-machineLearning__block--hidden">
                                 <h3 class="c-machineLearning__blockTitle">
-                                    You probably like one of these?
+                                    Automated suggestions!
                                 </h3>
                                 <p class="c-machineLearning__blockText">
                                     Seeing your album preferences, Apisearch thinks you might like one of this albums too
                                 </p>
                                 <div class="row" id="apisearchMachineLearningSuggestions"></div>
                             </div>
+                            <!-- /Suggestions -->
 
-                            <div class="col-12 my-5 c-machineLearning__block">
+                            <!-- Smart Search -->
+                            <div class="col-12 my-5 c-machineLearning__block c-machineLearning__block--hidden">
                                 <h3 class="c-machineLearning__blockTitle">
-                                    Search smarter
+                                    Not convinced? Search and get smarter results!
                                 </h3>
                                 <p class="c-machineLearning__blockText">
-                                    Search the music index after a little bit of training
+                                    Once your custom Apisearch brain is trained, you can get customized search results
                                 </p>
                                 <div class="row">
                                     <div class="col-12">
-                                        <input class="form-control" id="apisearchMachineLearningSearchInput" />
+                                        <div id="apisearchMachineLearningSearchInput" class="c-machineLearning__inputContainer"></div>
                                         <div id="apisearchMachineLearningSearchResults"></div>
                                     </div>
                                 </div>
-                            </input>
+                            </div>
+                            <!-- /Smart Search -->
+
                         </div>
                     </div>
                 </div>
