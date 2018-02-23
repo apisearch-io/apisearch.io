@@ -29,11 +29,15 @@
     -webkit-box-shadow: 0 1px 13px 0 rgba(0, 0, 0, 0.29)
     -moz-box-shadow: 0 1px 13px 0 rgba(0, 0, 0, 0.29)
     box-shadow: 0 1px 13px 0 rgba(0, 0, 0, 0.29)
+    &--disabled
+      filter: brightness(40%)
+      transform: none!important
     &--liked
       &:after
         font-family: FontAwesome
         -webkit-transform: translateY(-50%) scale(.9)
         transform: translateY(-50%) scale(.9)
+        filter: none
         content: "\F004"
         color: white
         position: absolute
