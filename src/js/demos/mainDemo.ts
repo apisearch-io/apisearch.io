@@ -6,13 +6,13 @@ const resultTemplate = `
         <div class="col-6 col-sm-4 mb-3">
             <div class="as-result__album" style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.img}}')">
                 <span class="as-result__albumTitle">{{metadata.title}}</span>
-                <span class="as-result__albumYear">{{indexed_metadata.year}}</span>
+                <span class="as-result__albumYear">{{indexedMetadata.year}}</span>
                 
-                {{#indexed_metadata.rating}}
+                {{#indexedMetadata.rating}}
                 <span class="as-result__albumRating">
-                    <i class="fa fa-star"></i>{{indexed_metadata.rating}}
+                    <i class="fa fa-star"></i>{{indexedMetadata.rating}}
                 </span>
-                {{/indexed_metadata.rating}}
+                {{/indexedMetadata.rating}}
             </div>
         </div>
         {{/items}}
@@ -46,7 +46,7 @@ const authorsFilterItemTemplate = `
     <li class="{{#isActive}}as-multipleFilter__item--active{{/isActive}}">
         <span class="as-multipleFilter__itemContent">
             {{#values.img}}<img class="as-multipleFilter__itemImage" src="{{values.img}}"/>{{/values.img}}
-            {{^values.img}}<img class="as-multipleFilter__itemImage" src="http://apisearch.io/public/images/no-cover.jpg">{{/values.img}}
+            {{^values.img}}<img class="as-multipleFilter__itemImage" src="http://apisearch.io/assets/media/no-cover.jpg">{{/values.img}}
             <span class="as-multipleFilter__itemText">{{values.name}}</span>
         </span>
     </li>
@@ -55,16 +55,17 @@ const authorsFilterItemTemplate = `
 /**
  * Apisearch UI
  */
-export const mainDemo = apisearchUI({
-    appId: '54725861',
-    indexId: '66777162',
+export const mainDemo = apisearchUI.create({
+    app_id: '54725861',
+    index_id: '66777162',
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
-        overrideQueries: false
+        endpoint: 'https://apisearch.global.ssl.fastly.net',
+        override_queries: false
     }
 });
 
-mainDemo.store.on('render', function() {
+mainDemo.attach('render', function() {
     document.querySelector('.as-mainDemo__loader').classList.add('hide');
 });
 
@@ -87,7 +88,7 @@ mainDemo.addWidgets(
     }),
     multipleFilter({
         target: '.as-mainDemo__searchGenreFilter',
-        name: 'genre',
+        filterName: 'genre',
         filterField: 'genre_id',
         aggregationField: 'genre_data',
         applicationType: 8,
@@ -100,7 +101,7 @@ mainDemo.addWidgets(
     }),
     multipleFilter({
         target: '.as-mainDemo__searchYearFilter',
-        name: 'year',
+        filterName: 'year',
         filterField: 'year',
         applicationType: 8,
         viewLimit: 3,
@@ -115,7 +116,7 @@ mainDemo.addWidgets(
     }),
     multipleFilter({
         target: '.as-mainDemo__searchRatingFilter',
-        name: 'rating',
+        filterName: 'rating',
         filterField: 'rating',
         applicationType: 8,
         fetchLimit: 5,
@@ -142,7 +143,7 @@ mainDemo.addWidgets(
     }),
     multipleFilter({
         target: '.as-mainDemo__searchAuthorFilter',
-        name: 'author',
+        filterName: 'author',
         filterField: 'author_id',
         aggregationField: 'author_data',
         applicationType: 4,

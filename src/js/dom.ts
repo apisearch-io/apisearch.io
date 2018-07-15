@@ -1,4 +1,4 @@
-import hljs from "highlight.js";
+import * as hljs from "highlight.js";
 
 /**
  * Add navbar class on scroll down
@@ -39,8 +39,8 @@ export const burgerAction = () => document
  */
 export const codeHighlights = () => {
     hljs.configure({useBR: true});
-    document
-        .querySelectorAll('code')
-        .forEach(block => hljs.highlightBlock(block))
-    ;
+    const code = document.querySelectorAll('code')
+    for (var i = 0; i < code.length; i++) {
+        hljs.highlightBlock(code[i])
+    }
 };

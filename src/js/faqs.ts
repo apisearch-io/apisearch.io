@@ -1,9 +1,12 @@
 import apisearchUI from "apisearch-ui";
 
-let faqsUI = apisearchUI({
-    appId: '4186e76c',
-    indexId: '0d2ca7b4',
-    token: 'e3aee575-2b0a-4a95-b0ce-88fa316c4eff'
+let faqsUI = apisearchUI.create({
+    app_id: '4186e76c',
+    index_id: '0d2ca7b4',
+    token: 'e3aee575-2b0a-4a95-b0ce-88fa316c4eff',
+    options: {
+        endpoint: 'https://apisearch.global.ssl.fastly.net'
+    }
 });
 
 faqsUI.addWidgets(
