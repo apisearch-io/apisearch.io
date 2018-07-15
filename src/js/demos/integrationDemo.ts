@@ -1,9 +1,12 @@
 import apisearchUI from "apisearch-ui";
 
-let integrationsUI = apisearchUI({
-    appId: '54725861',
-    indexId: '66777162',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
+let integrationsUI = apisearchUI.create({
+    app_id: '54725861',
+    index_id: '66777162',
+    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    options: {
+        endpoint: 'https://apisearch.global.ssl.fastly.net'
+    }
 });
 
 integrationsUI.addWidgets(
@@ -28,12 +31,12 @@ integrationsUI.addWidgets(
                 <li>
                     <img src="{{metadata.img}}" height="40px">
                     <span class="ml-3">{{metadata.title}}</span>
-                    <span style="color: #777777; font-size: .8rem">({{indexed_metadata.year}})</span>
-                    {{#indexed_metadata.rating}}
+                    <span style="color: #777777; font-size: .8rem">({{indexedMetadata.year}})</span>
+                    {{#indexedMetadata.rating}}
                         <span class="as-result__albumRating pull-right">
-                            <i class="fa fa-star mr-1"></i>{{indexed_metadata.rating}}
+                            <i class="fa fa-star mr-1"></i>{{indexedMetadata.rating}}
                         </span>
-                    {{/indexed_metadata.rating}}
+                    {{/indexedMetadata.rating}}
                 </li> 
                 {{/items}}
                 {{^items}} 

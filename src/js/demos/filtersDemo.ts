@@ -8,13 +8,13 @@ const resultTemplate = `
                  style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.img}}')"
             >
                 <span class="as-result__albumTitle">{{metadata.title}}</span>
-                <span class="as-result__albumYear">{{indexed_metadata.year}}</span>
+                <span class="as-result__albumYear">{{indexedMetadata.year}}</span>
                 
-                {{#indexed_metadata.rating}}
+                {{#indexedMetadata.rating}}
                 <span class="as-result__albumRating">
-                    <i class="fa fa-star"></i>{{indexed_metadata.rating}}
+                    <i class="fa fa-star"></i>{{indexedMetadata.rating}}
                 </span>
-                {{/indexed_metadata.rating}}
+                {{/indexedMetadata.rating}}
             </div>
         </div>
         {{/items}}
@@ -43,7 +43,7 @@ const authorsFilterItemTemplate = `
     <li class="{{#isActive}}as-multipleFilter__item--active{{/isActive}}">
         <span class="as-multipleFilter__itemContent">
             {{#values.img}}<img class="as-multipleFilter__itemImage" src="{{values.img}}"/>{{/values.img}}
-            {{^values.img}}<img class="as-multipleFilter__itemImage" src="https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/no-cover.jpg">{{/values.img}}
+            {{^values.img}}<img class="as-multipleFilter__itemImage" src="https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg">{{/values.img}}
             <span class="as-multipleFilter__itemText">{{values.name}}</span>
         </span>
     </li>
@@ -52,10 +52,13 @@ const authorsFilterItemTemplate = `
 /**
  * Apisearch UI
  */
-let filtersDemo = apisearchUI({
-    appId: '54725861',
-    indexId: '66777162',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad'
+let filtersDemo = apisearchUI.create({
+    app_id: '54725861',
+    index_id: '66777162',
+    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    options: {
+        endpoint: 'https://apisearch.global.ssl.fastly.net'
+    }
 });
 
 const {
@@ -66,7 +69,7 @@ const {
 filtersDemo.addWidgets(
     multipleFilter({
         target: '.as-filtersDemo__authorsFilter',
-        name: 'author',
+        filterName: 'author',
         filterField: 'author_id',
         aggregationField: 'author_data',
         applicationType: 4,
@@ -83,9 +86,10 @@ filtersDemo.addWidgets(
             container: 'filter author',
         }
     }),
+
     multipleFilter({
         target: '.as-filtersDemo__genreFilter',
-        name: 'genre',
+        filterName: 'genre',
         filterField: 'genre_id',
         aggregationField: 'genre_data',
         applicationType: 8,
