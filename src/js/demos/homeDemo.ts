@@ -53,7 +53,7 @@ homeUI.addWidgets(
             itemsList: `<ul>
                     {{#items}}
                     <li>
-                        <img src="{{metadata.img}}" height="40px">
+                        <img src="{{metadata.img}}" height="40px" width="40px">
                         <span class="ml-3">{{metadata.title}}</span>
                         <span style="color: #777777; font-size: .8rem">({{indexedMetadata.year}})</span>
                         {{#indexedMetadata.rating}}
