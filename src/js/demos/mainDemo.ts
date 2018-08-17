@@ -61,7 +61,7 @@ export const mainDemo = apisearchUI.create({
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
         endpoint: 'https://apisearch.global.ssl.fastly.net',
-        override_queries: false
+        override_queries: true
     }
 });
 
@@ -177,6 +177,9 @@ mainDemo.addWidgets(
             { type: 'album', id: '4-mw0002136254' },
             { type: 'album', id: 'michael-mw0002079107' }
         ],
+        filter: function(query) {
+            query.setAutoFuzziness();
+        },
         template: {
             itemsList: resultTemplate
         }
