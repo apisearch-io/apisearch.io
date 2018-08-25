@@ -4,7 +4,7 @@
   "description": "Apisearch website",
   "main": "src/index.js",
   "license": "MIT",
-  "author": "Puntmig Development <hello@puntmig.com>",
+  "author": "Apisearch team <hello@apisearch.io>",
   "repository": {
     "type": "git",
     "url": "https://github.com/apisearch-io/apisearch.io.git"
