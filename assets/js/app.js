@@ -33605,8 +33605,8 @@ var authorsFilterItemTemplate = "\n    <li class=\"{{#isActive}}as-multipleFilte
  * Apisearch UI
  */
 var filtersDemo = apisearch_ui_1["default"].create({
-    app_id: '54725861',
-    index_id: '66777162',
+    app_id: '9c078fa1a748',
+    index_id: 'e742fbfbac24',
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
         endpoint: 'https://apisearch.global.ssl.fastly.net'
@@ -33680,8 +33680,8 @@ exports["default"] = filtersDemo;
 exports.__esModule = true;
 var apisearch_ui_1 = __webpack_require__(/*! apisearch-ui */ "./node_modules/apisearch-ui/lib/index.js");
 var homeUI = apisearch_ui_1["default"].create({
-    app_id: '54725861',
-    index_id: '66777162',
+    app_id: '9c078fa1a748',
+    index_id: 'e742fbfbac24',
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
         endpoint: 'https://apisearch.global.ssl.fastly.net',
@@ -33745,8 +33745,8 @@ exports["default"] = homeUI;
 exports.__esModule = true;
 var apisearch_ui_1 = __webpack_require__(/*! apisearch-ui */ "./node_modules/apisearch-ui/lib/index.js");
 var integrationsUI = apisearch_ui_1["default"].create({
-    app_id: '54725861',
-    index_id: '66777162',
+    app_id: '9c078fa1a748',
+    index_id: 'e742fbfbac24',
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
         endpoint: 'https://apisearch.global.ssl.fastly.net',
@@ -33795,8 +33795,8 @@ var authorsFilterItemTemplate = "\n    <li class=\"{{#isActive}}as-multipleFilte
  * Apisearch UI
  */
 exports.mainDemo = apisearch_ui_1["default"].create({
-    app_id: '54725861',
-    index_id: '66777162',
+    app_id: '9c078fa1a748',
+    index_id: 'e742fbfbac24',
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
         endpoint: 'https://apisearch.global.ssl.fastly.net',

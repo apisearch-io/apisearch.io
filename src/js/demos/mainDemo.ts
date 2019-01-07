@@ -56,8 +56,8 @@ const authorsFilterItemTemplate = `
  * Apisearch UI
  */
 export const mainDemo = apisearchUI.create({
-    app_id: '54725861',
-    index_id: '66777162',
+    app_id: '9c078fa1a748',
+    index_id: 'e742fbfbac24',
     token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
     options: {
         endpoint: 'https://apisearch.global.ssl.fastly.net',
