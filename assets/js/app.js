@@ -3984,7 +3984,9 @@ var AxiosClient = /** @class */ (function (_super) {
                                 "Content-Type": "application/json"
                             };
                         var axiosRequestConfig = {
-                            url: url + "?" + Client_1.Client.objectToUrlParameters(tslib_1.__assign({}, credentials, parameters)),
+                            url: url + "?" + Client_1.Client.objectToUrlParameters(tslib_1.__assign({}, parameters, {
+                                'token': credentials.token
+                            })),
                             data: data,
                             headers: headers,
                             method: method,
@@ -7814,11 +7816,9 @@ var HttpRepository = /** @class */ (function (_super) {
                 }
                 return [2 /*return*/, this
                         .httpClient
-                        .get("/items", "post", this.getCredentialsWithIndex(this.indexId), {}, {
-                        items: itemsToUpdate.map(function (item) {
-                            return item.toArray();
-                        })
-                    })
+                        .get("/" + this.appId + "/indices/" + this.indexId + "/items", "put", this.getCredentials(), {}, itemsToUpdate.map(function (item) {
+                        return item.toArray();
+                    }))
                         .then(function (response) {
                         HttpRepository.throwTransportableExceptionIfNeeded(response);
                     })];
@@ -7840,11 +7840,9 @@ var HttpRepository = /** @class */ (function (_super) {
                 }
                 return [2 /*return*/, this
                         .httpClient
-                        .get("/items", "delete", this.getCredentialsWithIndex(this.indexId), {}, {
-                        items: itemsToDelete.map(function (itemUUID) {
-                            return itemUUID.toArray();
-                        })
-                    })
+                        .get("/" + this.appId + "/indices/" + this.indexId + "/items", "delete", this.getCredentials(), {}, itemsToDelete.map(function (itemUUID) {
+                        return itemUUID.toArray();
+                    }))
                         .then(function (response) {
                         HttpRepository.throwTransportableExceptionIfNeeded(response);
                     })];
@@ -7865,7 +7863,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/", "get", this.getCredentialsWithIndex(this.indexId), {
+                            .get("/" + this.appId + "/indices/" + this.indexId, "get", this.getCredentials(), {
                             query: JSON.stringify(query.toArray())
                         }, {})
                             .then(function (response) {
@@ -7911,7 +7909,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/items", "put", this.getCredentialsWithIndex(this.indexId), {}, {
+                            .get("/" + this.appId + "/indices/" + this.indexId + "/items/update-by-query", "post", this.getCredentials(), {}, {
                             query: query.toArray(),
                             changes: changes.toArray()
                         })
@@ -7938,7 +7936,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index", "put", this.getCredentials(), {}, {
+                            .get("/" + this.appId + "/indices", "put", this.getCredentials(), {}, {
                             index: indexUUID.toArray(),
                             config: config.toArray()
                         })
@@ -7964,7 +7962,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index", "delete", this.getCredentialsWithIndex(this.indexId), {}, {})
+                            .get("/" + this.appId + "/indices/" + this.indexId, "delete", this.getCredentials(), {}, {})
                             .then(function (response) {
                             HttpRepository.throwTransportableExceptionIfNeeded(response);
                             return;
@@ -7987,7 +7985,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index/reset", "post", this.getCredentialsWithIndex(this.indexId), {}, {})
+                            .get("/" + this.appId + "/indices/" + this.indexId + '/reset', "post", this.getCredentials(), {}, {})
                             .then(function (response) {
                             HttpRepository.throwTransportableExceptionIfNeeded(response);
                             return;
@@ -8010,7 +8008,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index", "head", this.getCredentialsWithIndex(this.indexId), {}, {})
+                            .get("/" + this.appId + "/indices/" + this.indexId + '/reset', "head", this.getCredentials(), {}, {})
                             .then(function (response) {
                             HttpRepository.throwTransportableExceptionIfNeeded(response);
                             return response.getCode() === 200;
@@ -8031,7 +8029,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/indices", "get", this.getCredentials(), {}, {})
+                            .get("/" + this.appId + "/indices/", "get", this.getCredentials(), {}, {})
                             .then(function (response) {
                             HttpRepository.throwTransportableExceptionIfNeeded(response);
                             var result = [];
@@ -8060,9 +8058,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index", "post", this.getCredentialsWithIndex(this.indexId), {}, {
-                            config: config.toArray()
-                        })
+                            .get("/" + this.appId + "/indices/" + this.indexId + '/configure', "post", this.getCredentials(), {}, config.toArray())
                             .then(function (response) {
                             HttpRepository.throwTransportableExceptionIfNeeded(response);
                             return;
@@ -8080,20 +8076,6 @@ var HttpRepository = /** @class */ (function (_super) {
     HttpRepository.prototype.getCredentials = function () {
         return {
             app_id: this.appId,
-            token: this.token
-        };
-    };
-    /**
-     * Get query values
-     *
-     * @param indexComposedUUID
-     *
-     * @returns any
-     */
-    HttpRepository.prototype.getCredentialsWithIndex = function (indexComposedUUID) {
-        return {
-            app_id: this.appId,
-            index: indexComposedUUID,
             token: this.token
         };
     };
@@ -40020,7 +40002,7 @@ process.umask = function() { return 0; };
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*!
  * shallow-clone <https://github.com/jonschlinkert/shallow-clone>
  *
- * Copyright (c) 2015-2018, Jon Schlinkert.
+ * Copyright (c) 2015-present, Jon Schlinkert.
  * Released under the MIT License.
  */
 
@@ -40036,7 +40018,7 @@ function clone(val, deep) {
     case 'object':
       return Object.assign({}, val);
     case 'date':
-      return new val.constructor(+val);
+      return new val.constructor(Number(val));
     case 'map':
       return new Map(val);
     case 'set':
@@ -40068,7 +40050,8 @@ function clone(val, deep) {
 }
 
 function cloneRegExp(val) {
-  const re = new val.constructor(val.source, /\w+$/.exec(val));
+  const flags = val.flags !== void 0 ? val.flags : (/\w+$/.exec(val) || void 0);
+  const re = new val.constructor(val.source, flags);
   re.lastIndex = val.lastIndex;
   return re;
 }
@@ -40085,7 +40068,7 @@ function cloneTypedArray(val, deep) {
 
 function cloneBuffer(val) {
   const len = val.length;
-  const buf = Buffer.allocUnsafe ? Buffer.allocUnsafe(len) : new Buffer(len);
+  const buf = Buffer.allocUnsafe ? Buffer.allocUnsafe(len) : Buffer.from(len);
   val.copy(buf);
   return buf;
 }
@@ -40365,7 +40348,6 @@ module.exports = g;
 exports.__esModule = true;
 var dom_1 = __webpack_require__(/*! ./js/dom */ "./src/js/dom.ts");
 var demos_1 = __webpack_require__(/*! ./js/demos */ "./src/js/demos.ts");
-var faqs_1 = __webpack_require__(/*! ./js/faqs */ "./src/js/faqs.ts");
 (function () {
     dom_1.burgerAction();
     dom_1.addNavbarClassOnScroll();
@@ -40374,12 +40356,6 @@ var faqs_1 = __webpack_require__(/*! ./js/faqs */ "./src/js/faqs.ts");
      * Site demos
      */
     demos_1["default"]();
-    /**
-     * Faqs page
-     */
-    if (document.querySelector('#apisearchFaqsSearchInput')) {
-        faqs_1["default"].init();
-    }
 })();
 
 
@@ -40812,50 +40788,6 @@ exports.codeHighlights = function () {
         hljs.highlightBlock(code[i]);
     }
 };
-
-
-/***/ }),
-
-/***/ "./src/js/faqs.ts":
-/*!************************!*\
-  !*** ./src/js/faqs.ts ***!
-  \************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var apisearch_ui_1 = __webpack_require__(/*! apisearch-ui */ "./node_modules/apisearch-ui/lib/index.js");
-var faqsUI = apisearch_ui_1["default"].create({
-    app_id: '4186e76c',
-    index_id: '0d2ca7b4',
-    token: 'e3aee575-2b0a-4a95-b0ce-88fa316c4eff',
-    options: {
-        endpoint: 'https://apisearch.global.ssl.fastly.net'
-    }
-});
-faqsUI.addWidgets(faqsUI.widgets.searchInput({
-    target: '#apisearchFaqsSearchInput',
-    autofocus: true
-}), faqsUI.widgets.multipleFilter({
-    target: '.c-faqs__topicsFilter',
-    name: 'topic',
-    filterField: 'topic',
-    template: {
-        item: '{{values.name}}'
-    }
-}), faqsUI.widgets.pagination({
-    target: '.c-faqs__pagination'
-}), faqsUI.widgets.result({
-    target: '.c-faqs__result',
-    itemsPerPage: 8,
-    highlightsEnabled: true,
-    template: {
-        itemsList: "\n                <ul class=\"c-faqs__resultList row\">\n                {{#items}}\n                    <li class=\"col-12 col-sm-6\">\n                        <div class=\"c-faqs__resultItem\">\n                            <h4 class=\"c-faqs__resultItemQuestion\">\n                                {{#highlights.question}}{{{highlights.question}}}{{/highlights.question}}\n                                {{^highlights.question}}{{{metadata.question}}}{{/highlights.question}}\n                            </h4>\n                            <p class=\"c-faqs__resultItemAnswer\">\n                                {{#highlights.answer}}{{{highlights.answer}}}{{/highlights.answer}}\n                                {{^highlights.answer}}{{{metadata.answer}}}{{/highlights.answer}}\n                            </p>\n                        </div>\n                    </li>\n                {{/items}}\n                </ul>\n            "
-    }
-}));
-exports["default"] = faqsUI;
 
 
 /***/ })

@@ -32,8 +32,8 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "apisearch": "^0.2.17",
-    "apisearch-ui": "^0.2.8",
+    "apisearch": "^0.2.19",
+    "apisearch-ui": "^0.2.9",
     "bootstrap": "^4.3.0",
     "highlight.js": "^9.15.6",
     "jquery": "^3.3.1",
