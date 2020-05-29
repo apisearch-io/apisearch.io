@@ -36,7 +36,7 @@
     "apisearch-ui": "^0.2.9",
     "bootstrap": "^4.3.0",
     "highlight.js": "^9.15.6",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "lodash": ">=4.17.11",
     "popper.js": "^1.14.7",
     "react": "^16.8.6"
