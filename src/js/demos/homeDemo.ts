@@ -1,11 +1,11 @@
 import apisearchUI from "apisearch-ui";
 
 let homeUI = apisearchUI.create({
-    app_id: '9c078fa1a748',
-    index_id: 'e742fbfbac24',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    app_id: 'as-29be77d7-2f64-4522',
+    index_id: 'eu1-prod-d53da03a-d49c-483c',
+    token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
     options: {
-        endpoint: 'https://apisearch.global.ssl.fastly.net',
+        endpoint: 'https://eu1.apisearch.io',
         override_queries: true
     }
 });
@@ -20,9 +20,8 @@ homeUI.addWidgets(
     }),
     homeUI.widgets.multipleFilter({
         target: '.as-homeDemo__genreFilter',
-        filterName: 'genre',
-        filterField: 'genre_id',
-        aggregationField: 'genre_data',
+        filterName: 'categories',
+        filterField: 'categories',
         applicationType: 8,
         fetchLimit: 2,
         viewLimit: 2,
@@ -44,10 +43,10 @@ homeUI.addWidgets(
         target: '.as-homeDemo__result',
         itemsPerPage: 4,
         promote: [
-            { type: 'album', id: 'purpose-mw0002885819' },
-            { type: 'album', id: 'crazy-love-mw0000828548' },
-            { type: 'album', id: 'classic-queen-mw0000085540' },
-            { type: 'album', id: '21-mw0002080092' },
+            { type: 'album', id: 'mw0002885819' },
+            { type: 'album', id: 'mw0000828548' },
+            { type: 'album', id: 'mw0000085540' },
+            { type: 'album', id: 'mw0002080092' }
         ],
         filter: function(query) {
             query.setAutoFuzziness();
@@ -56,7 +55,7 @@ homeUI.addWidgets(
             itemsList: `<ul>
                     {{#items}}
                     <li>
-                        <img src="{{metadata.img}}" height="40px" width="40px">
+                        <img src="{{metadata.image}}" height="40px" width="40px">
                         <span class="ml-3">{{metadata.title}}</span>
                         <span style="color: #777777; font-size: .8rem">({{indexedMetadata.year}})</span>
                         {{#indexedMetadata.rating}}
@@ -64,13 +63,13 @@ homeUI.addWidgets(
                                 <i class="fa fa-star mr-1"></i>{{indexedMetadata.rating}}
                             </span>
                         {{/indexedMetadata.rating}}
-                    </li> 
+                    </li>
                     {{/items}}
-                    {{^items}} 
+                    {{^items}}
                     <li>
                         <i class="fa fa-meh-o" aria-hidden="true"></i>
                         No results
-                    </li> 
+                    </li>
                     {{/items}}
                 </ul>`,
         }

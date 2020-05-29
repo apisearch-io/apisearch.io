@@ -1,15 +1,15 @@
 import apisearchUI from "apisearch-ui";
 
-const resultTemplate = ` 
+const resultTemplate = `
     <div class="row">
         {{#items}}
         <div class="col-12 col-sm-6 col-md-4 mb-3">
-            <div class="as-result__album" 
-                 style="background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.img}}')"
+            <div class="as-result__album"
+                 style="background-image: url('{{#metadata.image}}{{metadata.image}}{{/metadata.image}}{{^metadata.image}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.image}}')"
             >
                 <span class="as-result__albumTitle">{{metadata.title}}</span>
                 <span class="as-result__albumYear">{{indexedMetadata.year}}</span>
-                
+
                 {{#indexedMetadata.rating}}
                 <span class="as-result__albumRating">
                     <i class="fa fa-star"></i>{{indexedMetadata.rating}}
@@ -53,11 +53,11 @@ const authorsFilterItemTemplate = `
  * Apisearch UI
  */
 let filtersDemo = apisearchUI.create({
-    app_id: '9c078fa1a748',
-    index_id: 'e742fbfbac24',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    app_id: 'as-29be77d7-2f64-4522',
+    index_id: 'eu1-prod-d53da03a-d49c-483c',
+    token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
     options: {
-        endpoint: 'https://apisearch.global.ssl.fastly.net'
+        endpoint: 'https://eu1.apisearch.io'
     }
 });
 
@@ -89,9 +89,8 @@ filtersDemo.addWidgets(
 
     multipleFilter({
         target: '.as-filtersDemo__genreFilter',
-        filterName: 'genre',
-        filterField: 'genre_id',
-        aggregationField: 'genre_data',
+        filterName: 'categories',
+        filterField: 'categories',
         applicationType: 8,
         fetchLimit: 14,
         viewLimit: 10,
@@ -109,12 +108,12 @@ filtersDemo.addWidgets(
         target: '.as-filtersDemo__result',
         itemsPerPage: 6,
         promote: [
-            { type: 'album', id: 'purpose-mw0002885819' },
-            { type: 'album', id: 'crazy-love-mw0000828548' },
-            { type: 'album', id: 'classic-queen-mw0000085540' },
-            { type: 'album', id: '21-mw0002080092' },
-            { type: 'album', id: '4-mw0002136254' },
-            { type: 'album', id: 'michael-mw0002079107' }
+            { type: 'album', id: 'mw0002885819' },
+            { type: 'album', id: 'mw0000828548' },
+            { type: 'album', id: 'mw0000085540' },
+            { type: 'album', id: 'mw0002080092' },
+            { type: 'album', id: 'mw0002136254' },
+            { type: 'album', id: 'mw0002079107' }
         ],
         template: {
             itemsList: resultTemplate

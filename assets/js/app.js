@@ -40414,18 +40414,18 @@ exports["default"] = initDemos;
 
 exports.__esModule = true;
 var apisearch_ui_1 = __webpack_require__(/*! apisearch-ui */ "./node_modules/apisearch-ui/lib/index.js");
-var resultTemplate = " \n    <div class=\"row\">\n        {{#items}}\n        <div class=\"col-12 col-sm-6 col-md-4 mb-3\">\n            <div class=\"as-result__album\" \n                 style=\"background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.img}}')\"\n            >\n                <span class=\"as-result__albumTitle\">{{metadata.title}}</span>\n                <span class=\"as-result__albumYear\">{{indexedMetadata.year}}</span>\n                \n                {{#indexedMetadata.rating}}\n                <span class=\"as-result__albumRating\">\n                    <i class=\"fa fa-star\"></i>{{indexedMetadata.rating}}\n                </span>\n                {{/indexedMetadata.rating}}\n            </div>\n        </div>\n        {{/items}}\n    </div>\n    {{^items}}\n    <div class=\"as-result__notFound\">\n        <span class=\"as-result__notFoundCopy\">\n            <span class=\"as-result__notFoundEmoji\">\uD83D\uDE32</span>\n            <span class=\"as-result__notFoundText\">No results found</span>\n        </span>\n    </div>\n    {{/items}}\n";
+var resultTemplate = "\n    <div class=\"row\">\n        {{#items}}\n        <div class=\"col-12 col-sm-6 col-md-4 mb-3\">\n            <div class=\"as-result__album\"\n                 style=\"background-image: url('{{#metadata.image}}{{metadata.image}}{{/metadata.image}}{{^metadata.image}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.image}}')\"\n            >\n                <span class=\"as-result__albumTitle\">{{metadata.title}}</span>\n                <span class=\"as-result__albumYear\">{{indexedMetadata.year}}</span>\n\n                {{#indexedMetadata.rating}}\n                <span class=\"as-result__albumRating\">\n                    <i class=\"fa fa-star\"></i>{{indexedMetadata.rating}}\n                </span>\n                {{/indexedMetadata.rating}}\n            </div>\n        </div>\n        {{/items}}\n    </div>\n    {{^items}}\n    <div class=\"as-result__notFound\">\n        <span class=\"as-result__notFoundCopy\">\n            <span class=\"as-result__notFoundEmoji\">\uD83D\uDE32</span>\n            <span class=\"as-result__notFoundText\">No results found</span>\n        </span>\n    </div>\n    {{/items}}\n";
 var genreFilterItemTemplate = "\n    <li class=\"{{#isActive}}as-multipleFilter__item--active{{/isActive}}\">\n        <span class=\"as-multipleFilter__itemContent\">\n            <i class=\"{{#isActive}}fa fa-check-square{{/isActive}}{{^isActive}}fa fa-square-o{{/isActive}}\"></i>\n            <span class=\"as-multipleFilter__itemText\">{{values.name}}</span>\n        </span>\n        <span class=\"as-multipleFilter__itemCount\">{{n}}</span>\n    </li>\n";
 var authorsFilterItemTemplate = "\n    <li class=\"{{#isActive}}as-multipleFilter__item--active{{/isActive}}\">\n        <span class=\"as-multipleFilter__itemContent\">\n            {{#values.img}}<img class=\"as-multipleFilter__itemImage\" src=\"{{values.img}}\"/>{{/values.img}}\n            {{^values.img}}<img class=\"as-multipleFilter__itemImage\" src=\"https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg\">{{/values.img}}\n            <span class=\"as-multipleFilter__itemText\">{{values.name}}</span>\n        </span>\n    </li>\n";
 /**
  * Apisearch UI
  */
 var filtersDemo = apisearch_ui_1["default"].create({
-    app_id: '9c078fa1a748',
-    index_id: 'e742fbfbac24',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    app_id: 'as-29be77d7-2f64-4522',
+    index_id: 'eu1-prod-d53da03a-d49c-483c',
+    token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
     options: {
-        endpoint: 'https://apisearch.global.ssl.fastly.net'
+        endpoint: 'https://eu1.apisearch.io'
     }
 });
 var _a = filtersDemo.widgets, multipleFilter = _a.multipleFilter, result = _a.result;
@@ -40449,9 +40449,8 @@ filtersDemo.addWidgets(multipleFilter({
     }
 }), multipleFilter({
     target: '.as-filtersDemo__genreFilter',
-    filterName: 'genre',
-    filterField: 'genre_id',
-    aggregationField: 'genre_data',
+    filterName: 'categories',
+    filterField: 'categories',
     applicationType: 8,
     fetchLimit: 14,
     viewLimit: 10,
@@ -40468,12 +40467,12 @@ filtersDemo.addWidgets(multipleFilter({
     target: '.as-filtersDemo__result',
     itemsPerPage: 6,
     promote: [
-        { type: 'album', id: 'purpose-mw0002885819' },
-        { type: 'album', id: 'crazy-love-mw0000828548' },
-        { type: 'album', id: 'classic-queen-mw0000085540' },
-        { type: 'album', id: '21-mw0002080092' },
-        { type: 'album', id: '4-mw0002136254' },
-        { type: 'album', id: 'michael-mw0002079107' }
+        { type: 'album', id: 'mw0002885819' },
+        { type: 'album', id: 'mw0000828548' },
+        { type: 'album', id: 'mw0000085540' },
+        { type: 'album', id: 'mw0002080092' },
+        { type: 'album', id: 'mw0002136254' },
+        { type: 'album', id: 'mw0002079107' }
     ],
     template: {
         itemsList: resultTemplate
@@ -40496,11 +40495,11 @@ exports["default"] = filtersDemo;
 exports.__esModule = true;
 var apisearch_ui_1 = __webpack_require__(/*! apisearch-ui */ "./node_modules/apisearch-ui/lib/index.js");
 var homeUI = apisearch_ui_1["default"].create({
-    app_id: '9c078fa1a748',
-    index_id: 'e742fbfbac24',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    app_id: 'as-29be77d7-2f64-4522',
+    index_id: 'eu1-prod-d53da03a-d49c-483c',
+    token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
     options: {
-        endpoint: 'https://apisearch.global.ssl.fastly.net',
+        endpoint: 'https://eu1.apisearch.io',
         override_queries: true
     }
 });
@@ -40512,9 +40511,8 @@ homeUI.addWidgets(homeUI.widgets.searchInput({
     }
 }), homeUI.widgets.multipleFilter({
     target: '.as-homeDemo__genreFilter',
-    filterName: 'genre',
-    filterField: 'genre_id',
-    aggregationField: 'genre_data',
+    filterName: 'categories',
+    filterField: 'categories',
     applicationType: 8,
     fetchLimit: 2,
     viewLimit: 2,
@@ -40532,16 +40530,16 @@ homeUI.addWidgets(homeUI.widgets.searchInput({
     target: '.as-homeDemo__result',
     itemsPerPage: 4,
     promote: [
-        { type: 'album', id: 'purpose-mw0002885819' },
-        { type: 'album', id: 'crazy-love-mw0000828548' },
-        { type: 'album', id: 'classic-queen-mw0000085540' },
-        { type: 'album', id: '21-mw0002080092' },
+        { type: 'album', id: 'mw0002885819' },
+        { type: 'album', id: 'mw0000828548' },
+        { type: 'album', id: 'mw0000085540' },
+        { type: 'album', id: 'mw0002080092' }
     ],
     filter: function (query) {
         query.setAutoFuzziness();
     },
     template: {
-        itemsList: "<ul>\n                    {{#items}}\n                    <li>\n                        <img src=\"{{metadata.img}}\" height=\"40px\" width=\"40px\">\n                        <span class=\"ml-3\">{{metadata.title}}</span>\n                        <span style=\"color: #777777; font-size: .8rem\">({{indexedMetadata.year}})</span>\n                        {{#indexedMetadata.rating}}\n                            <span class=\"as-result__albumRating pull-right\">\n                                <i class=\"fa fa-star mr-1\"></i>{{indexedMetadata.rating}}\n                            </span>\n                        {{/indexedMetadata.rating}}\n                    </li> \n                    {{/items}}\n                    {{^items}} \n                    <li>\n                        <i class=\"fa fa-meh-o\" aria-hidden=\"true\"></i>\n                        No results\n                    </li> \n                    {{/items}}\n                </ul>"
+        itemsList: "<ul>\n                    {{#items}}\n                    <li>\n                        <img src=\"{{metadata.image}}\" height=\"40px\" width=\"40px\">\n                        <span class=\"ml-3\">{{metadata.title}}</span>\n                        <span style=\"color: #777777; font-size: .8rem\">({{indexedMetadata.year}})</span>\n                        {{#indexedMetadata.rating}}\n                            <span class=\"as-result__albumRating pull-right\">\n                                <i class=\"fa fa-star mr-1\"></i>{{indexedMetadata.rating}}\n                            </span>\n                        {{/indexedMetadata.rating}}\n                    </li>\n                    {{/items}}\n                    {{^items}}\n                    <li>\n                        <i class=\"fa fa-meh-o\" aria-hidden=\"true\"></i>\n                        No results\n                    </li>\n                    {{/items}}\n                </ul>"
     }
 }));
 exports["default"] = homeUI;
@@ -40561,11 +40559,11 @@ exports["default"] = homeUI;
 exports.__esModule = true;
 var apisearch_ui_1 = __webpack_require__(/*! apisearch-ui */ "./node_modules/apisearch-ui/lib/index.js");
 var integrationsUI = apisearch_ui_1["default"].create({
-    app_id: '9c078fa1a748',
-    index_id: 'e742fbfbac24',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    app_id: 'as-29be77d7-2f64-4522',
+    index_id: 'eu1-prod-d53da03a-d49c-483c',
+    token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
     options: {
-        endpoint: 'https://apisearch.global.ssl.fastly.net',
+        endpoint: 'https://eu1.apisearch.io',
         override_queries: true
     }
 });
@@ -40578,13 +40576,13 @@ integrationsUI.addWidgets(integrationsUI.widgets.searchInput({
     target: '.as-integrationDemo__results',
     itemsPerPage: 4,
     promote: [
-        { type: 'album', id: 'purpose-mw0002885819' },
-        { type: 'album', id: 'crazy-love-mw0000828548' },
-        { type: 'album', id: 'classic-queen-mw0000085540' },
-        { type: 'album', id: '21-mw0002080092' },
+        { type: 'album', id: 'mw0002885819' },
+        { type: 'album', id: 'mw0000828548' },
+        { type: 'album', id: 'mw0000085540' },
+        { type: 'album', id: 'mw0002080092' }
     ],
     template: {
-        itemsList: "<ul>\n                {{#items}} \n                <li>\n                    <img src=\"{{metadata.img}}\" height=\"40px\">\n                    <span class=\"ml-3\">{{metadata.title}}</span>\n                    <span style=\"color: #777777; font-size: .8rem\">({{indexedMetadata.year}})</span>\n                    {{#indexedMetadata.rating}}\n                        <span class=\"as-result__albumRating pull-right\">\n                            <i class=\"fa fa-star mr-1\"></i>{{indexedMetadata.rating}}\n                        </span>\n                    {{/indexedMetadata.rating}}\n                </li> \n                {{/items}}\n                {{^items}} \n                <li>\n                    <i class=\"fa fa-meh-o\" aria-hidden=\"true\"></i>\n                    No results\n                </li> \n                {{/items}}\n            </ul>"
+        itemsList: "<ul>\n                {{#items}}\n                <li>\n                    <img src=\"{{metadata.image}}\" height=\"40px\">\n                    <span class=\"ml-3\">{{metadata.title}}</span>\n                    <span style=\"color: #777777; font-size: .8rem\">({{indexedMetadata.year}})</span>\n                    {{#indexedMetadata.rating}}\n                        <span class=\"as-result__albumRating pull-right\">\n                            <i class=\"fa fa-star mr-1\"></i>{{indexedMetadata.rating}}\n                        </span>\n                    {{/indexedMetadata.rating}}\n                </li>\n                {{/items}}\n                {{^items}}\n                <li>\n                    <i class=\"fa fa-meh-o\" aria-hidden=\"true\"></i>\n                    No results\n                </li>\n                {{/items}}\n            </ul>"
     }
 }));
 exports["default"] = integrationsUI;
@@ -40603,7 +40601,7 @@ exports["default"] = integrationsUI;
 
 exports.__esModule = true;
 var apisearch_ui_1 = __webpack_require__(/*! apisearch-ui */ "./node_modules/apisearch-ui/lib/index.js");
-var resultTemplate = " \n    <div class=\"row\">\n        {{#items}}\n        <div class=\"col-6 col-sm-4 mb-3\">\n            <div class=\"as-result__album\" style=\"background-image: url('{{#metadata.img}}{{metadata.img}}{{/metadata.img}}{{^metadata.img}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.img}}')\">\n                <span class=\"as-result__albumTitle\">{{metadata.title}}</span>\n                <span class=\"as-result__albumYear\">{{indexedMetadata.year}}</span>\n                \n                {{#indexedMetadata.rating}}\n                <span class=\"as-result__albumRating\">\n                    <i class=\"fa fa-star\"></i>{{indexedMetadata.rating}}\n                </span>\n                {{/indexedMetadata.rating}}\n            </div>\n        </div>\n        {{/items}}\n    </div>\n    {{^items}}\n    <div class=\"as-result__notFound\">\n        <span class=\"as-result__notFoundEmoji\">\uD83D\uDE32</span>\n        <span class=\"as-result__notFoundText\">No results found</span>\n    </div>\n    {{/items}}\n";
+var resultTemplate = "\n    <div class=\"row\">\n        {{#items}}\n        <div class=\"col-6 col-sm-4 mb-3\">\n            <div class=\"as-result__album\" style=\"background-image: url('{{#metadata.image}}{{metadata.image}}{{/metadata.image}}{{^metadata.image}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.image}}')\">\n                <span class=\"as-result__albumTitle\">{{metadata.title}}</span>\n                <span class=\"as-result__albumYear\">{{indexedMetadata.year}}</span>\n\n                {{#indexedMetadata.rating}}\n                <span class=\"as-result__albumRating\">\n                    <i class=\"fa fa-star\"></i>{{indexedMetadata.rating}}\n                </span>\n                {{/indexedMetadata.rating}}\n            </div>\n        </div>\n        {{/items}}\n    </div>\n    {{^items}}\n    <div class=\"as-result__notFound\">\n        <span class=\"as-result__notFoundEmoji\">\uD83D\uDE32</span>\n        <span class=\"as-result__notFoundText\">No results found</span>\n    </div>\n    {{/items}}\n";
 var regularFilterItemTemplate = "\n    <li class=\"{{#isActive}}as-multipleFilter__item--active{{/isActive}}\">\n        <span class=\"as-multipleFilter__itemContent\">\n            <i class=\"{{#isActive}}fa fa-check-square{{/isActive}}{{^isActive}}fa fa-square-o{{/isActive}}\"></i>\n            <span class=\"as-multipleFilter__itemText\">{{values.name}}</span>\n        </span>\n        <span class=\"as-multipleFilter__itemCount\">{{n}}</span>\n    </li>\n";
 var ratingFilterItemTemplate = "\n    <li class=\"{{#isActive}}as-multipleFilter__item--active{{/isActive}}\">\n        <span class=\"as-multipleFilter__itemStars\">{{{values.name}}}</span>\n        <span class=\"as-multipleFilter__itemCount\">{{n}}</span>\n    </li>\n";
 var authorsFilterItemTemplate = "\n    <li class=\"{{#isActive}}as-multipleFilter__item--active{{/isActive}}\">\n        <span class=\"as-multipleFilter__itemContent\">\n            {{#values.img}}<img class=\"as-multipleFilter__itemImage\" src=\"{{values.img}}\"/>{{/values.img}}\n            {{^values.img}}<img class=\"as-multipleFilter__itemImage\" src=\"http://apisearch.io/assets/media/no-cover.jpg\">{{/values.img}}\n            <span class=\"as-multipleFilter__itemText\">{{values.name}}</span>\n        </span>\n    </li>\n";
@@ -40611,11 +40609,11 @@ var authorsFilterItemTemplate = "\n    <li class=\"{{#isActive}}as-multipleFilte
  * Apisearch UI
  */
 exports.mainDemo = apisearch_ui_1["default"].create({
-    app_id: '9c078fa1a748',
-    index_id: 'e742fbfbac24',
-    token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    app_id: 'as-29be77d7-2f64-4522',
+    index_id: 'eu1-prod-d53da03a-d49c-483c',
+    token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
     options: {
-        endpoint: 'https://apisearch.global.ssl.fastly.net',
+        endpoint: 'https://eu1.apisearch.io',
         override_queries: true
     }
 });
@@ -40631,9 +40629,8 @@ exports.mainDemo.addWidgets(searchInput({
     }
 }), multipleFilter({
     target: '.as-mainDemo__searchGenreFilter',
-    filterName: 'genre',
-    filterField: 'genre_id',
-    aggregationField: 'genre_data',
+    filterName: 'categories',
+    filterField: 'categories',
     applicationType: 8,
     viewLimit: 3,
     sortBy: ['_count', 'desc'],
@@ -40706,12 +40703,12 @@ exports.mainDemo.addWidgets(searchInput({
     target: '.as-mainDemo__searchResults',
     itemsPerPage: 6,
     promote: [
-        { type: 'album', id: 'purpose-mw0002885819' },
-        { type: 'album', id: 'crazy-love-mw0000828548' },
-        { type: 'album', id: 'classic-queen-mw0000085540' },
-        { type: 'album', id: '21-mw0002080092' },
-        { type: 'album', id: '4-mw0002136254' },
-        { type: 'album', id: 'michael-mw0002079107' }
+        { type: 'album', id: 'mw0002885819' },
+        { type: 'album', id: 'mw0000828548' },
+        { type: 'album', id: 'mw0000085540' },
+        { type: 'album', id: 'mw0002080092' },
+        { type: 'album', id: 'mw0002136254' },
+        { type: 'album', id: 'mw0002079107' }
     ],
     filter: function (query) {
         query.setAutoFuzziness();
