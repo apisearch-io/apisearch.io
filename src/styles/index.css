@@ -1,21 +1,63 @@
 /*
-Error: File to import not found or unreadable: ../../node_modules/bootstrap/scss/bootstrap.
-        on line 1 of index.sass
+Error: Invalid CSS after "...lor}: #{$value}": expected "{", was ";"
+        on line 5 of ../../node_modules/bootstrap/scss/_root.scss
+        from line 11 of ../../node_modules/bootstrap/scss/bootstrap.scss
+        from line 1 of index.sass
 
-1: @import "../../node_modules/bootstrap/scss/bootstrap"
-2: 
-3: @import "mixins"
-4: @import "animations"
-5: 
-6: // fonts
+1: // Do not forget to update getting-started/theming.md!
+2: :root {
+3:   // Custom variable values only support SassScript inside `#{}`.
+4:   @each $color, $value in $colors {
+5:     --#{$color}: #{$value};
+6:   }
+7: 
+8:   @each $color, $value in $theme-colors {
+9:     --#{$color}: #{$value};
+10:   }
 
 Backtrace:
+../../node_modules/bootstrap/scss/_root.scss:5
+../../node_modules/bootstrap/scss/bootstrap.scss:11
 index.sass:1
-/usr/lib/ruby/vendor_ruby/sass/tree/import_node.rb:67:in `rescue in import'
-/usr/lib/ruby/vendor_ruby/sass/tree/import_node.rb:44:in `import'
-/usr/lib/ruby/vendor_ruby/sass/tree/import_node.rb:28:in `imported_file'
-/usr/lib/ruby/vendor_ruby/sass/tree/import_node.rb:37:in `css_import?'
-/usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:313:in `visit_import'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:1207:in `expected'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:1137:in `expected'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:1132:in `tok!'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:665:in `block'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:735:in `declaration_or_ruleset'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:685:in `block_child'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:674:in `block_contents'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:666:in `block'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:307:in `each_directive'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:222:in `special_directive'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:197:in `directive'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:685:in `block_child'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:674:in `block_contents'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:666:in `block'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:658:in `ruleset'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:684:in `block_child'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:674:in `block_contents'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:125:in `stylesheet'
+/usr/lib/ruby/vendor_ruby/sass/scss/parser.rb:41:in `parse'
+/usr/lib/ruby/vendor_ruby/sass/engine.rb:406:in `_to_tree'
+/usr/lib/ruby/vendor_ruby/sass/engine.rb:312:in `to_tree'
+/usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:326:in `block in visit_import'
+/usr/lib/ruby/vendor_ruby/sass/stack.rb:88:in `block in with_import'
+/usr/lib/ruby/vendor_ruby/sass/stack.rb:115:in `with_frame'
+/usr/lib/ruby/vendor_ruby/sass/stack.rb:88:in `with_import'
+/usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:325:in `visit_import'
+/usr/lib/ruby/vendor_ruby/sass/tree/visitors/base.rb:36:in `visit'
+/usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:160:in `block in visit'
+/usr/lib/ruby/vendor_ruby/sass/stack.rb:79:in `block in with_base'
+/usr/lib/ruby/vendor_ruby/sass/stack.rb:115:in `with_frame'
+/usr/lib/ruby/vendor_ruby/sass/stack.rb:79:in `with_base'
+/usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:160:in `visit'
+/usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:328:in `block (2 levels) in visit_import'
+/usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:328:in `map'
+/usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:328:in `block in visit_import'
+/usr/lib/ruby/vendor_ruby/sass/stack.rb:88:in `block in with_import'
+/usr/lib/ruby/vendor_ruby/sass/stack.rb:115:in `with_frame'
+/usr/lib/ruby/vendor_ruby/sass/stack.rb:88:in `with_import'
+/usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:325:in `visit_import'
 /usr/lib/ruby/vendor_ruby/sass/tree/visitors/base.rb:36:in `visit'
 /usr/lib/ruby/vendor_ruby/sass/tree/visitors/perform.rb:160:in `block in visit'
 /usr/lib/ruby/vendor_ruby/sass/stack.rb:79:in `block in with_base'
@@ -46,4 +88,4 @@ index.sass:1
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: File to import not found or unreadable: ../../node_modules/bootstrap/scss/bootstrap.\A         on line 1 of index.sass\A \A 1: @import \"../../node_modules/bootstrap/scss/bootstrap\"\A 2: \A 3: @import \"mixins\"\A 4: @import \"animations\"\A 5: \A 6: // fonts"; }
+  content: "Error: Invalid CSS after \"...lor}: #{$value}\": expected \"{\", was \";\"\A         on line 5 of ../../node_modules/bootstrap/scss/_root.scss\A         from line 11 of ../../node_modules/bootstrap/scss/bootstrap.scss\A         from line 1 of index.sass\A \A 1: // Do not forget to update getting-started/theming.md!\A 2: :root {\A 3:   // Custom variable values only support SassScript inside `#{}`.\A 4:   @each $color, $value in $colors {\A 5:     --#{$color}: #{$value};\A 6:   }\A 7: \A 8:   @each $color, $value in $theme-colors {\A 9:     --#{$color}: #{$value};\A 10:   }"; }

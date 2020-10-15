@@ -96,6 +96,7 @@
 "use strict";
 
 exports.__esModule = true;
+exports.initialDataFetchAction = void 0;
 var Constants_1 = __webpack_require__(/*! ./Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
 var Container_1 = __webpack_require__(/*! ./Container */ "./node_modules/apisearch-ui/lib/Container.js");
 /**
@@ -133,6 +134,13 @@ exports.initialDataFetchAction = initialDataFetchAction;
 
 "use strict";
 
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var ApisearchActions_1 = __webpack_require__(/*! ./ApisearchActions */ "./node_modules/apisearch-ui/lib/ApisearchActions.js");
@@ -199,7 +207,7 @@ var ApisearchUI = /** @class */ (function () {
      * @return {ApisearchUI}
      */
     ApisearchUI.prototype.addWidget = function (widget) {
-        this.activeWidgets = this.activeWidgets.concat([widget]);
+        this.activeWidgets = __spreadArrays(this.activeWidgets, [widget]);
         return this;
     };
     /**
@@ -270,10 +278,28 @@ var ApisearchUI = /** @class */ (function () {
          * Add widgets
          */
         apisearchUI.widgets = Widgets_1["default"];
+        var uiId = "ui_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
+        apisearchUI.reference = uiId;
+        window[uiId] = apisearchUI;
         /**
          * Return ApisearchUI instance
          */
         return apisearchUI;
+    };
+    /**
+     * Click
+     *
+     * @param app_id
+     * @param index_id
+     * @param item_id
+     * @param user_id
+     *
+     * @return {any}
+     */
+    ApisearchUI.prototype.click = function (app_id, index_id, item_id, user_id) {
+        this
+            .repository
+            .click(app_id, index_id, item_id, user_id);
     };
     return ApisearchUI;
 }());
@@ -292,6 +318,7 @@ exports["default"] = ApisearchUI;
 "use strict";
 
 exports.__esModule = true;
+exports.bootstrap = void 0;
 var flux_1 = __webpack_require__(/*! flux */ "./node_modules/flux/index.js");
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var ApisearchUI_1 = __webpack_require__(/*! ./ApisearchUI */ "./node_modules/apisearch-ui/lib/ApisearchUI.js");
@@ -309,6 +336,7 @@ function bootstrap(environmentId, config) {
     var repositoryId = Constants_1.APISEARCH_REPOSITORY + "__" + configAsString;
     var storeId = Constants_1.APISEARCH_STORE + "__" + environmentId;
     var dispatcherId = Constants_1.APISEARCH_DISPATCHER + "__" + environmentId;
+    var configId = Constants_1.APISEARCH_CONFIG + "__" + environmentId;
     var asuiId = Constants_1.APISEARCH_UI + "__" + environmentId;
     /**
      * Register Apisearch repository
@@ -320,13 +348,19 @@ function bootstrap(environmentId, config) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        return new Store_1["default"]();
+        return new Store_1["default"](config.coordinate, config.options.min_score);
     });
     /**
      * Register an event dispatcher
      */
     Container_1["default"].register(dispatcherId, function () {
         return new flux_1.Dispatcher();
+    });
+    /**
+     * Register Apisearch config
+     */
+    Container_1["default"].register(configId, function () {
+        return config;
     });
     /**
      * Apisearch UI Instance
@@ -350,6 +384,7 @@ exports.bootstrap = bootstrap;
 "use strict";
 
 exports.__esModule = true;
+exports.APISEARCH_CONFIG = exports.APISEARCH_UI = exports.APISEARCH_DISPATCHER = exports.APISEARCH_STORE = exports.APISEARCH_REPOSITORY = void 0;
 /**
  * Service constants
  */
@@ -357,6 +392,7 @@ exports.APISEARCH_REPOSITORY = "apisearch_repository";
 exports.APISEARCH_STORE = "apisearch_store";
 exports.APISEARCH_DISPATCHER = "apisearch_dispatcher";
 exports.APISEARCH_UI = "apisearch_ui";
+exports.APISEARCH_CONFIG = "apisearch_config";
 
 
 /***/ }),
@@ -415,6 +451,7 @@ exports["default"] = new Container;
 "use strict";
 
 exports.__esModule = true;
+exports.createEnvironmentId = void 0;
 /**
  * Create an envID
  */
@@ -433,9 +470,12 @@ exports.createEnvironmentId = function () { return "env_" + Math.ceil(Math.rando
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -444,6 +484,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 /**
  * Flux pattern store class
@@ -452,8 +493,11 @@ var Store = /** @class */ (function (_super) {
     __extends(Store, _super);
     /**
      * Constructor
+     *
+     * @param {Coordinate}
+     * @param {number}
      */
-    function Store() {
+    function Store(coordinate, minScore) {
         var _this = _super.call(this) || this;
         /**
          * Store initial state
@@ -462,11 +506,19 @@ var Store = /** @class */ (function (_super) {
         /**
          * Current query instance
          */
-        _this.currentQuery = apisearch_1["default"].createQueryMatchAll();
+        _this.currentQuery = (coordinate &&
+            coordinate.lat != undefined &&
+            coordinate.lon != undefined)
+            ? apisearch_1["default"].createQueryLocated(new apisearch_2.Coordinate(coordinate.lat, coordinate.lon), '', apisearch_2.QUERY_DEFAULT_PAGE, apisearch_2.QUERY_DEFAULT_SIZE)
+            : apisearch_1["default"].createQueryMatchAll();
+        if (minScore) {
+            _this.currentQuery.setMinScore(minScore);
+        }
         /**
          * Data received
          */
         _this.currentResult = apisearch_1["default"].createEmptyResult();
+        _this.currentVisibleResults = false;
         return _this;
     }
     /**
@@ -494,6 +546,14 @@ var Store = /** @class */ (function (_super) {
         return this.currentResult;
     };
     /**
+     * Results are visible
+     *
+     * @return {boolean}
+     */
+    Store.prototype.resultsAreVisible = function () {
+        return this.currentVisibleResults;
+    };
+    /**
      * Handle Dispatched actions
      *
      * This is what we call a reducer
@@ -506,32 +566,248 @@ var Store = /** @class */ (function (_super) {
          */
         if (action.type === "UPDATE_APISEARCH_SETUP") {
             this.currentQuery = action.payload.query;
+            return;
         }
         /**
          * Is triggered when a initial data is received
          * Dispatches an 'render' event
          */
         if (action.type === "RENDER_INITIAL_DATA") {
-            var _a = action.payload, result = _a.result, query = _a.query;
+            var _a = action.payload, result = _a.result, query = _a.query, visibleResults = _a.visibleResults;
             this.currentResult = result;
             this.currentQuery = query;
+            this.currentVisibleResults = query != undefined;
             this.emit("render");
+            return;
         }
         /**
          * When action triggers a re-rendering
          * Dispatches a 'render' event
          */
         if (action.type === "RENDER_FETCHED_DATA") {
-            var _b = action.payload, result = _b.result, query = _b.query;
+            var _b = action.payload, result = _b.result, query = _b.query, visibleResults = _b.visibleResults;
             this.dirty = false;
             this.currentResult = result;
             this.currentQuery = query;
+            if (visibleResults != undefined) {
+                this.currentVisibleResults = visibleResults;
+            }
             this.emit("render");
+            return;
         }
     };
     return Store;
 }(events_1.EventEmitter));
 exports["default"] = Store;
+
+
+/***/ }),
+
+/***/ "./node_modules/apisearch-ui/lib/components/CheckboxFilter/CheckboxFilterActions.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/apisearch-ui/lib/components/CheckboxFilter/CheckboxFilterActions.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.onChangeSearchAction = exports.aggregationSetup = void 0;
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
+var Constants_1 = __webpack_require__(/*! ../../Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/apisearch-ui/lib/Container.js");
+/**
+ * Define aggregations setup
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param filterName
+ * @param aggregationField
+ */
+function aggregationSetup(environmentId, currentQuery, filterName, aggregationField) {
+    var clonedQuery = cloneDeep(currentQuery);
+    clonedQuery.aggregateBy(filterName, aggregationField, apisearch_1.FILTER_TYPE_FIELD);
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    dispatcher.dispatch({
+        type: "UPDATE_APISEARCH_SETUP",
+        payload: {
+            query: clonedQuery
+        }
+    });
+}
+exports.aggregationSetup = aggregationSetup;
+/**
+ * ON change search action
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param selectedOption
+ */
+function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, isChecked) {
+    var clonedQuery = cloneDeep(currentQuery);
+    clonedQuery.filterBy(filterName, filterField, isChecked
+        ? ["true"]
+        : [], apisearch_1.FILTER_MUST_ALL, false);
+    clonedQuery.page = 1;
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    repository
+        .query(clonedQuery)
+        .then(function (result) {
+        dispatcher.dispatch({
+            type: "RENDER_FETCHED_DATA",
+            payload: {
+                query: clonedQuery,
+                result: result
+            }
+        });
+    })["catch"](function (error) {
+        // Do nothing
+    });
+}
+exports.onChangeSearchAction = onChangeSearchAction;
+
+
+/***/ }),
+
+/***/ "./node_modules/apisearch-ui/lib/components/CheckboxFilter/CheckboxFilterComponent.js":
+/*!********************************************************************************************!*\
+  !*** ./node_modules/apisearch-ui/lib/components/CheckboxFilter/CheckboxFilterComponent.js ***!
+  \********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var CheckboxFilterActions_1 = __webpack_require__(/*! ./CheckboxFilterActions */ "./node_modules/apisearch-ui/lib/components/CheckboxFilter/CheckboxFilterActions.js");
+/**
+ * Checkbox Filter Component
+ */
+var CheckboxFilterComponent = /** @class */ (function (_super) {
+    __extends(CheckboxFilterComponent, _super);
+    /**
+     * Constructor
+     */
+    function CheckboxFilterComponent(props) {
+        var _this = _super.call(this, props) || this;
+        /**
+         * Handle change
+         *
+         * @param e
+         */
+        _this.handleChange = function (e) {
+            var props = _this.props;
+            var environmentId = props.environmentId;
+            var currentQuery = props.currentQuery;
+            var repository = props.repository;
+            var filterName = props.filterName;
+            var filterField = props.filterField;
+            /**
+             * Dispatch action
+             */
+            CheckboxFilterActions_1.onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, e.target.checked);
+        };
+        _this.state = {
+            isActive: false,
+            n: 0
+        };
+        return _this;
+    }
+    /**
+     * Component will mount
+     */
+    CheckboxFilterComponent.prototype.componentWillMount = function () {
+        var props = this.props;
+        var environmentId = props.environmentId;
+        var filterName = props.filterName;
+        var aggregationField = props.filterField;
+        var currentQuery = props.currentQuery;
+        /**
+         * Dispatch action
+         */
+        CheckboxFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, aggregationField);
+    };
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    CheckboxFilterComponent.prototype.componentWillReceiveProps = function (props) {
+        var filterName = props.filterName;
+        var filter = props.currentQuery.getFilter(filterName);
+        var isNowActive = filter != null;
+        var n = 0;
+        var aggregation = props.currentResult.getAggregation(filterName);
+        if (aggregation != null) {
+            var counters = aggregation.getCounters();
+            for (var i in counters) {
+                var counter = counters[i];
+                if (counter.values.name == 'true') {
+                    n = counter.getN();
+                }
+            }
+            ;
+        }
+        this.setState(function (prevState) {
+            return {
+                isActive: isNowActive,
+                n: n
+            };
+        });
+    };
+    /**
+     * Render
+     *
+     * @return {any}
+     */
+    CheckboxFilterComponent.prototype.render = function (props, state) {
+        var label = props.label
+            ? props.label
+            : props.filterName;
+        var attributes = {};
+        var n = this.state.n;
+        if (this.state.isActive) {
+            attributes['checked'] = 'checked';
+        }
+        return (preact_1.h("div", { className: "as-checkboxFilter" },
+            preact_1.h("input", __assign({ type: "checkbox", "class": "as-checkboxFilter__checkbox" }, attributes, { onClick: this.handleChange })),
+            preact_1.h("label", { "class": "as-checkboxFilter__label" },
+                label,
+                " (",
+                n,
+                ")")));
+    };
+    return CheckboxFilterComponent;
+}(preact_1.Component));
+exports["default"] = CheckboxFilterComponent;
 
 
 /***/ }),
@@ -546,6 +822,7 @@ exports["default"] = Store;
 "use strict";
 
 exports.__esModule = true;
+exports.clearFiltersAction = void 0;
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/apisearch-ui/lib/Container.js");
@@ -573,6 +850,8 @@ function clearFiltersAction(environmentId, currentQuery, repository) {
                 result: result
             }
         });
+    })["catch"](function (error) {
+        // Do nothing
     });
 }
 exports.clearFiltersAction = clearFiltersAction;
@@ -590,9 +869,12 @@ exports.clearFiltersAction = clearFiltersAction;
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -600,7 +882,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./node_modules/apisearch-ui/lib/components/Template.js");
 var ClearFiltersActions_1 = __webpack_require__(/*! ./ClearFiltersActions */ "./node_modules/apisearch-ui/lib/components/ClearFilters/ClearFiltersActions.js");
 /**
@@ -621,7 +903,9 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
             var environmentId = props.environmentId;
             var currentQuery = props.currentQuery;
             var repository = props.repository;
-            _this.setState({ showClearFilters: false });
+            _this.setState(function (prevState) {
+                return { showClearFilters: false };
+            });
             /**
              * Dispatch a clear filter action
              */
@@ -638,7 +922,9 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
     ClearFiltersComponent.prototype.componentWillReceiveProps = function (props) {
         var filters = props.currentQuery.getFilters();
         var areFiltersActive = (Object.keys(filters).length > 1);
-        this.setState({ showClearFilters: areFiltersActive });
+        this.setState(function (prevState) {
+            return { showClearFilters: areFiltersActive };
+        });
     };
     /**
      * Render
@@ -678,9 +964,12 @@ exports["default"] = ClearFiltersComponent;
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -688,28 +977,52 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./node_modules/apisearch-ui/lib/components/Template.js");
 /**
  * Result Information Component
  */
 var InformationComponent = /** @class */ (function (_super) {
     __extends(InformationComponent, _super);
-    function InformationComponent() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    /**
+     * Constructor
+     */
+    function InformationComponent(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = {
+            hits: 0,
+            total: 0
+        };
+        return _this;
     }
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    InformationComponent.prototype.componentWillReceiveProps = function (props) {
+        this.setState(function (prevState) {
+            return {
+                hits: props.currentResult.getTotalHits(),
+                total: props.currentResult.getTotalItems()
+            };
+        });
+    };
     InformationComponent.prototype.render = function () {
         var props = this.props;
         var containerClassName = props.classNames.container;
         var containerTemplate = props.template.container;
         var formatData = props.formatData;
         var currentResult = props.currentResult;
+        if (props.currentResult == null) {
+            return;
+        }
         /**
          * Data accessible to the template
          */
         var reducedTemplateData = {
-            total_hits: currentResult.getTotalHits().toLocaleString(),
-            total_items: currentResult.getTotalItems().toLocaleString()
+            total_hits: this.state.hits.toLocaleString(),
+            total_items: this.state.total.toLocaleString()
         };
         var formattedTemplateData = formatData(reducedTemplateData);
         return (preact_1.h(Template_1["default"], { template: containerTemplate, data: formattedTemplateData, className: "as-information " + containerClassName }));
@@ -739,7 +1052,15 @@ exports["default"] = InformationComponent;
 
 "use strict";
 
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
+exports.manageCurrentFilterItems = void 0;
 /**
  * Manage filter items
  *
@@ -759,7 +1080,7 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
             .filter(function (item) { return item !== selectedItem; });
     }
     else {
-        return currentItems.concat([
+        return __spreadArrays(currentItems, [
             selectedItem,
         ]);
     }
@@ -779,8 +1100,10 @@ exports.manageCurrentFilterItems = manageCurrentFilterItems;
 "use strict";
 
 exports.__esModule = true;
+exports.filterAction = exports.aggregationSetup = void 0;
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/apisearch-ui/lib/Container.js");
 /**
  * Define aggregations setup
@@ -792,10 +1115,17 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/api
  * @param applicationType
  * @param sortBy
  * @param fetchLimit
+ * @param ranges
  */
-function aggregationSetup(environmentId, currentQuery, filterName, aggregationField, applicationType, sortBy, fetchLimit) {
+function aggregationSetup(environmentId, currentQuery, filterName, aggregationField, applicationType, sortBy, fetchLimit, ranges) {
     var clonedQuery = cloneDeep(currentQuery);
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    var rangesValues = Object.keys(ranges);
+    if (rangesValues.length > 0) {
+        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+    }
+    else {
+        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    }
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch({
         type: "UPDATE_APISEARCH_SETUP",
@@ -818,11 +1148,20 @@ exports.aggregationSetup = aggregationSetup;
  * @param applicationType
  * @param sortBy
  * @param fetchLimit
+ * @param ranges
+ * @param labels
  */
-function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit) {
+function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels) {
     var clonedQuery = cloneDeep(currentQuery);
-    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    var rangesValues = Object.keys(ranges);
+    if (rangesValues.length > 0) {
+        clonedQuery.filterByRange(filterName, filterField, rangesValues, filterValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, false, sortBy);
+        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+    }
+    else {
+        clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
+        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    }
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
@@ -836,7 +1175,7 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
             }
         });
     })["catch"](function (error) {
-        return null;
+        // Do nothing
     });
 }
 exports.filterAction = filterAction;
@@ -854,17 +1193,27 @@ exports.filterAction = filterAction;
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var MultipleFilterActions_1 = __webpack_require__(/*! ./MultipleFilterActions */ "./node_modules/apisearch-ui/lib/components/MultipleFilter/MultipleFilterActions.js");
 var Helpers_1 = __webpack_require__(/*! ./Helpers */ "./node_modules/apisearch-ui/lib/components/MultipleFilter/Helpers.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./node_modules/apisearch-ui/lib/components/Template.js");
@@ -894,6 +1243,8 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             var aggregationField = props.aggregationField;
             var applicationType = props.applicationType;
             var sortBy = props.sortBy;
+            var ranges = props.ranges;
+            var labels = props.labels;
             var fetchLimit = props.fetchLimit;
             var repository = props.repository;
             var currentQuery = props.currentQuery;
@@ -910,28 +1261,29 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
              */
             MultipleFilterActions_1.filterAction(environmentId, currentQuery, repository, filterName, filterField, (aggregationField
                 ? aggregationField
-                : filterField), Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString), applicationType, sortBy, fetchLimit);
+                : filterField), Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString), applicationType, sortBy, fetchLimit, ranges, labels);
         };
         /**
          * Handle show more
          */
         _this.handleShowMore = function () {
-            var activeAggregations = _this.state.activeAggregations;
-            var currentAggregations = _this.state.currentAggregations;
-            var viewLimit = activeAggregations.length + currentAggregations.length;
-            _this.setState({ viewLimit: viewLimit });
+            var viewLimit = _this.state.aggregations.length;
+            _this.setState(function (prevState) {
+                return { viewLimit: viewLimit };
+            });
         };
         /**
          * Handle show less
          */
         _this.handleShowLess = function () {
             var viewLimit = _this.props.viewLimit;
-            _this.setState({ viewLimit: viewLimit });
+            _this.setState(function (prevState) {
+                return { viewLimit: viewLimit };
+            });
         };
         _this.state = {
             viewLimit: 0,
-            activeAggregations: [],
-            currentAggregations: []
+            aggregations: []
         };
         return _this;
     }
@@ -946,6 +1298,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var aggregationField = props.aggregationField;
         var applicationType = props.applicationType;
         var sortBy = props.sortBy;
+        var ranges = props.ranges;
         var fetchLimit = props.fetchLimit;
         var viewLimit = props.viewLimit;
         var currentQuery = props.currentQuery;
@@ -953,25 +1306,30 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
          * Set view items limit
          */
         var isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
-        this.setState({
-            viewLimit: (isViewLimitProperlySet)
-                ? viewLimit
-                : fetchLimit
+        this.setState(function (prevState) {
+            return {
+                viewLimit: (isViewLimitProperlySet)
+                    ? viewLimit
+                    : fetchLimit
+            };
         });
         /**
          * Dispatch action
          */
         MultipleFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, (aggregationField
             ? aggregationField
-            : filterField), applicationType, sortBy, fetchLimit);
+            : filterField), applicationType, sortBy, fetchLimit, ranges);
     };
     /**
-     * Component will recieve props
+     * Component will receive props
      *
      * @param props
      */
     MultipleFilterComponent.prototype.componentWillReceiveProps = function (props) {
         var filterName = props.filterName;
+        if (props.currentResult == null) {
+            return;
+        }
         var aggregation = props.currentResult.getAggregation(filterName);
         if (typeof aggregation.getCounters === "function") {
             /**
@@ -979,20 +1337,17 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
              */
             var counters = aggregation.getCounters();
             var countersAsArray = Object.values(counters);
-            this.setState({
-                /**
-                 * Current used aggregations
-                 */
-                activeAggregations: countersAsArray.filter(function (counter) {
+            var aggregations_1 = props.activeFirst
+                ? __spreadArrays(countersAsArray.filter(function (counter) {
                     return true === counter.isUsed();
-                }),
-                /**
-                 * Current inactive aggregations
-                 */
-                currentAggregations: countersAsArray.filter(function (counter) {
+                }), countersAsArray.filter(function (counter) {
                     return (false === counter.isUsed() ||
                         null === counter.isUsed());
-                })
+                })) : countersAsArray;
+            this.setState(function (prevState) {
+                return {
+                    aggregations: aggregations_1
+                };
             });
         }
     };
@@ -1017,23 +1372,35 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var showMoreTemplate = props.template.showMore;
         var showLessTemplate = props.template.showLess;
         var formatData = props.formatData;
+        var labels = Object.keys(props.ranges).length > 0
+            ? props.ranges
+            : props.labels;
         /**
          * Get aggregation items
          */
-        var allItems = this.state.activeAggregations.concat(this.state.currentAggregations);
+        var allItems = this.state.aggregations;
         var allItemsLength = allItems.length;
         var items = allItems.slice(0, this.state.viewLimit);
+        if (allItems.length == 0) {
+            return null;
+        }
         /**
          * Check available view limit
          */
-        var isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
+        var isViewLimitProperlySet = (viewLimit &&
+            viewLimit < fetchLimit &&
+            allItemsLength > viewLimit);
         return (preact_1.h("div", { className: "as-multipleFilter " + containerClassName },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top " + topClassName }),
             preact_1.h("div", { className: "as-multipleFilter__itemsList " + itemsListClassName }, items.map(function (item) {
+                var values = item.getValues();
+                values.name = labels[values.name] ? labels[values.name] : values.name;
+                var uid = Math.floor(Math.random() * 10000000000);
                 var reducedTemplateData = {
                     n: item.getN(),
                     isActive: item.isUsed(),
-                    values: item.getValues()
+                    values: values,
+                    uid: uid
                 };
                 var formattedTemplateData = formatData(reducedTemplateData);
                 return (preact_1.h("div", { className: "as-multipleFilter__item " +
@@ -1052,6 +1419,8 @@ MultipleFilterComponent.defaultProps = {
     fetchLimit: 10,
     viewLimit: null,
     sortBy: ['_term', 'desc'],
+    ranges: {},
+    labels: {},
     classNames: {
         container: '',
         top: '',
@@ -1066,7 +1435,8 @@ MultipleFilterComponent.defaultProps = {
         showMore: '+ Show more',
         showLess: '- Show less'
     },
-    formatData: function (data) { return data; }
+    formatData: function (data) { return data; },
+    activeFirst: true
 };
 exports["default"] = MultipleFilterComponent;
 
@@ -1083,7 +1453,7 @@ exports["default"] = MultipleFilterComponent;
 "use strict";
 
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./node_modules/apisearch-ui/lib/components/Template.js");
 /**
  * Show more component
@@ -1117,7 +1487,8 @@ exports["default"] = ShowMoreComponent;
 "use strict";
 
 exports.__esModule = true;
-exports.defaultItemTemplate = "\n    <input \n        type=\"checkbox\" \n        id=\"filter_{{values.id}}\"\n        class=\"as-multipleFilter__itemCheckbox\" \n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    >\n    <label \n        class=\"as-multipleFilter__itemName\"\n        for=\"filter_{{values.id}}\"\n    >\n        {{{values.name}}}\n    </label>\n    <span class=\"as-multipleFilter__itemNumber\">\n        {{n}}\n    </span>\n";
+exports.defaultItemTemplate = void 0;
+exports.defaultItemTemplate = "\n    <input\n        type=\"checkbox\"\n        id=\"filter_{{uid}}\"\n        class=\"as-multipleFilter__itemCheckbox\"\n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    >\n    <label\n        class=\"as-multipleFilter__itemName\"\n        for=\"filter_{{uid}}\"\n    >\n        {{{values.name}}}\n    </label>\n    <span class=\"as-multipleFilter__itemNumber\">\n        {{n}}\n    </span>\n";
 
 
 /***/ }),
@@ -1132,6 +1503,7 @@ exports.defaultItemTemplate = "\n    <input \n        type=\"checkbox\" \n      
 "use strict";
 
 exports.__esModule = true;
+exports.getEnd = exports.getStart = exports.totalPagesToArray = exports.getTotalPages = void 0;
 /**
  * Get total pages from the total reached hits
  * divided by the hits per page configured
@@ -1232,7 +1604,7 @@ exports.getEnd = getEnd;
 "use strict";
 
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./node_modules/apisearch-ui/lib/components/Template.js");
 /**
  * Arrow navigation component
@@ -1259,6 +1631,7 @@ exports["default"] = NavigationComponent;
 "use strict";
 
 exports.__esModule = true;
+exports.paginationChangeAction = void 0;
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/apisearch-ui/lib/Container.js");
@@ -1284,6 +1657,8 @@ function paginationChangeAction(environmentId, currentQuery, repository, selecte
                 result: result
             }
         });
+    })["catch"](function (error) {
+        // Do nothing
     });
 }
 exports.paginationChangeAction = paginationChangeAction;
@@ -1301,9 +1676,12 @@ exports.paginationChangeAction = paginationChangeAction;
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1311,7 +1689,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./node_modules/apisearch-ui/lib/components/Template.js");
 var PaginationActions_1 = __webpack_require__(/*! ./PaginationActions */ "./node_modules/apisearch-ui/lib/components/Pagination/PaginationActions.js");
 var NavigationComponent_1 = __webpack_require__(/*! ./NavigationComponent */ "./node_modules/apisearch-ui/lib/components/Pagination/NavigationComponent.js");
@@ -1321,8 +1699,11 @@ var Helpers_1 = __webpack_require__(/*! ./Helpers */ "./node_modules/apisearch-u
  */
 var PaginationComponent = /** @class */ (function (_super) {
     __extends(PaginationComponent, _super);
+    /**
+     * Constructor
+     */
     function PaginationComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super.call(this) || this;
         /**
          * Handle click
          *
@@ -1346,8 +1727,24 @@ var PaginationComponent = /** @class */ (function (_super) {
              */
             PaginationActions_1.paginationChangeAction(environmentId, currentQuery, repository, page);
         };
+        _this.state = {
+            page: 1
+        };
         return _this;
     }
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    PaginationComponent.prototype.componentWillReceiveProps = function (props) {
+        var page = props.currentQuery.getPage();
+        this.setState(function (prevState) {
+            return {
+                page: page
+            };
+        });
+    };
     /**
      * Render
      *
@@ -1356,6 +1753,19 @@ var PaginationComponent = /** @class */ (function (_super) {
     PaginationComponent.prototype.render = function () {
         var _this = this;
         var props = this.props;
+        var currentResult = props.currentResult;
+        if (props.currentResult == null) {
+            return;
+        }
+        var currentQuerySize = props.currentQuery.getSize();
+        var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuerySize);
+        /**
+         * Hide container if hits are empty
+         */
+        if (currentResult.getTotalHits() === 0 ||
+            totalPages === 1) {
+            return null;
+        }
         var padding = props.padding;
         var goFirstLast = props.goFirstLast;
         var containerClassName = props.classNames.container;
@@ -1372,12 +1782,9 @@ var PaginationComponent = /** @class */ (function (_super) {
         var firstTemplate = props.template.first;
         var lastTemplate = props.template.last;
         var currentQueryPage = props.currentQuery.getPage();
-        var currentQuerySize = props.currentQuery.getSize();
-        var currentResult = props.currentResult;
         /**
          * Get Total pages
          */
-        var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuerySize);
         var pages = Helpers_1.totalPagesToArray(totalPages);
         /**
          *  Get pages spectre
@@ -1391,12 +1798,6 @@ var PaginationComponent = /** @class */ (function (_super) {
          */
         var previousDisabledClass = (currentQueryPage === 1) ? disabledClassName : '';
         var nextDisabledClass = (currentQueryPage === totalPages) ? disabledClassName : '';
-        /**
-         * Hide container if hits are empty
-         */
-        if (currentResult.getTotalHits() === 0) {
-            return null;
-        }
         return (preact_1.h("ul", { className: "as-pagination " + containerClassName },
             preact_1.h(NavigationComponent_1["default"], { isVisible: goFirstLast, classNames: "as-pagination__item as-pagination__item--first " + firstClassName + " " + previousDisabledClass, template: firstTemplate, handleClick: function () { return _this.handleClick(1); } }),
             preact_1.h(NavigationComponent_1["default"], { isVisible: true, classNames: "as-pagination__item as-pagination__item--previous " + previousClassName + " " + previousDisabledClass, template: previousTemplate, handleClick: function () { return _this.handleClick(currentQueryPage - 1); } }),
@@ -1433,6 +1834,254 @@ exports["default"] = PaginationComponent;
 
 /***/ }),
 
+/***/ "./node_modules/apisearch-ui/lib/components/RangeFilter/RangeFilterActions.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/apisearch-ui/lib/components/RangeFilter/RangeFilterActions.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.onChangeSearchAction = void 0;
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
+var Constants_1 = __webpack_require__(/*! ../../Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/apisearch-ui/lib/Container.js");
+/**
+ * ON change search action
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param selectedOption
+ */
+function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, minValue, maxValue, from, to) {
+    var clonedQuery = cloneDeep(currentQuery);
+    if (minValue != from ||
+        maxValue != to) {
+        clonedQuery.filterByRange(filterName, filterField, [], [from + ".." + to], apisearch_1.FILTER_AT_LEAST_ONE, apisearch_1.FILTER_TYPE_RANGE, false);
+    }
+    clonedQuery.page = 1;
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    repository
+        .query(clonedQuery)
+        .then(function (result) {
+        dispatcher.dispatch({
+            type: "RENDER_FETCHED_DATA",
+            payload: {
+                query: clonedQuery,
+                result: result
+            }
+        });
+    })["catch"](function (error) {
+        // Do nothing
+    });
+}
+exports.onChangeSearchAction = onChangeSearchAction;
+
+
+/***/ }),
+
+/***/ "./node_modules/apisearch-ui/lib/components/RangeFilter/RangeFilterComponent.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/apisearch-ui/lib/components/RangeFilter/RangeFilterComponent.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
+var RangeFilterActions_1 = __webpack_require__(/*! ./RangeFilterActions */ "./node_modules/apisearch-ui/lib/components/RangeFilter/RangeFilterActions.js");
+/**
+ * Range Filter Component
+ */
+var RangeFilterComponent = /** @class */ (function (_super) {
+    __extends(RangeFilterComponent, _super);
+    function RangeFilterComponent() {
+        var _this = _super.call(this) || this;
+        _this.uid = Math.random().toString(16).substr(2, 12);
+        _this.observerFrom = _this.configureObserver('from');
+        _this.observerTo = _this.configureObserver('to');
+        return _this;
+    }
+    RangeFilterComponent.prototype.configureObserver = function (field) {
+        var that = this;
+        return new MutationObserver(function (mutationsList, observer) {
+            // Use traditional 'for loops' for IE 11
+            for (var _i = 0, mutationsList_1 = mutationsList; _i < mutationsList_1.length; _i++) {
+                var mutation = mutationsList_1[_i];
+                if (mutation.attributeName === 'value') {
+                    var value = mutation.target["defaultValue"];
+                    if ((field === 'from' &&
+                        value === that.state.valueFrom) ||
+                        (field === 'to' &&
+                            value === that.state.valueTo)) {
+                        return;
+                    }
+                    field == 'from'
+                        ? that.handleSliderChange([value, that.state.valueTo])
+                        : that.handleSliderChange([that.state.valueFrom, value]);
+                }
+            }
+        });
+    };
+    RangeFilterComponent.prototype.componentDidMount = function () {
+        this.observerFrom.observe(document.getElementsByClassName('as-rangeFilter__from__' + this.uid)[0], { attributes: true });
+        this.observerTo.observe(document.getElementsByClassName('as-rangeFilter__to__' + this.uid)[0], { attributes: true });
+    };
+    RangeFilterComponent.prototype.componentWillUnmount = function () {
+        this.observerFrom.disconnect();
+        this.observerTo.disconnect();
+    };
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    RangeFilterComponent.prototype.componentWillReceiveProps = function (props) {
+        var filterName = props.filterName;
+        var filterIsNotFound = props.currentQuery.getFilter(filterName) == null;
+        if (filterIsNotFound) {
+            this.setState(function (prevState) {
+                return {
+                    valueFrom: props.minValue,
+                    valueTo: props.maxValue
+                };
+            });
+        }
+    };
+    /**
+     * Handle change
+     *
+     * @param e
+     */
+    RangeFilterComponent.prototype.handleChange = function (e) {
+        this.applyFilter(e.target.parentNode.getElementsByClassName('as-rangeFilter__from')[0].value, e.target.parentNode.getElementsByClassName('as-rangeFilter__to')[0].value);
+    };
+    ;
+    RangeFilterComponent.prototype.handleSliderChange = function (values) {
+        this.setState(function (prevState) {
+            return {
+                valueFrom: values[0],
+                valueTo: values[1]
+            };
+        });
+        this.applyFilter(values[0], values[1]);
+    };
+    ;
+    /**
+     * Apply filter
+     */
+    RangeFilterComponent.prototype.applyFilter = function (valueFrom, valueTo) {
+        var props = this.props;
+        var environmentId = props.environmentId;
+        var currentQuery = props.currentQuery;
+        var repository = props.repository;
+        var filterName = props.filterName;
+        var filterField = props.filterField;
+        var minValue = props.minValue;
+        var maxValue = props.maxValue;
+        /**
+         * Dispatch action
+         */
+        RangeFilterActions_1.onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, minValue, maxValue, valueFrom, valueTo);
+    };
+    /**
+     * Render
+     *
+     * @return {any}
+     */
+    RangeFilterComponent.prototype.render = function (props, state) {
+        var _this = this;
+        var filterName = props.filterName;
+        var from = props.from;
+        var to = props.to;
+        var minValue = props.minValue;
+        var maxValue = props.maxValue;
+        var initialFrom = Math.max(from.initialValue, minValue);
+        var initialTo = Math.min(to.initialValue, maxValue);
+        var currentFromValue = this.state.valueFrom
+            ? this.state.valueFrom
+            : initialFrom;
+        var currentToValue = this.state.valueTo
+            ? this.state.valueTo
+            : initialTo;
+        var ref = compat_1.useRef(null);
+        compat_1.useEffect(function () {
+            var self = _this;
+            if (!ref.current) {
+                return;
+            }
+            /**
+             * Alert if clicked on outside of element
+             */
+            function handleChange(event) {
+                var target = event.target;
+                var parentNode = target.parentNode;
+                self.applyFilter(parentNode.getElementsByClassName('as-rangeFilter__from')[0].value, parentNode.getElementsByClassName('as-rangeFilter__to')[0].value);
+            }
+            // Bind the event listener
+            ref.current.addEventListener("change", handleChange);
+            return function () {
+                // Unbind the event listener on clean up
+                ref.current.removeEventListener("change", handleChange);
+            };
+        }, [ref]);
+        return (preact_1.h("div", { className: "as-rangeFilter" },
+            preact_1.h("label", { "class": "as-rangeFilter__label" }, filterName),
+            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__from " + from["class"] + " as-rangeFilter__from__" + this.uid }, from.attributes, { value: this.state.valueFrom, min: minValue, max: maxValue, ref: ref, autocomplete: "off" })),
+            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__to " + to["class"] + " as-rangeFilter__to__" + this.uid }, to.attributes, { value: this.state.valueTo, min: minValue, max: maxValue, autocomplete: "off" }))));
+    };
+    return RangeFilterComponent;
+}(preact_1.Component));
+RangeFilterComponent.defaultProps = {
+    minValue: 0,
+    maxValue: 100,
+    from: {
+        "class": "",
+        attributes: {},
+        initialValue: 0
+    },
+    to: {
+        "class": "",
+        attributes: {},
+        initialValue: 100
+    }
+};
+exports["default"] = RangeFilterComponent;
+
+
+/***/ }),
+
 /***/ "./node_modules/apisearch-ui/lib/components/Result/ResultActions.js":
 /*!**************************************************************************!*\
   !*** ./node_modules/apisearch-ui/lib/components/Result/ResultActions.js ***!
@@ -1443,6 +2092,7 @@ exports["default"] = PaginationComponent;
 "use strict";
 
 exports.__esModule = true;
+exports.configureQuery = void 0;
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/apisearch-ui/lib/Container.js");
@@ -1454,12 +2104,13 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/api
  * @param currentQuery
  * @param itemsPerPage
  * @param highlightsEnabled
+ * @param suggestionsEnabled
  * @param promotedUUIDs
  * @param excludedUUIDs
  * @param fields
  * @param filter
  */
-function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, promotedUUIDs, excludedUUIDs, fields, filter) {
+function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, suggestionsEnabled, promotedUUIDs, excludedUUIDs, fields, filter) {
     var clonedQuery = cloneDeep(currentQuery);
     filter(clonedQuery);
     /**
@@ -1475,6 +2126,18 @@ function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEna
      */
     if (highlightsEnabled) {
         clonedQuery.enableHighlights();
+    }
+    /**
+     * Enabling highlights on query result
+     */
+    if (suggestionsEnabled) {
+        clonedQuery.enableSuggestions();
+        if (suggestionsEnabled == true) {
+            clonedQuery.setMetadataValue('number_of_suggestions', null);
+        }
+        else if (suggestionsEnabled > 0) {
+            clonedQuery.setMetadataValue('number_of_suggestions', suggestionsEnabled);
+        }
     }
     /**
      * Promoted uuids
@@ -1511,37 +2174,105 @@ exports.configureQuery = configureQuery;
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./node_modules/apisearch-ui/lib/components/Template.js");
 var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./node_modules/apisearch-ui/lib/components/Result/defaultTemplates.js");
 var ResultActions_1 = __webpack_require__(/*! ./ResultActions */ "./node_modules/apisearch-ui/lib/components/Result/ResultActions.js");
 var ItemUUID_1 = __webpack_require__(/*! apisearch/lib/Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/apisearch-ui/lib/Container.js");
+var Constants_1 = __webpack_require__(/*! ../../Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
 /**
  * Result Component
  */
 var ResultComponent = /** @class */ (function (_super) {
     __extends(ResultComponent, _super);
-    function ResultComponent() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    /**
+     * Constructor
+     */
+    function ResultComponent(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = {
+            itemsId: [],
+            focus: props.fadeInSelector == ''
+        };
+        return _this;
     }
+    /**
+     * Hook that change state once mouse clicks inside or outside the container
+     */
+    ResultComponent.prototype.addMouseDownListeners = function (ref, fadeInSelector) {
+        var _this = this;
+        compat_1.useEffect(function () {
+            var self = _this;
+            /**
+             * Alert if clicked on outside of element
+             */
+            function handleClickOutside(event) {
+                self.setState(function (prevState) {
+                    return {
+                        itemsId: prevState.itemsId,
+                        focus: event.target.closest(fadeInSelector) != null
+                    };
+                });
+            }
+            // Bind the event listener
+            document.addEventListener("mousedown", handleClickOutside);
+            return function () {
+                // Unbind the event listener on clean up
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [ref]);
+    };
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    ResultComponent.prototype.componentWillReceiveProps = function (props) {
+        var itemsId = [];
+        if (props.currentResult == null) {
+            this.setState(function (prevState) {
+                return {
+                    itemsId: itemsId
+                };
+            });
+            return;
+        }
+        var items = props.currentResult.getItems();
+        items.map(function (item) {
+            itemsId.push(item.uuid.composedUUID());
+        });
+        this.setState(function (prevState) {
+            return {
+                itemsId: itemsId
+            };
+        });
+    };
     /**
      * Component will mount
      */
@@ -1550,7 +2281,7 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        ResultActions_1.configureQuery(props.environmentId, props.currentQuery, props.itemsPerPage, props.highlightsEnabled, props.promote.map(function (itemUUID) {
+        ResultActions_1.configureQuery(props.environmentId, props.currentQuery, props.itemsPerPage, props.highlightsEnabled, props.suggestionsEnabled, props.promote.map(function (itemUUID) {
             return itemUUID instanceof ItemUUID_1.ItemUUID
                 ? itemUUID
                 : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
@@ -1571,27 +2302,59 @@ var ResultComponent = /** @class */ (function (_super) {
         var containerClassName = props.classNames.container;
         var itemsListClassName = props.classNames.itemsList;
         var placeholderClassName = props.classNames.placeholder;
+        var environmentId = props.environmentId;
+        var config = Container_1["default"].get(Constants_1.APISEARCH_CONFIG + "__" + environmentId);
+        var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
+        var apisearchReference = apisearchUI.reference;
         var itemsListTemplate = props.template.itemsList;
         var placeholderTemplate = props.template.placeholder;
         var formatData = props.formatData;
         var currentResult = props.currentResult;
         var currentQuery = props.currentQuery;
+        var currentVisibleResults = props.currentVisibleResults;
+        var wrapperRef = compat_1.useRef(null);
+        if (props.fadeInSelector != '') {
+            this.addMouseDownListeners(wrapperRef, props.fadeInSelector);
+        }
+        if (!currentVisibleResults || !this.state.focus) {
+            return (preact_1.h("div", { className: "as-result " + containerClassName }));
+        }
         /**
          * Data accessible to the template
          */
+        var items = currentResult.getItems();
         var reducedTemplateData = {
             query: currentQuery.getQueryText(),
-            items: currentResult.getItems()
+            suggestions: currentResult.getSuggestions()
         };
         /**
          * Format each item data
          */
-        var formattedTemplateData = __assign({}, reducedTemplateData, { items: (reducedTemplateData.items)
-                ? reducedTemplateData
-                    .items
-                    .map(function (item) { return formatData(item); })
+        var formattedTemplateData = __assign(__assign({}, reducedTemplateData), { items: (items)
+                ? items.map(function (item) {
+                    var appId = config.app_id;
+                    var appUUID = item.getAppUUID();
+                    if (typeof appUUID === "object") {
+                        appId = appUUID.composedUUID();
+                    }
+                    var indexId = config.index_id;
+                    var indexUUID = item.getIndexUUID();
+                    if (typeof indexUUID === "object") {
+                        indexId = indexUUID.composedUUID();
+                    }
+                    var itemId = item.getUUID().composedUUID();
+                    var userId = config.user_id;
+                    var clickParameters = typeof userId === "string"
+                        ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
+                        : appId + '", "' + indexId + '", "' + itemId;
+                    var fields = Object.assign(item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
+                    return __assign(__assign({}, formatData(item)), {
+                        'fields': fields,
+                        'click': apisearchReference + '.click("' + clickParameters + '");'
+                    });
+                })
                 : [] });
-        return (preact_1.h("div", { className: "as-result " + containerClassName }, (placeholderTemplate && dirty)
+        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef }, (placeholderTemplate && dirty)
             ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName })
             : preact_1.h(Template_1["default"], { template: itemsListTemplate, data: formattedTemplateData, className: "as-result__itemsList " + itemsListClassName })));
     };
@@ -1613,7 +2376,8 @@ ResultComponent.defaultProps = {
         itemsList: defaultTemplates_1.defaultItemsListTemplate,
         placeholder: null
     },
-    formatData: function (data) { return data; }
+    formatData: function (data) { return data; },
+    fadeInSelector: ''
 };
 exports["default"] = ResultComponent;
 
@@ -1630,7 +2394,88 @@ exports["default"] = ResultComponent;
 "use strict";
 
 exports.__esModule = true;
-exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}} <br />\n            <strong>Metadata:</strong> {{metadata}} <br />\n            <strong>Indexed metadata:</strong> {{indexedMetadata}}\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+exports.defaultItemsListTemplate = void 0;
+exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{{fields.title}}}<br />\n            <strong>Description:</strong> {{fields.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+
+
+/***/ }),
+
+/***/ "./node_modules/apisearch-ui/lib/components/SearchInput/AutocompleteComponent.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/apisearch-ui/lib/components/SearchInput/AutocompleteComponent.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/**
+ * Autocomplete Component
+ */
+var AutocompleteComponent = /** @class */ (function (_super) {
+    __extends(AutocompleteComponent, _super);
+    /**
+     * Constructor
+     */
+    function AutocompleteComponent(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = {
+            suggestion: ''
+        };
+        return _this;
+    }
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    AutocompleteComponent.prototype.componentWillReceiveProps = function (props) {
+        if (props.suggestions.length > 0) {
+            this.setState(function (prevState) {
+                return {
+                    suggestion: props.suggestions[0]
+                };
+            });
+        }
+        else {
+            this.setState(function (prevState) {
+                return {
+                    suggestion: ''
+                };
+            });
+        }
+    };
+    /**
+     * Render
+     *
+     * @return {any}
+     */
+    AutocompleteComponent.prototype.render = function () {
+        var suggestion = this.state.suggestion;
+        var queryText = this.props.queryText;
+        var inputClassName = this.props.inputClassName;
+        var queryTextLength = queryText.length;
+        var formattedSuggestion = queryText + suggestion.substring(queryTextLength);
+        return (preact_1.h("input", { type: 'text', className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedSuggestion, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
+    };
+    return AutocompleteComponent;
+}(preact_1.Component));
+exports["default"] = AutocompleteComponent;
 
 
 /***/ }),
@@ -1645,9 +2490,38 @@ exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li clas
 "use strict";
 
 exports.__esModule = true;
+exports.simpleSearchAction = exports.initialSearchSetup = void 0;
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/apisearch-ui/lib/Container.js");
+/**
+ * Initial Search
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param initialSearch
+ * @param autocomplete
+ */
+function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete) {
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var clonedQuery = cloneDeep(currentQuery);
+    clonedQuery.filters._query.values = [initialSearch];
+    clonedQuery.page = 1;
+    if (autocomplete) {
+        clonedQuery.enableSuggestions();
+        var metadata = clonedQuery.getMetadata();
+        if (metadata.number_of_suggestions === undefined) {
+            clonedQuery.setMetadataValue('number_of_suggestions', 1);
+        }
+    }
+    dispatcher.dispatch({
+        type: "UPDATE_APISEARCH_SETUP",
+        payload: {
+            query: clonedQuery
+        }
+    });
+}
+exports.initialSearchSetup = initialSearchSetup;
 /**
  * Search action
  *
@@ -1655,12 +2529,24 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/api
  * @param currentQuery
  * @param repository
  * @param queryText
+ * @param visibleResults
  */
-function simpleSearchAction(environmentId, currentQuery, repository, queryText) {
+function simpleSearchAction(environmentId, currentQuery, repository, queryText, visibleResults) {
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     var clonedQuery = cloneDeep(currentQuery);
     clonedQuery.filters._query.values = [queryText];
     clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    if (!visibleResults) {
+        dispatcher.dispatch({
+            type: "RENDER_FETCHED_DATA",
+            payload: {
+                query: clonedQuery,
+                result: null,
+                visibleResults: visibleResults
+            }
+        });
+        return;
+    }
     repository
         .query(clonedQuery)
         .then(function (result) {
@@ -1668,9 +2554,12 @@ function simpleSearchAction(environmentId, currentQuery, repository, queryText) 
             type: "RENDER_FETCHED_DATA",
             payload: {
                 query: clonedQuery,
-                result: result
+                result: result,
+                visibleResults: visibleResults
             }
         });
+    })["catch"](function (error) {
+        // Do nothing
     });
 }
 exports.simpleSearchAction = simpleSearchAction;
@@ -1688,34 +2577,44 @@ exports.simpleSearchAction = simpleSearchAction;
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var SearchInputActions_1 = __webpack_require__(/*! ./SearchInputActions */ "./node_modules/apisearch-ui/lib/components/SearchInput/SearchInputActions.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./node_modules/apisearch-ui/lib/components/Template.js");
+var AutocompleteComponent_1 = __webpack_require__(/*! ./AutocompleteComponent */ "./node_modules/apisearch-ui/lib/components/SearchInput/AutocompleteComponent.js");
 /**
  * SearchInput Component
  */
 var SearchInputComponent = /** @class */ (function (_super) {
     __extends(SearchInputComponent, _super);
-    function SearchInputComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+    /**
+     * Constructor
+     */
+    function SearchInputComponent(props) {
+        var _this = _super.call(this, props) || this;
         /**
          * Handle search
          *
@@ -1727,35 +2626,80 @@ var SearchInputComponent = /** @class */ (function (_super) {
             var environmentId = props.environmentId;
             var currentQuery = props.currentQuery;
             var repository = props.repository;
-            /**
-             * Search when string is bigger than {startSearchOn}
-             */
-            if (e.target.value.length < startSearchOn) {
-                return;
-            }
+            var visibleResults = e.target.value.length >= startSearchOn;
             /**
              * Dispatch input search action
              */
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, e.target.value);
+            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, e.target.value, visibleResults);
         };
         /**
          * Clear search
          */
         _this.clearSearch = function () {
             var props = _this.props;
+            var startSearchOn = props.startSearchOn;
             var environmentId = props.environmentId;
             var currentQuery = props.currentQuery;
             var repository = props.repository;
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, '');
+            var visibleResults = 0 == startSearchOn;
+            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, '', visibleResults);
         };
+        if (props.autocomplete) {
+            _this.state = { queryText: '' };
+        }
         return _this;
     }
+    /**
+     * Components will mount
+     */
+    SearchInputComponent.prototype.componentWillMount = function () {
+        var props = this.props;
+        var environmentId = props.environmentId;
+        var initialSearch = props.initialSearch;
+        var currentQuery = props.currentQuery;
+        var autocomplete = props.autocomplete;
+        /**
+         * Dispatch action
+         */
+        SearchInputActions_1.initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete);
+    };
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    SearchInputComponent.prototype.componentWillReceiveProps = function (props) {
+        if (props.autocomplete) {
+            this.setState({
+                queryText: props.currentQuery.getQueryText()
+            });
+        }
+    };
+    /**
+     * Key down
+     */
+    SearchInputComponent.prototype.handleKeyDown = function (e) {
+        switch (e.keyCode) {
+            case 39:
+            case 9:
+                var props = this.props;
+                var environmentId = props.environmentId;
+                var currentQuery = props.currentQuery;
+                var repository = props.repository;
+                if (this.props.currentResult.getSuggestions().length > 0) {
+                    SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, this.props.currentResult.getSuggestions()[0], true);
+                }
+                break;
+        }
+    };
+    SearchInputComponent.prototype.doNothing = function (e) { };
     /**
      * Search
      *
      * @return {any}
      */
     SearchInputComponent.prototype.render = function () {
+        var _this = this;
         var props = this.props;
         var placeholder = props.placeholder;
         var autofocus = props.autofocus;
@@ -1767,9 +2711,25 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var clearSearchTemplate = props.template.clearSearch;
         var currentQueryText = props.currentQuery.getQueryText();
         var htmlNodeInheritProps = props.htmlNodeInheritProps;
-        var searchInput = (preact_1.h("input", __assign({ type: 'text', className: "as-searchInput__input " + inputClassName, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: this.handleSearch, value: currentQueryText })));
+        var suggestions = props.currentResult
+            ? props.currentResult.getSuggestions()
+            : [];
+        var hasSuggestions = suggestions.length > 0;
+        var showAutocomplete = props.autocomplete;
+        var keyDownCallback = showAutocomplete
+            ? function (e) { return _this.handleKeyDown(e); }
+            : function (e) { return _this.doNothing(e); };
+        var style = showAutocomplete
+            ? 'position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;'
+            : '';
+        var searchInput = (preact_1.h("input", __assign({ type: 'text', className: "as-searchInput__input " + inputClassName, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: this.handleSearch, value: currentQueryText, style: style, onKeyDown: keyDownCallback })));
+        if (showAutocomplete) {
+            searchInput = (preact_1.h("div", { style: "position: relative" },
+                preact_1.h(AutocompleteComponent_1["default"], { suggestions: suggestions, queryText: currentQueryText, inputClassName: inputClassName }),
+                searchInput));
+        }
         if (withContainer) {
-            return (preact_1.h("div", { className: "as-searchInput " + containerClassName },
+            searchInput = (preact_1.h("div", { className: "as-searchInput " + containerClassName },
                 searchInput,
                 (clearSearch && currentQueryText && currentQueryText.length !== 0)
                     ? (preact_1.h("div", { className: "as-searchInput__clearSearch " + clearSearchClassName, onClick: this.clearSearch },
@@ -1782,8 +2742,10 @@ var SearchInputComponent = /** @class */ (function (_super) {
 SearchInputComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
+    autocomplete: false,
     startSearchOn: 0,
     clearSearch: true,
+    initialSearch: '',
     withContainer: true,
     classNames: {
         container: '',
@@ -1809,13 +2771,35 @@ exports["default"] = SearchInputComponent;
 "use strict";
 
 exports.__esModule = true;
+exports.onChangeSearchAction = exports.initialSortBySetup = void 0;
 /**
  * SortBy actions
  */
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./node_modules/apisearch-ui/lib/Constants.js");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/apisearch-ui/lib/Container.js");
+/**
+ * Initial sortBy
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param initialOption
+ */
+function initialSortBySetup(environmentId, currentQuery, initialOption) {
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var clonedQuery = cloneDeep(currentQuery);
+    applySortByToQuery(clonedQuery, initialOption);
+    clonedQuery.page = 1;
+    dispatcher.dispatch({
+        type: "UPDATE_APISEARCH_SETUP",
+        payload: {
+            query: clonedQuery
+        }
+    });
+}
+exports.initialSortBySetup = initialSortBySetup;
 /**
  * ON change search action
  *
@@ -1826,11 +2810,7 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./node_modules/api
  */
 function onChangeSearchAction(environmentId, currentQuery, repository, selectedOption) {
     var clonedQuery = cloneDeep(currentQuery);
-    var filterData = splitQueryValue(selectedOption);
-    clonedQuery
-        .sortBy(apisearch_1["default"]
-        .createEmptySortBy()
-        .byFieldValue(filterData.field, filterData.sort));
+    applySortByToQuery(clonedQuery, selectedOption);
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
@@ -1843,9 +2823,37 @@ function onChangeSearchAction(environmentId, currentQuery, repository, selectedO
                 result: result
             }
         });
+    })["catch"](function (error) {
+        // Do nothing
     });
 }
 exports.onChangeSearchAction = onChangeSearchAction;
+/**
+ * Apply sort by to query
+ *
+ * @param Query
+ * @param string
+ */
+function applySortByToQuery(query, selectedOption) {
+    var sortByData = splitQueryValue(selectedOption);
+    var sortBy = apisearch_1["default"].createEmptySortBy();
+    if (sortByData.field == 'distance') {
+        sortBy.byValue({
+            type: apisearch_2.SORT_BY_TYPE_DISTANCE,
+            unit: sortByData.sort
+                ? sortByData.sort
+                : 'km'
+        });
+    }
+    else if (sortByData.field == 'score') {
+        sortBy.byValue(apisearch_2.SORT_BY_SCORE);
+    }
+    else {
+        sortBy.byFieldValue(sortByData.field, sortByData.sort);
+    }
+    query.sortBy(sortBy);
+    return query;
+}
 /**
  * Split sort by string representation
  *
@@ -1874,9 +2882,12 @@ function splitQueryValue(string) {
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1884,7 +2895,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var SortByActions_1 = __webpack_require__(/*! ./SortByActions */ "./node_modules/apisearch-ui/lib/components/SortBy/SortByActions.js");
 /**
  * SortBy Filter Component
@@ -1911,6 +2922,19 @@ var SortByComponent = /** @class */ (function (_super) {
         return _this;
     }
     /**
+     * Components will mount
+     */
+    SortByComponent.prototype.componentWillMount = function () {
+        var props = this.props;
+        var environmentId = props.environmentId;
+        var options = props.options;
+        var currentQuery = props.currentQuery;
+        /**
+         * Dispatch action
+         */
+        SortByActions_1.initialSortBySetup(environmentId, currentQuery, options[0].value);
+    };
+    /**
      * Should component update
      *
      * @return {boolean}
@@ -1927,6 +2951,12 @@ var SortByComponent = /** @class */ (function (_super) {
         var containerClassName = props.classNames.container;
         var selectClassName = props.classNames.select;
         var options = props.options;
+        var coordinate = props.currentQuery.toArray().coordinate;
+        if (!coordinate) {
+            options = options.filter(function (o) {
+                return o.value != 'distance';
+            });
+        }
         return (preact_1.h("div", { className: "as-sortBy " + containerClassName },
             preact_1.h("select", { className: "as-sortBy__selector " + selectClassName, onChange: this.handleChange }, options.map(function (option) { return (preact_1.h("option", { value: option.value }, option.name)); }))));
     };
@@ -1953,9 +2983,12 @@ exports["default"] = SortByComponent;
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1963,7 +2996,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var Hogan = __webpack_require__(/*! hogan.js */ "./node_modules/hogan.js/lib/hogan.js");
 /**
  * Template
@@ -2029,6 +3062,79 @@ exports["default"] = ApisearchUI_1["default"];
 
 /***/ }),
 
+/***/ "./node_modules/apisearch-ui/lib/widgets/CheckboxFilter.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/apisearch-ui/lib/widgets/CheckboxFilter.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var CheckboxFilterComponent_1 = __webpack_require__(/*! ../components/CheckboxFilter/CheckboxFilterComponent */ "./node_modules/apisearch-ui/lib/components/CheckboxFilter/CheckboxFilterComponent.js");
+var Widget_1 = __webpack_require__(/*! ./Widget */ "./node_modules/apisearch-ui/lib/widgets/Widget.js");
+/**
+ * CheckboxFilter
+ */
+var CheckboxFilter = /** @class */ (function (_super) {
+    __extends(CheckboxFilter, _super);
+    function CheckboxFilter(_a) {
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, label = _a.label;
+        var _this = _super.call(this) || this;
+        _this.target = target;
+        _this.component = preact_1.h(CheckboxFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, label: label });
+        return _this;
+    }
+    /**
+     * Widget
+     *
+     * @param environmentId
+     * @param store
+     * @param repository
+     */
+    CheckboxFilter.prototype.render = function (environmentId, store, repository) {
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        var targetNode = document.querySelector(this.target);
+        preact_1.render(this.component, targetNode);
+    };
+    return CheckboxFilter;
+}(Widget_1["default"]));
+/**
+ * CheckboxFilter widget
+ *
+ * @param settings
+ */
+exports["default"] = (function (settings) { return new CheckboxFilter(settings); });
+
+
+/***/ }),
+
 /***/ "./node_modules/apisearch-ui/lib/widgets/ClearFilters.js":
 /*!***************************************************************!*\
   !*** ./node_modules/apisearch-ui/lib/widgets/ClearFilters.js ***!
@@ -2039,25 +3145,31 @@ exports["default"] = ApisearchUI_1["default"];
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var ClearFiltersComponent_1 = __webpack_require__(/*! ../components/ClearFilters/ClearFiltersComponent */ "./node_modules/apisearch-ui/lib/components/ClearFilters/ClearFiltersComponent.js");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./node_modules/apisearch-ui/lib/widgets/Widget.js");
 /**
@@ -2076,7 +3188,7 @@ var ClearFilters = /** @class */ (function (_super) {
         var target = _a.target, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(ClearFiltersComponent_1["default"], { target: target, classNames: __assign({}, ClearFiltersComponent_1["default"].defaultProps.classNames, classNames), template: template });
+        _this.component = preact_1.h(ClearFiltersComponent_1["default"], { target: target, classNames: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.classNames), classNames), template: template });
         return _this;
     }
     /**
@@ -2087,9 +3199,9 @@ var ClearFilters = /** @class */ (function (_super) {
      * @param repository
      */
     ClearFilters.prototype.render = function (environmentId, store, repository) {
-        this.component.attributes = __assign({}, this.component.attributes, { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
         var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode, targetNode.lastChild);
+        preact_1.render(this.component, targetNode);
     };
     return ClearFilters;
 }(Widget_1["default"]));
@@ -2113,25 +3225,31 @@ exports["default"] = (function (settings) { return new ClearFilters(settings); }
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var InformationComponent_1 = __webpack_require__(/*! ../components/Information/InformationComponent */ "./node_modules/apisearch-ui/lib/components/Information/InformationComponent.js");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./node_modules/apisearch-ui/lib/widgets/Widget.js");
 /**
@@ -2151,7 +3269,7 @@ var Information = /** @class */ (function (_super) {
         var target = _a.target, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(InformationComponent_1["default"], { target: target, classNames: __assign({}, InformationComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, InformationComponent_1["default"].defaultProps.template, template), formatData: formatData });
+        _this.component = preact_1.h(InformationComponent_1["default"], { target: target, classNames: __assign(__assign({}, InformationComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, InformationComponent_1["default"].defaultProps.template), template), formatData: formatData });
         return _this;
     }
     /**
@@ -2162,9 +3280,9 @@ var Information = /** @class */ (function (_super) {
      * @param repository
      */
     Information.prototype.render = function (environmentId, store, repository) {
-        this.component.attributes = __assign({}, this.component.attributes, { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
         var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode, targetNode.lastChild);
+        preact_1.render(this.component, targetNode);
     };
     return Information;
 }(Widget_1["default"]));
@@ -2188,25 +3306,31 @@ exports["default"] = (function (settings) { return new Information(settings); })
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var MultipleFilterComponent_1 = __webpack_require__(/*! ../components/MultipleFilter/MultipleFilterComponent */ "./node_modules/apisearch-ui/lib/components/MultipleFilter/MultipleFilterComponent.js");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./node_modules/apisearch-ui/lib/widgets/Widget.js");
 /**
@@ -2225,15 +3349,17 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param fetchLimit
      * @param viewLimit
      * @param sortBy
+     * @param ranges
+     * @param labels
      * @param classNames
      * @param template
      * @param formatData
      */
     function MultipleFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, ranges = _a.ranges, labels = _a.labels, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, activeFirst = _a.activeFirst;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, aggregationField: aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, classNames: __assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, MultipleFilterComponent_1["default"].defaultProps.template, template), formatData: formatData });
+        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, aggregationField: aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, labels: labels, classNames: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.template), template), formatData: formatData, activeFirst: activeFirst });
         return _this;
     }
     /**
@@ -2244,9 +3370,9 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param repository
      */
     MultipleFilter.prototype.render = function (environmentId, store, repository) {
-        this.component.attributes = __assign({}, this.component.attributes, { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
         var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode, targetNode.lastChild);
+        preact_1.render(this.component, targetNode);
     };
     return MultipleFilter;
 }(Widget_1["default"]));
@@ -2270,25 +3396,31 @@ exports["default"] = (function (settings) { return new MultipleFilter(settings);
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var PaginationComponent_1 = __webpack_require__(/*! ../components/Pagination/PaginationComponent */ "./node_modules/apisearch-ui/lib/components/Pagination/PaginationComponent.js");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./node_modules/apisearch-ui/lib/widgets/Widget.js");
 /**
@@ -2309,7 +3441,7 @@ var Pagination = /** @class */ (function (_super) {
         var target = _a.target, padding = _a.padding, goFirstLast = _a.goFirstLast, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(PaginationComponent_1["default"], { target: target, padding: padding, goFirstLast: goFirstLast, classNames: __assign({}, PaginationComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, PaginationComponent_1["default"].defaultProps.template, template) });
+        _this.component = preact_1.h(PaginationComponent_1["default"], { target: target, padding: padding, goFirstLast: goFirstLast, classNames: __assign(__assign({}, PaginationComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, PaginationComponent_1["default"].defaultProps.template), template) });
         return _this;
     }
     /**
@@ -2320,9 +3452,9 @@ var Pagination = /** @class */ (function (_super) {
      * @param repository
      */
     Pagination.prototype.render = function (environmentId, store, repository) {
-        this.component.attributes = __assign({}, this.component.attributes, { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
         var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode, targetNode.lastChild);
+        preact_1.render(this.component, targetNode);
     };
     return Pagination;
 }(Widget_1["default"]));
@@ -2332,6 +3464,79 @@ var Pagination = /** @class */ (function (_super) {
  * @param settings
  */
 exports["default"] = (function (settings) { return new Pagination(settings); });
+
+
+/***/ }),
+
+/***/ "./node_modules/apisearch-ui/lib/widgets/RangeFilter.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/apisearch-ui/lib/widgets/RangeFilter.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var RangeFilterComponent_1 = __webpack_require__(/*! ../components/RangeFilter/RangeFilterComponent */ "./node_modules/apisearch-ui/lib/components/RangeFilter/RangeFilterComponent.js");
+var Widget_1 = __webpack_require__(/*! ./Widget */ "./node_modules/apisearch-ui/lib/widgets/Widget.js");
+/**
+ * RangeFilter
+ */
+var RangeFilter = /** @class */ (function (_super) {
+    __extends(RangeFilter, _super);
+    function RangeFilter(_a) {
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, minValue = _a.minValue, maxValue = _a.maxValue, from = _a.from, to = _a.to;
+        var _this = _super.call(this) || this;
+        _this.target = target;
+        _this.component = preact_1.h(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, from: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.from), from), to: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.to), to) });
+        return _this;
+    }
+    /**
+     * Widget
+     *
+     * @param environmentId
+     * @param store
+     * @param repository
+     */
+    RangeFilter.prototype.render = function (environmentId, store, repository) {
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        var targetNode = document.querySelector(this.target);
+        preact_1.render(this.component, targetNode);
+    };
+    return RangeFilter;
+}(Widget_1["default"]));
+/**
+ * CheckboxFilter widget
+ *
+ * @param settings
+ */
+exports["default"] = (function (settings) { return new RangeFilter(settings); });
 
 
 /***/ }),
@@ -2346,25 +3551,31 @@ exports["default"] = (function (settings) { return new Pagination(settings); });
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var ResultComponent_1 = __webpack_require__(/*! ../components/Result/ResultComponent */ "./node_modules/apisearch-ui/lib/components/Result/ResultComponent.js");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./node_modules/apisearch-ui/lib/widgets/Widget.js");
 /**
@@ -2382,15 +3593,18 @@ var Result = /** @class */ (function (_super) {
      * @param exclude
      * @param filter
      * @param highlightsEnabled
+     * @param suggestionsEnabled
      * @param classNames
      * @param template
      * @param formatData
+     * @param fadeInSelector
      */
     function Result(_a) {
-        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
+        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, suggestionsEnabled = _a.suggestionsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign({}, ResultComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, ResultComponent_1["default"].defaultProps.template, template), formatData: formatData });
+        _this.targetNode = document.querySelector(_this.target);
+        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, suggestionsEnabled: suggestionsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector });
         return _this;
     }
     /**
@@ -2401,9 +3615,8 @@ var Result = /** @class */ (function (_super) {
      * @param repository
      */
     Result.prototype.render = function (environmentId, store, repository) {
-        this.component.attributes = __assign({}, this.component.attributes, { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode, targetNode.lastChild);
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), currentVisibleResults: store.resultsAreVisible() });
+        preact_1.render(this.component, this.targetNode);
     };
     return Result;
 }(Widget_1["default"]));
@@ -2427,25 +3640,31 @@ exports["default"] = (function (settings) { return new Result(settings); });
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var SearchInputComponent_1 = __webpack_require__(/*! ../components/SearchInput/SearchInputComponent */ "./node_modules/apisearch-ui/lib/components/SearchInput/SearchInputComponent.js");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./node_modules/apisearch-ui/lib/widgets/Widget.js");
 /**
@@ -2466,11 +3685,10 @@ var SearchInput = /** @class */ (function (_super) {
      * @param template
      */
     function SearchInput(_a) {
-        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, classNames = _a.classNames, template = _a.template;
+        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.isFirstRender = true;
-        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, classNames: __assign({}, SearchInputComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, SearchInputComponent_1["default"].defaultProps.template, template) });
+        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch });
         return _this;
     }
     /**
@@ -2481,26 +3699,30 @@ var SearchInput = /** @class */ (function (_super) {
      * @param repository
      */
     SearchInput.prototype.render = function (environmentId, store, repository) {
-        this.component.attributes = __assign({}, this.component.attributes, { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), htmlNodeInheritProps: {
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), htmlNodeInheritProps: {
                 autocomplete: 'off',
                 spellcheck: false
             } });
-        var targetNode = document.querySelector(this.target);
-        /**
-         * Checking if the targeted element is an input
-         * or is another container element.
-         */
-        var isInput = isInputElement(targetNode);
-        if (!isInput) {
-            preact_1.render(this.component, targetNode, targetNode.lastChild);
+        if (!this.targetNode) {
+            var targetNode = document.querySelector(this.target);
+            var isInput = isInputElement(targetNode);
+            if (isInput) {
+                this.component.props = __assign(__assign({}, this.component.props), { withContainer: false, htmlNodeInheritProps: __assign(__assign({}, this.component.props.htmlNodeInheritedProps), getNodeAttributes(targetNode)) });
+                var parentNode = targetNode.parentNode;
+                targetNode.remove();
+                this.targetNode = parentNode;
+            }
+            else {
+                this.targetNode = targetNode;
+            }
         }
-        if (isInput && this.isFirstRender) {
-            this.component.attributes = __assign({}, this.component.attributes, { withContainer: false, htmlNodeInheritProps: __assign({}, this.component.attributes.htmlNodeInheritedProps, getNodeAttributes(targetNode)) });
-            var parentNode = targetNode.parentNode;
-            preact_1.render(this.component, parentNode, parentNode.childNodes[0]);
-            targetNode.remove();
+        if (this.isSecondRender == undefined) {
+            this.isSecondRender = true;
         }
-        this.isFirstRender = false;
+        else if (this.isSecondRender == true) {
+            this.isSecondRender = false;
+        }
+        preact_1.render(this.component, this.targetNode);
     };
     return SearchInput;
 }(Widget_1["default"]));
@@ -2517,7 +3739,7 @@ var getNodeAttributes = function (htmlNode) {
     for (var i = 0; i < htmlNode.attributes.length; i++) {
         var attr = htmlNode.attributes[i];
         if (attr.specified) {
-            nodeAttributes = __assign({}, nodeAttributes, (_a = {}, _a[attr.name] = attr.value, _a));
+            nodeAttributes = __assign(__assign({}, nodeAttributes), (_a = {}, _a[attr.name] = attr.value, _a));
         }
     }
     return nodeAttributes;
@@ -2552,25 +3774,31 @@ exports["default"] = (function (settings) { return new SearchInput(settings); })
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var SortByComponent_1 = __webpack_require__(/*! ../components/SortBy/SortByComponent */ "./node_modules/apisearch-ui/lib/components/SortBy/SortByComponent.js");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./node_modules/apisearch-ui/lib/widgets/Widget.js");
 /**
@@ -2582,7 +3810,7 @@ var SortBy = /** @class */ (function (_super) {
         var target = _a.target, classNames = _a.classNames, options = _a.options;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(SortByComponent_1["default"], { target: target, classNames: __assign({}, SortByComponent_1["default"].defaultProps.classNames, classNames), options: options });
+        _this.component = preact_1.h(SortByComponent_1["default"], { target: target, classNames: __assign(__assign({}, SortByComponent_1["default"].defaultProps.classNames), classNames), options: options });
         return _this;
     }
     /**
@@ -2593,9 +3821,9 @@ var SortBy = /** @class */ (function (_super) {
      * @param repository
      */
     SortBy.prototype.render = function (environmentId, store, repository) {
-        this.component.attributes = __assign({}, this.component.attributes, { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
         var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode, targetNode.lastChild);
+        preact_1.render(this.component, targetNode);
     };
     return SortBy;
 }(Widget_1["default"]));
@@ -2649,6 +3877,8 @@ var Pagination_1 = __webpack_require__(/*! ./Pagination */ "./node_modules/apise
 var Result_1 = __webpack_require__(/*! ./Result */ "./node_modules/apisearch-ui/lib/widgets/Result.js");
 var SearchInput_1 = __webpack_require__(/*! ./SearchInput */ "./node_modules/apisearch-ui/lib/widgets/SearchInput.js");
 var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./node_modules/apisearch-ui/lib/widgets/SortBy.js");
+var CheckboxFilter_1 = __webpack_require__(/*! ./CheckboxFilter */ "./node_modules/apisearch-ui/lib/widgets/CheckboxFilter.js");
+var RangeFilter_1 = __webpack_require__(/*! ./RangeFilter */ "./node_modules/apisearch-ui/lib/widgets/RangeFilter.js");
 /**
  * Widget factories
  */
@@ -2659,7 +3889,9 @@ exports["default"] = {
     sortBy: SortBy_1["default"],
     information: Information_1["default"],
     result: Result_1["default"],
-    pagination: Pagination_1["default"]
+    pagination: Pagination_1["default"],
+    checkboxFilter: CheckboxFilter_1["default"],
+    rangeFilter: RangeFilter_1["default"]
 };
 
 
@@ -2676,7 +3908,6 @@ exports["default"] = {
 
 exports.__esModule = true;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var NoCache_1 = __webpack_require__(/*! ./Cache/NoCache */ "./node_modules/apisearch/lib/Cache/NoCache.js");
 var AxiosClient_1 = __webpack_require__(/*! ./Http/AxiosClient */ "./node_modules/apisearch/lib/Http/AxiosClient.js");
 var RetryMap_1 = __webpack_require__(/*! ./Http/RetryMap */ "./node_modules/apisearch/lib/Http/RetryMap.js");
 var Query_1 = __webpack_require__(/*! ./Query/Query */ "./node_modules/apisearch/lib/Query/Query.js");
@@ -2702,13 +3933,13 @@ var Apisearch = /** @class */ (function () {
      */
     Apisearch.createRepository = function (config) {
         Apisearch.ensureRepositoryConfigIsValid(config);
-        config.options = tslib_1.__assign({ api_version: "v1", cache: new NoCache_1.NoCache(), timeout: 5000, override_queries: true }, config.options);
+        config.options = tslib_1.__assign({ api_version: "v1", override_queries: true, retry_map_config: [], timeout: 5000 }, config.options);
         /**
          * Client
          */
         var httpClient = typeof config.options.http_client !== "undefined"
             ? config.options.http_client
-            : new AxiosClient_1.AxiosClient(config.options.endpoint, config.options.api_version, config.options.timeout, new RetryMap_1.RetryMap(), config.options.override_queries, config.options.cache);
+            : new AxiosClient_1.AxiosClient(config.options.endpoint, config.options.api_version, config.options.timeout, RetryMap_1.RetryMap.createFromArray(config.options.retry_map_config), config.options.override_queries);
         return new HttpRepository_1.HttpRepository(httpClient, config.app_id, config.index_id, config.token, new Transformer_1.Transformer());
     };
     /**
@@ -2800,7 +4031,7 @@ var Apisearch = /** @class */ (function () {
      * @return {Result}
      */
     Apisearch.createEmptyResult = function () {
-        return Result_1.Result.create('', 0, 0, new ResultAggregations_1.ResultAggregations(0), [], []);
+        return Result_1.Result.create("", 0, 0, new ResultAggregations_1.ResultAggregations(0), [], []);
     };
     /**
      * Create empty sortby
@@ -2813,133 +4044,6 @@ var Apisearch = /** @class */ (function () {
     return Apisearch;
 }());
 exports["default"] = Apisearch;
-
-
-/***/ }),
-
-/***/ "./node_modules/apisearch/lib/Cache/InMemoryCache.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/apisearch/lib/Cache/InMemoryCache.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/**
- * Cache class
- */
-var InMemoryCache = /** @class */ (function () {
-    /**
-     * Constructor
-     */
-    function InMemoryCache() {
-        this.cache = {};
-        this.size = 0;
-        this.cache = {};
-        this.size = 0;
-    }
-    /**
-     * Set cache element
-     *
-     * @param key
-     * @param value
-     *
-     * @returns {void}
-     */
-    InMemoryCache.prototype.set = function (key, value) {
-        var _a;
-        this.cache = tslib_1.__assign({}, this.cache, (_a = {}, _a[key] = value, _a));
-        this.size = this.size + 1;
-    };
-    /**
-     * Get element from cache
-     *
-     * @param key
-     *
-     * @returns {any}
-     */
-    InMemoryCache.prototype.get = function (key) {
-        return this.cache[key];
-    };
-    /**
-     * Deletes element from cache
-     *
-     * @param key
-     */
-    InMemoryCache.prototype.del = function (key) {
-        delete this.cache[key];
-    };
-    /**
-     * Clear cache
-     */
-    InMemoryCache.prototype.clear = function () {
-        this.cache = {};
-        this.size = 0;
-    };
-    return InMemoryCache;
-}());
-exports.InMemoryCache = InMemoryCache;
-
-
-/***/ }),
-
-/***/ "./node_modules/apisearch/lib/Cache/NoCache.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/apisearch/lib/Cache/NoCache.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-/**
- * Cache class
- */
-var NoCache = /** @class */ (function () {
-    function NoCache() {
-    }
-    /**
-     * Set cache element
-     *
-     * @param key
-     * @param value
-     *
-     * @returns {void}
-     */
-    NoCache.prototype.set = function (key, value) {
-        // Empty
-    };
-    /**
-     * Get element from cache
-     *
-     * @param key
-     *
-     * @returns {any}
-     */
-    NoCache.prototype.get = function (key) {
-        return undefined;
-    };
-    /**
-     * Deletes element from cache
-     *
-     * @param key
-     */
-    NoCache.prototype.del = function (key) {
-        // Empty
-    };
-    /**
-     * Clear cache
-     */
-    NoCache.prototype.clear = function () {
-        // Empty
-    };
-    return NoCache;
-}());
-exports.NoCache = NoCache;
 
 
 /***/ }),
@@ -3654,6 +4758,41 @@ exports.ResourceNotAvailableError = ResourceNotAvailableError;
 
 /***/ }),
 
+/***/ "./node_modules/apisearch/lib/Error/UnknownError.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/apisearch/lib/Error/UnknownError.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
+/**
+ * Connection error
+ */
+var UnknownError = /** @class */ (function (_super) {
+    tslib_1.__extends(UnknownError, _super);
+    function UnknownError() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /**
+     * Unknown error
+     *
+     * @return this
+     */
+    UnknownError.createUnknownError = function () {
+        return new this("Unknown error.");
+    };
+    return UnknownError;
+}(ErrorWithMessage_1.ErrorWithMessage));
+exports.UnknownError = UnknownError;
+
+
+/***/ }),
+
 /***/ "./node_modules/apisearch/lib/Error/UnsupportedContentTypeError.js":
 /*!*************************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/UnsupportedContentTypeError.js ***!
@@ -3924,6 +5063,7 @@ exports.Square = Square;
 exports.__esModule = true;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var axios_1 = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+var __1 = __webpack_require__(/*! .. */ "./node_modules/apisearch/lib/index.js");
 var Client_1 = __webpack_require__(/*! ./Client */ "./node_modules/apisearch/lib/Http/Client.js");
 var Response_1 = __webpack_require__(/*! ./Response */ "./node_modules/apisearch/lib/Http/Response.js");
 /**
@@ -3939,13 +5079,11 @@ var AxiosClient = /** @class */ (function (_super) {
      * @param timeout
      * @param retryMap
      * @param overrideQueries
-     * @param cache
      */
-    function AxiosClient(host, version, timeout, retryMap, overrideQueries, cache) {
+    function AxiosClient(host, version, timeout, retryMap, overrideQueries) {
         var _this = _super.call(this, version, retryMap) || this;
         _this.host = host;
         _this.timeout = timeout;
-        _this.cache = cache;
         _this.overrideQueries = overrideQueries;
         _this.cancelToken = {};
         return _this;
@@ -3965,51 +5103,66 @@ var AxiosClient = /** @class */ (function (_super) {
         if (parameters === void 0) { parameters = {}; }
         if (data === void 0) { data = {}; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var that;
+            var headers, axiosRequestConfig, sendRequest, retry, axiosResponse, error_1, response;
             var _this = this;
             return tslib_1.__generator(this, function (_a) {
-                that = this;
-                url = url.replace(/^\/*|\/*$/g, "");
-                url = "/" + (this.version + "/" + url).replace(/^\/*|\/*$/g, "");
-                method = method.toLowerCase();
-                if ("get" === method &&
-                    this.overrideQueries) {
-                    this.abort(url);
-                }
-                return [2 /*return*/, new Promise(function (resolve, reject) {
-                        var headers = "get" == method
+                switch (_a.label) {
+                    case 0:
+                        url = url.replace(/^\/*|\/*$/g, "");
+                        url = "/" + (this.version + "/" + url).replace(/^\/*|\/*$/g, "");
+                        method = method.toLowerCase();
+                        if ("get" === method &&
+                            this.overrideQueries) {
+                            this.abort(url);
+                        }
+                        headers = "get" === method
                             ? {}
                             : {
                                 "Content-Encoding": "gzip",
                                 "Content-Type": "application/json"
                             };
-                        var axiosRequestConfig = {
-                            url: url + "?" + Client_1.Client.objectToUrlParameters(tslib_1.__assign({}, parameters, {
-                                'token': credentials.token
-                            })),
+                        axiosRequestConfig = {
+                            baseURL: this.host.replace(/\/*$/g, ""),
                             data: data,
                             headers: headers,
                             method: method,
-                            baseURL: that.host.replace(/\/*$/g, ""),
-                            timeout: that.timeout,
-                            transformRequest: [function (data) { return JSON.stringify(data); }]
+                            timeout: this.timeout,
+                            transformRequest: [function (rawData) { return JSON.stringify(rawData); }],
+                            url: url + "?" + Client_1.Client.objectToUrlParameters(tslib_1.__assign(tslib_1.__assign({}, parameters), {
+                                token: credentials.token
+                            }))
                         };
-                        if (typeof _this.cancelToken[url] != 'undefined') {
-                            axiosRequestConfig.cancelToken = _this.cancelToken[url].token;
+                        if (typeof this.cancelToken[url] !== "undefined") {
+                            axiosRequestConfig.cancelToken = this.cancelToken[url].token;
                         }
-                        axios_1["default"]
-                            .request(axiosRequestConfig)
-                            .then(function (axiosResponse) {
-                            var response = new Response_1.Response(axiosResponse.status, axiosResponse.data);
-                            return resolve(response);
-                        })["catch"](function (error) {
-                            if (error.response === undefined) {
-                                return;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        sendRequest = function () { return tslib_1.__awaiter(_this, void 0, void 0, function () { return tslib_1.__generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, axios_1["default"].request(axiosRequestConfig)];
+                                case 1: return [2 /*return*/, _a.sent()];
                             }
-                            var response = new Response_1.Response(error.response.status, error.response.data);
-                            return reject(response);
-                        });
-                    })];
+                        }); }); };
+                        retry = this.retryMap.getRetry(axiosRequestConfig.url, axiosRequestConfig.method);
+                        return [4 /*yield*/, this.tryRequest(sendRequest, retry)];
+                    case 2:
+                        axiosResponse = _a.sent();
+                        return [2 /*return*/, new Response_1.Response(axiosResponse.status, axiosResponse.data)];
+                    case 3:
+                        error_1 = _a.sent();
+                        response = void 0;
+                        if (error_1.response) {
+                            response = new Response_1.Response(error_1.response.status, error_1.response.data);
+                        }
+                        else {
+                            response = new Response_1.Response(__1.ConnectionError.getTransportableHTTPError(), {
+                                message: "Connection failed or timed out"
+                            });
+                        }
+                        throw response;
+                    case 4: return [2 /*return*/];
+                }
             });
         });
     };
@@ -4020,7 +5173,7 @@ var AxiosClient = /** @class */ (function (_super) {
      * @param url
      */
     AxiosClient.prototype.abort = function (url) {
-        if (typeof this.cancelToken[url] != 'undefined') {
+        if (typeof this.cancelToken[url] !== "undefined") {
             this.cancelToken[url].cancel();
         }
         this.generateCancelToken(url);
@@ -4032,6 +5185,52 @@ var AxiosClient = /** @class */ (function (_super) {
      */
     AxiosClient.prototype.generateCancelToken = function (url) {
         this.cancelToken[url] = axios_1["default"].CancelToken.source();
+    };
+    /**
+     * Performs the request and maybe retries in case of failure
+     *
+     * @param sendRequest The function that, when called, will perform the HTTP request
+     * @param retry       If it's an instance of Retry and the request fails it will retry the request
+     *
+     * @return {Promise<AxiosResponse>}
+     */
+    AxiosClient.prototype.tryRequest = function (sendRequest, retry) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var retries, millisecondsBetweenRetries, error_2;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        retries = 0;
+                        millisecondsBetweenRetries = 0;
+                        if (retry instanceof __1.Retry) {
+                            retries = retry.getRetries();
+                            millisecondsBetweenRetries = retry.getMicrosecondsBetweenRetries() / 1000;
+                        }
+                        _a.label = 1;
+                    case 1:
+                        if (false) {}
+                        _a.label = 2;
+                    case 2:
+                        _a.trys.push([2, 4, , 7]);
+                        return [4 /*yield*/, sendRequest()];
+                    case 3: return [2 /*return*/, _a.sent()];
+                    case 4:
+                        error_2 = _a.sent();
+                        if (retries <= 0) {
+                            throw error_2;
+                        }
+                        retries -= 1;
+                        if (!(millisecondsBetweenRetries > 0)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, millisecondsBetweenRetries); })];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6: return [3 /*break*/, 7];
+                    case 7: return [3 /*break*/, 1];
+                    case 8: return [2 /*return*/];
+                }
+            });
+        });
     };
     return AxiosClient;
 }(Client_1.Client));
@@ -4254,20 +5453,23 @@ var RetryMap = /** @class */ (function () {
         this.retries = {};
     }
     /**
+     * Create from array
+     */
+    RetryMap.createFromArray = function (array) {
+        var retryMap = new RetryMap();
+        for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
+            var retryConfig = array_1[_i];
+            retryMap.addRetry(Retry_1.Retry.createFromArray(retryConfig));
+        }
+        return retryMap;
+    };
+    /**
      * Add retry
      *
      * @param retry
      */
     RetryMap.prototype.addRetry = function (retry) {
         this.retries[retry.getUrl() + "~~" + retry.getMethod()] = retry;
-    };
-    /**
-     * Create from array
-     */
-    RetryMap.createFromArray = function (array) {
-        var retryMap = new RetryMap();
-        retryMap.retries = array.map(function (retry) { return Retry_1.Retry.createFromArray(retry); });
-        return retryMap;
     };
     /**
      * Get retry
@@ -4795,6 +5997,8 @@ var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.j
 var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError */ "./node_modules/apisearch/lib/Error/InvalidFormatError.js");
 var Coordinate_1 = __webpack_require__(/*! ./Coordinate */ "./node_modules/apisearch/lib/Model/Coordinate.js");
 var ItemUUID_1 = __webpack_require__(/*! ./ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
+var AppUUID_1 = __webpack_require__(/*! ./AppUUID */ "./node_modules/apisearch/lib/Model/AppUUID.js");
+var IndexUUID_1 = __webpack_require__(/*! ./IndexUUID */ "./node_modules/apisearch/lib/Model/IndexUUID.js");
 /**
  * Item class
  */
@@ -5010,7 +6214,7 @@ var Item = /** @class */ (function () {
      * @returns {{}}
      */
     Item.prototype.getAllMetadata = function () {
-        return tslib_1.__assign({}, this.metadata, this.indexedMetadata);
+        return tslib_1.__assign(tslib_1.__assign({}, this.metadata), this.indexedMetadata);
     };
     /**
      * Get
@@ -5081,6 +6285,22 @@ var Item = /** @class */ (function () {
         return this.score;
     };
     /**
+     * Set appUUID
+     *
+     * @return {AppUUID}
+     */
+    Item.prototype.getAppUUID = function () {
+        return this.appUUID;
+    };
+    /**
+     * Set indexUUID
+     *
+     * @return {IndexUUID}
+     */
+    Item.prototype.getIndexUUID = function () {
+        return this.indexUUID;
+    };
+    /**
      * To array
      */
     Item.prototype.toArray = function () {
@@ -5117,6 +6337,12 @@ var Item = /** @class */ (function () {
         if (typeof this.score != "undefined") {
             itemAsArray.score = this.score;
         }
+        if (typeof this.appUUID != "undefined") {
+            itemAsArray.app_uuid = this.appUUID.toArray();
+        }
+        if (typeof this.indexUUID != "undefined") {
+            itemAsArray.index_uuid = this.indexUUID.toArray();
+        }
         return itemAsArray;
     };
     /**
@@ -5142,7 +6368,7 @@ var Item = /** @class */ (function () {
             item.distance = array.distance;
         }
         if (typeof array.highlights == "object" &&
-            array.distance != null) {
+            array.highlights != null) {
             item.highlights = array.highlights;
         }
         if (typeof array.is_promoted != "undefined" &&
@@ -5152,6 +6378,14 @@ var Item = /** @class */ (function () {
         if (typeof array.score != "undefined" &&
             array.score != null) {
             item.score = array.score;
+        }
+        if (typeof array.app_uuid != "undefined" &&
+            array.app_uuid != null) {
+            item.appUUID = AppUUID_1.AppUUID.createFromArray(array.app_uuid);
+        }
+        if (typeof array.index_uuid != "undefined" &&
+            array.index_uuid != null) {
+            item.indexUUID = IndexUUID_1.IndexUUID.createFromArray(array.index_uuid);
         }
         return item;
     };
@@ -5803,6 +7037,7 @@ var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError *
 var Filter_3 = __webpack_require__(/*! ./Filter */ "./node_modules/apisearch/lib/Query/Filter.js");
 var ScoreStrategies_1 = __webpack_require__(/*! ./ScoreStrategies */ "./node_modules/apisearch/lib/Query/ScoreStrategies.js");
 var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./node_modules/apisearch/lib/Query/SortBy.js");
+var IndexUUID_1 = __webpack_require__(/*! ../Model/IndexUUID */ "./node_modules/apisearch/lib/Model/IndexUUID.js");
 /**
  * Query constants
  */
@@ -5828,7 +7063,7 @@ var Query = /** @class */ (function () {
         this.aggregationsEnabled = true;
         this.suggestionsEnabled = false;
         this.highlightsEnabled = false;
-        this.filterFields = [];
+        this.searchableFields = [];
         this.minScore = exports.NO_MIN_SCORE;
         this.metadata = {};
         this.subqueries = {};
@@ -5953,7 +7188,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Item_1.Item.getPathByField("type");
         if (values.length > 0) {
-            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.universeFilters.type;
@@ -5970,18 +7205,18 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterByTypes = function (values, aggregate, aggregationSort) {
+        var _a, _b;
         if (aggregate === void 0) { aggregate = true; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
-        var _a, _b;
         var fieldPath = Item_1.Item.getPathByField("type");
         if (values.length > 0) {
-            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.filters.type;
         }
         if (aggregate) {
-            this.aggregations = tslib_1.__assign({}, this.aggregations, (_b = {}, _b["type"] = Aggregation_1.Aggregation.create("type", fieldPath, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort), _b));
+            this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_b = {}, _b["type"] = Aggregation_1.Aggregation.create("type", fieldPath, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort), _b));
         }
         return this;
     };
@@ -5996,7 +7231,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Item_1.Item.getPathByField("id");
         if (values.length > 0) {
-            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.universeFilters.id;
@@ -6014,7 +7249,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Item_1.Item.getPathByField("id");
         if (values.length > 0) {
-            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.filters.id;
@@ -6031,11 +7266,11 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterUniverseBy = function (field, values, applicationType) {
-        if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         var _a;
+        if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         var fieldPath = Item_1.Item.getPathByField(field);
         if (values.length > 0) {
-            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.universeFilters[field];
@@ -6055,13 +7290,13 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterBy = function (filterName, field, values, applicationType, aggregate, aggregationSort) {
+        var _a;
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         if (aggregate === void 0) { aggregate = true; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
-        var _a;
         var fieldPath = Item_1.Item.getPathByField(field);
         if (values.length > 0) {
-            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.filters[filterName];
@@ -6082,12 +7317,12 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterUniverseByRange = function (field, values, applicationType, rangeType) {
+        var _a;
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
-        var _a;
         var fieldPath = Item_1.Item.getPathByField(field);
         if (values.length > 0) {
-            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
+            this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
         }
         else {
             delete this.universeFilters[field];
@@ -6112,7 +7347,7 @@ var Query = /** @class */ (function () {
      *
      * @param filterName
      * @param field
-     * @param options
+     * @param ranges
      * @param values
      * @param applicationType
      * @param rangeType
@@ -6121,21 +7356,21 @@ var Query = /** @class */ (function () {
      *
      * @return {Query}
      */
-    Query.prototype.filterByRange = function (filterName, field, options, values, applicationType, rangeType, aggregate, aggregationSort) {
+    Query.prototype.filterByRange = function (filterName, field, ranges, values, applicationType, rangeType, aggregate, aggregationSort) {
+        var _a;
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
         if (aggregate === void 0) { aggregate = true; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
-        var _a;
         var fieldPath = Item_1.Item.getPathByField(field);
         if (values.length !== 0) {
-            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
+            this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
         }
         else {
             delete this.filters[filterName];
         }
         if (aggregate) {
-            this.aggregateByRange(filterName, fieldPath, options, applicationType, rangeType, aggregationSort);
+            this.aggregateByRange(filterName, fieldPath, ranges, applicationType, rangeType, aggregationSort);
         }
         return this;
     };
@@ -6167,18 +7402,18 @@ var Query = /** @class */ (function () {
      */
     Query.prototype.filterUniverseByLocation = function (locationRange) {
         var _a;
-        this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a["coordinate"] = Filter_1.Filter.create("coordinate", locationRange.toArray(), Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_GEO), _a));
+        this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a["coordinate"] = Filter_1.Filter.create("coordinate", locationRange.toArray(), Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_GEO), _a));
         return this;
     };
     /**
      * Set filter fields
      *
-     * @param filterFields
+     * @param searchableFields
      *
      * @return {Query}
      */
-    Query.prototype.setFilterFields = function (filterFields) {
-        this.filterFields = filterFields;
+    Query.prototype.setSearchableFields = function (searchableFields) {
+        this.searchableFields = searchableFields;
         return this;
     };
     /**
@@ -6186,8 +7421,8 @@ var Query = /** @class */ (function () {
      *
      * @return {string[]}
      */
-    Query.prototype.getFilterFields = function () {
-        return this.filterFields;
+    Query.prototype.getSearchableFields = function () {
+        return this.searchableFields;
     };
     /**
      * Sort by
@@ -6218,10 +7453,10 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.aggregateBy = function (filterName, field, applicationType, aggregationSort, limit) {
+        var _a;
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
-        var _a;
-        this.aggregations = tslib_1.__assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort, limit), _a));
+        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort, limit), _a));
         return this;
     };
     /**
@@ -6229,7 +7464,7 @@ var Query = /** @class */ (function () {
      *
      * @param filterName
      * @param field
-     * @param options
+     * @param ranges
      * @param applicationType
      * @param rangeType
      * @param aggregationSort
@@ -6237,15 +7472,15 @@ var Query = /** @class */ (function () {
      *
      * @return {Query}
      */
-    Query.prototype.aggregateByRange = function (filterName, field, options, applicationType, rangeType, aggregationSort, limit) {
+    Query.prototype.aggregateByRange = function (filterName, field, ranges, applicationType, rangeType, aggregationSort, limit) {
+        var _a;
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
-        var _a;
-        if (options.length === 0) {
+        if (ranges.length === 0) {
             return this;
         }
-        this.aggregations = tslib_1.__assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, rangeType, options, aggregationSort, limit), _a));
+        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, rangeType, ranges, aggregationSort, limit), _a));
         return this;
     };
     /**
@@ -6543,12 +7778,12 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.excludeUUIDs = function () {
+        var _a;
         var uuids = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             uuids[_i] = arguments[_i];
         }
-        var _a;
-        this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a["excluded_ids"] = Filter_1.Filter.create("_id", uuids.map(function (uuid) { return uuid.composedUUID(); }), Filter_2.FILTER_EXCLUDE, Filter_2.FILTER_TYPE_FIELD), _a));
+        this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a["excluded_ids"] = Filter_1.Filter.create("_id", uuids.map(function (uuid) { return uuid.composedUUID(); }), Filter_2.FILTER_EXCLUDE, Filter_2.FILTER_TYPE_FIELD), _a));
         return this;
     };
     /**
@@ -6703,6 +7938,25 @@ var Query = /** @class */ (function () {
         return this.UUID;
     };
     /**
+     * Force Index UUID.
+     *
+     * @param indexUUID
+     *
+     * @return {Query}
+     */
+    Query.prototype.forceIndexUUID = function (indexUUID) {
+        this.indexUUID = indexUUID;
+        return this;
+    };
+    /**
+     * Get IndexUUID
+     *
+     * @return {IndexUUID|null}
+     */
+    Query.prototype.getIndexUUID = function () {
+        return this.indexUUID;
+    };
+    /**
      * To array
      *
      * @return {any}
@@ -6788,7 +8042,7 @@ var Query = /** @class */ (function () {
             array.suggestions_enabled = true;
         }
         if (this.highlightsEnabled === true) {
-            array.highlights_enabled = true;
+            array.highlight_enabled = true;
         }
         if (this.aggregationsEnabled === false) {
             array.aggregations_enabled = false;
@@ -6796,9 +8050,9 @@ var Query = /** @class */ (function () {
         /**
          * Filter fields
          */
-        if (this.filterFields instanceof Array &&
-            this.filterFields.length > 0) {
-            array.filter_fields = this.filterFields;
+        if (this.searchableFields instanceof Array &&
+            this.searchableFields.length > 0) {
+            array.searchable_fields = this.searchableFields;
         }
         /**
          * Score strategies
@@ -6823,10 +8077,7 @@ var Query = /** @class */ (function () {
          * User
          */
         if (this.user instanceof User_1.User) {
-            var userAsArray = this.user.toArray();
-            if (Object.keys(userAsArray).length > 0) {
-                array.user = userAsArray;
-            }
+            array.user = this.user.toArray();
         }
         array.metadata = this.metadata;
         if (this.subqueries instanceof Object &&
@@ -6836,6 +8087,9 @@ var Query = /** @class */ (function () {
                 var subquery = this.subqueries[i];
                 array.subqueries[i] = subquery.toArray();
             }
+        }
+        if (this.indexUUID instanceof IndexUUID_1.IndexUUID) {
+            array.index_uuid = this.indexUUID.toArray();
         }
         /**
          * items promoted
@@ -6918,8 +8172,8 @@ var Query = /** @class */ (function () {
         query.aggregationsEnabled = typeof array.aggregations_enabled === "boolean"
             ? array.aggregations_enabled
             : true;
-        query.highlightsEnabled = typeof array.highlights_enabled === "boolean"
-            ? array.highlights_enabled
+        query.highlightsEnabled = typeof array.highlight_enabled === "boolean"
+            ? array.highlight_enabled
             : false;
         query.fuzziness = array.fuzziness;
         query.minScore = array.min_score ? array.min_score : exports.NO_MIN_SCORE;
@@ -6949,14 +8203,17 @@ var Query = /** @class */ (function () {
         query.metadata = typeof array.metadata === typeof {}
             ? array.metadata
             : {};
-        query.filterFields = array.filter_fields instanceof Array
-            ? array.filter_fields
+        query.searchableFields = array.searchable_fields instanceof Array
+            ? array.searchable_fields
             : [];
         query.scoreStrategies = array.score_strategies instanceof Object
             ? ScoreStrategies_1.ScoreStrategies.createFromArray(array.score_strategies)
             : undefined;
         query.user = array.user instanceof Object
             ? User_1.User.createFromArray(array.user)
+            : undefined;
+        query.indexUUID = array.index_uuid instanceof Object
+            ? IndexUUID_1.IndexUUID.createFromArray(array.index_uuid)
             : undefined;
         return query;
     };
@@ -6980,8 +8237,8 @@ exports.__esModule = true;
 /**
  * Aggregation constants
  */
-exports.RANGE_ZERO = 0;
-exports.RANGE_INFINITE = -1;
+exports.RANGE_MINUS_INFINITE = null;
+exports.RANGE_INFINITE = null;
 exports.RANGE_SEPARATOR = "..";
 /**
  * Filter class
@@ -7000,7 +8257,7 @@ var Range = /** @class */ (function () {
         var parts = string.split(exports.RANGE_SEPARATOR);
         var from = parts[0];
         var to = parts[1];
-        var finalFrom = exports.RANGE_ZERO;
+        var finalFrom = exports.RANGE_MINUS_INFINITE;
         var finalTo = exports.RANGE_INFINITE;
         if (from != "") {
             finalFrom = parseInt(from);
@@ -7019,7 +8276,7 @@ var Range = /** @class */ (function () {
      */
     Range.arrayToString = function (values) {
         var finalValues = ["", ""];
-        if (values[0] != exports.RANGE_ZERO) {
+        if (values[0] != exports.RANGE_MINUS_INFINITE) {
             finalValues[0] = String(values[0]);
         }
         if (values[1] != exports.RANGE_INFINITE) {
@@ -7742,11 +8999,13 @@ var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError *
 var InvalidTokenError_1 = __webpack_require__(/*! ../Error/InvalidTokenError */ "./node_modules/apisearch/lib/Error/InvalidTokenError.js");
 var ResourceExistsError_1 = __webpack_require__(/*! ../Error/ResourceExistsError */ "./node_modules/apisearch/lib/Error/ResourceExistsError.js");
 var ResourceNotAvailableError_1 = __webpack_require__(/*! ../Error/ResourceNotAvailableError */ "./node_modules/apisearch/lib/Error/ResourceNotAvailableError.js");
+var UnknownError_1 = __webpack_require__(/*! ../Error/UnknownError */ "./node_modules/apisearch/lib/Error/UnknownError.js");
+var Response_1 = __webpack_require__(/*! ../Http/Response */ "./node_modules/apisearch/lib/Http/Response.js");
+var Index_1 = __webpack_require__(/*! ../Model/Index */ "./node_modules/apisearch/lib/Model/Index.js");
 var Item_1 = __webpack_require__(/*! ../Model/Item */ "./node_modules/apisearch/lib/Model/Item.js");
 var ItemUUID_1 = __webpack_require__(/*! ../Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
 var Result_1 = __webpack_require__(/*! ../Result/Result */ "./node_modules/apisearch/lib/Result/Result.js");
 var Repository_1 = __webpack_require__(/*! ./Repository */ "./node_modules/apisearch/lib/Repository/Repository.js");
-var Index_1 = __webpack_require__(/*! ../Model/Index */ "./node_modules/apisearch/lib/Model/Index.js");
 /**
  * Aggregation class
  */
@@ -7779,6 +9038,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * Generate item document by a simple object.
      *
      * @param object
+     *
+     * @returns {void}
      */
     HttpRepository.prototype.addObject = function (object) {
         var item = this
@@ -7792,6 +9053,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * Delete item document by uuid.
      *
      * @param object
+     *
+     * @returns {void}
      */
     HttpRepository.prototype.deleteObject = function (object) {
         var itemUUID = this
@@ -7804,120 +9067,125 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Flush update items
      *
-     * @param itemsToUpdate
+     * @param {Item[]} itemsToUpdate
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.flushUpdateItems = function (itemsToUpdate) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_1;
             return tslib_1.__generator(this, function (_a) {
-                if (itemsToUpdate.length === 0) {
-                    return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        if (itemsToUpdate.length === 0) {
+                            return [2 /*return*/];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/items", "put", this.getCredentials(), {}, itemsToUpdate.map(function (item) {
+                                return item.toArray();
+                            }))];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        response_1 = _a.sent();
+                        throw this.createErrorFromResponse(response_1);
+                    case 4: return [2 /*return*/];
                 }
-                return [2 /*return*/, this
-                        .httpClient
-                        .get("/" + this.appId + "/indices/" + this.indexId + "/items", "put", this.getCredentials(), {}, itemsToUpdate.map(function (item) {
-                        return item.toArray();
-                    }))
-                        .then(function (response) {
-                        HttpRepository.throwTransportableExceptionIfNeeded(response);
-                    })];
             });
         });
     };
     /**
      * Flush delete items
      *
-     * @param itemsToDelete
+     * @param {ItemUUID[]} itemsToDelete
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.flushDeleteItems = function (itemsToDelete) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_2;
             return tslib_1.__generator(this, function (_a) {
-                if (itemsToDelete.length === 0) {
-                    return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        if (itemsToDelete.length === 0) {
+                            return [2 /*return*/];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/items", "delete", this.getCredentials(), {}, itemsToDelete.map(function (itemUUID) {
+                                return itemUUID.toArray();
+                            }))];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        response_2 = _a.sent();
+                        throw this.createErrorFromResponse(response_2);
+                    case 4: return [2 /*return*/];
                 }
-                return [2 /*return*/, this
-                        .httpClient
-                        .get("/" + this.appId + "/indices/" + this.indexId + "/items", "delete", this.getCredentials(), {}, itemsToDelete.map(function (itemUUID) {
-                        return itemUUID.toArray();
-                    }))
-                        .then(function (response) {
-                        HttpRepository.throwTransportableExceptionIfNeeded(response);
-                    })];
             });
         });
     };
     /**
      * Query
      *
-     * @param query
+     * @param {Query} query
      *
      * @return {Promise<Result>}
      */
     HttpRepository.prototype.query = function (query) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var _this = this;
+            var response, response_3, result;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId, "get", this.getCredentials(), {
-                            query: JSON.stringify(query.toArray())
-                        }, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            var result = Result_1.Result.createFromArray(response.getBody());
-                            return _this.applyTransformersToResult(result);
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId, "get", this.getCredentials(), {
+                                query: JSON.stringify(query.toArray())
+                            }, {})];
+                    case 1:
+                        response = _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_3 = _a.sent();
+                        throw this.createErrorFromResponse(response_3);
+                    case 3:
+                        result = Result_1.Result.createFromArray(response.getBody());
+                        return [2 /*return*/, this.applyTransformersToResult(result)];
                 }
             });
         });
     };
     /**
-     * Apply transformers to results
-     *
-     * @param result
-     *
-     * @return {Result}
-     */
-    HttpRepository.prototype.applyTransformersToResult = function (result) {
-        var subresults = result.getSubresults();
-        if (Object.keys(subresults).length > 0) {
-            Object.keys(subresults).map(function (key) {
-                subresults[key] = this.applyTransformersToResult(subresults[key]);
-            }.bind(this));
-            return Result_1.Result.createMultiresults(subresults);
-        }
-        return Result_1.Result.create(result.getQueryUUID(), result.getTotalItems(), result.getTotalHits(), result.getAggregations(), result.getSuggests(), this
-            .transformer
-            .fromItems(result.getItems()));
-    };
-    /**
      * Update items
      *
-     * @param query
-     * @param changes
+     * @param {Query} query
+     * @param {Changes} changes
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.updateItems = function (query, changes) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_4;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId + "/items/update-by-query", "post", this.getCredentials(), {}, {
-                            query: query.toArray(),
-                            changes: changes.toArray()
-                        })
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/items/update-by-query", "put", this.getCredentials(), {}, {
+                                changes: changes.toArray(),
+                                query: query.toArray()
+                            })];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_4 = _a.sent();
+                        throw this.createErrorFromResponse(response_4);
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -7925,26 +9193,26 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Create index
      *
-     * @param indexUUID
-     * @param config
+     * @param {IndexUUID} indexUUID
+     * @param {Config} config
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.createIndex = function (indexUUID, config) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_5;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices", "put", this.getCredentials(), {}, {
-                            index: indexUUID.toArray(),
-                            config: config.toArray()
-                        })
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + indexUUID.composedUUID(), "put", this.getCredentials(), {}, config.toArray())];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_5 = _a.sent();
+                        throw this.createErrorFromResponse(response_5);
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -7952,22 +9220,25 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Delete index
      *
-     * @param indexUUID
+     * @param {IndexUUID} indexUUID
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.deleteIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_6;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId, "delete", this.getCredentials(), {}, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId, "delete", this.getCredentials(), {}, {})];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_6 = _a.sent();
+                        throw this.createErrorFromResponse(response_6);
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -7975,22 +9246,25 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Reset index
      *
-     * @param indexUUID
+     * @param {IndexUUID} indexUUID
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.resetIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_7;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId + '/reset', "post", this.getCredentials(), {}, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/reset", "put", this.getCredentials(), {}, {})];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_7 = _a.sent();
+                        throw this.createErrorFromResponse(response_7);
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -7998,22 +9272,25 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Check index
      *
-     * @param indexUUID
+     * @param {IndexUUID} indexUUID
      *
      * @return {Promise<boolean>}
      */
     HttpRepository.prototype.checkIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response, response_8;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId + '/reset', "head", this.getCredentials(), {}, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return response.getCode() === 200;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId, "head", this.getCredentials(), {}, {})];
+                    case 1:
+                        response = _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_8 = _a.sent();
+                        throw this.createErrorFromResponse(response_8);
+                    case 3: return [2 /*return*/, response.getCode() === 200];
                 }
             });
         });
@@ -8025,21 +9302,25 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.getIndices = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            return tslib_1.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/", "get", this.getCredentials(), {}, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            var result = [];
-                            for (var _i = 0, _a = response.getBody(); _i < _a.length; _i++) {
-                                var indexAsArray = _a[_i];
-                                result.push(Index_1.Index.createFromArray(indexAsArray));
-                            }
-                            return result;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+            var response, response_9, result, _i, _a, indexAsArray;
+            return tslib_1.__generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/", "get", this.getCredentials(), {}, {})];
+                    case 1:
+                        response = _b.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_9 = _b.sent();
+                        throw this.createErrorFromResponse(response_9);
+                    case 3:
+                        result = [];
+                        for (_i = 0, _a = response.getBody(); _i < _a.length; _i++) {
+                            indexAsArray = _a[_i];
+                            result.push(Index_1.Index.createFromArray(indexAsArray));
+                        }
+                        return [2 /*return*/, result];
                 }
             });
         });
@@ -8047,23 +9328,63 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Configure index
      *
-     * @param indexUUID
-     * @param config
+     * @param {IndexUUID} indexUUID
+     * @param {Config} config
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.configureIndex = function (indexUUID, config) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_10;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId + '/configure', "post", this.getCredentials(), {}, config.toArray())
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/configure", "put", this.getCredentials(), {}, config.toArray())];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_10 = _a.sent();
+                        throw this.createErrorFromResponse(response_10);
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Click
+     *
+     * @param {string} app_id
+     * @param {string} index_id
+     * @param {string} item_id
+     * @param {string} user_id
+     *
+     * @return {Promise<void>}
+     */
+    HttpRepository.prototype.click = function (app_id, index_id, item_id, user_id) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var parameters, response_11;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        parameters = {};
+                        if (typeof user_id != "undefined") {
+                            parameters.user_id = user_id;
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.httpClient.get("/" + app_id + "/indices/" + index_id + "/items/" + item_id + '/click', "post", {
+                                token: this.token
+                            }, parameters, {})];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        response_11 = _a.sent();
+                        throw this.createErrorFromResponse(response_11);
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -8080,26 +9401,53 @@ var HttpRepository = /** @class */ (function (_super) {
         };
     };
     /**
-     * throw error if needed
+     * Apply transformers to results
      *
-     * @param response
+     * @param {Result} result
+     *
+     * @return {Result}
      */
-    HttpRepository.throwTransportableExceptionIfNeeded = function (response) {
-        if (typeof response.getCode() == "undefined") {
-            return;
+    HttpRepository.prototype.applyTransformersToResult = function (result) {
+        var subresults = result.getSubresults();
+        if (Object.keys(subresults).length > 0) {
+            Object.keys(subresults).map(function (key) {
+                subresults[key] = this.applyTransformersToResult(subresults[key]);
+            }.bind(this));
+            return Result_1.Result.createMultiresults(subresults);
         }
-        switch (response.getCode()) {
-            case ResourceNotAvailableError_1.ResourceNotAvailableError.getTransportableHTTPError():
-                throw new ResourceNotAvailableError_1.ResourceNotAvailableError(response.getBody().message);
-            case InvalidTokenError_1.InvalidTokenError.getTransportableHTTPError():
-                throw new InvalidTokenError_1.InvalidTokenError(response.getBody().message);
-            case InvalidFormatError_1.InvalidFormatError.getTransportableHTTPError():
-                throw new InvalidFormatError_1.InvalidFormatError(response.getBody().message);
-            case ResourceExistsError_1.ResourceExistsError.getTransportableHTTPError():
-                throw new ResourceExistsError_1.ResourceExistsError(response.getBody().message);
-            case ConnectionError_1.ConnectionError.getTransportableHTTPError():
-                throw new ConnectionError_1.ConnectionError(response.getBody().message);
+        return Result_1.Result.create(result.getQueryUUID(), result.getTotalItems(), result.getTotalHits(), result.getAggregations(), result.getSuggestions(), this
+            .transformer
+            .fromItems(result.getItems()));
+    };
+    /**
+     * Create exception to match an error response
+     *
+     * @param any response
+     */
+    HttpRepository.prototype.createErrorFromResponse = function (response) {
+        var error;
+        if (response instanceof Response_1.Response) {
+            switch (response.getCode()) {
+                case ResourceNotAvailableError_1.ResourceNotAvailableError.getTransportableHTTPError():
+                    error = new ResourceNotAvailableError_1.ResourceNotAvailableError(response.getBody().message);
+                    break;
+                case InvalidTokenError_1.InvalidTokenError.getTransportableHTTPError():
+                    error = new InvalidTokenError_1.InvalidTokenError(response.getBody().message);
+                    break;
+                case InvalidFormatError_1.InvalidFormatError.getTransportableHTTPError():
+                    error = new InvalidFormatError_1.InvalidFormatError(response.getBody().message);
+                    break;
+                case ResourceExistsError_1.ResourceExistsError.getTransportableHTTPError():
+                    error = new ResourceExistsError_1.ResourceExistsError(response.getBody().message);
+                    break;
+                case ConnectionError_1.ConnectionError.getTransportableHTTPError():
+                    error = new ConnectionError_1.ConnectionError(response.getBody().message);
+                    break;
+            }
         }
+        return undefined === error
+            ? UnknownError_1.UnknownError.createUnknownError()
+            : error;
     };
     return HttpRepository;
 }(Repository_1.Repository));
@@ -8186,10 +9534,11 @@ var Repository = /** @class */ (function () {
      * @param bulkNumber
      * @param skipIfLess
      *
-     * @return {Promise<void>}
+     * @return {Promise<any[]>}
      */
     Repository.prototype.flush = function (bulkNumber, skipIfLess) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var promise, resetCachedElements;
             var _this = this;
             return tslib_1.__generator(this, function (_a) {
                 if (!bulkNumber) {
@@ -8202,20 +9551,21 @@ var Repository = /** @class */ (function () {
                     this.itemsToUpdate.length < bulkNumber) {
                     return [2 /*return*/];
                 }
-                return [2 /*return*/, Promise.all(Repository
-                        .chunkArray(this.itemsToUpdate, bulkNumber)
-                        .map(function (arrayOfItems) {
-                        return _this.flushUpdateItems(arrayOfItems);
-                    })
-                        .concat(Repository
-                        .chunkArray(this.itemsToDelete, bulkNumber)
-                        .map(function (arrayOfItemsUUID) {
-                        return _this.flushDeleteItems(arrayOfItemsUUID);
-                    }))).then(function (_) {
-                        _this.resetCachedElements();
-                    })["catch"](function (_) {
-                        _this.resetCachedElements();
-                    })];
+                promise = Promise.all(Repository
+                    .chunkArray(this.itemsToUpdate, bulkNumber)
+                    .map(function (arrayOfItems) {
+                    return _this.flushUpdateItems(arrayOfItems);
+                })
+                    .concat(Repository
+                    .chunkArray(this.itemsToDelete, bulkNumber)
+                    .map(function (arrayOfItemsUUID) {
+                    return _this.flushDeleteItems(arrayOfItemsUUID);
+                })));
+                resetCachedElements = function () {
+                    _this.resetCachedElements();
+                };
+                promise.then(resetCachedElements, resetCachedElements);
+                return [2 /*return*/, promise];
             });
         });
     };
@@ -8413,7 +9763,7 @@ var Result = /** @class */ (function () {
      */
     function Result(queryUUID, totalItems, totalHits) {
         this.items = [];
-        this.suggests = [];
+        this.suggestions = [];
         this.subresults = {};
         this.queryUUID = queryUUID;
         this.totalItems = totalItems;
@@ -8426,15 +9776,15 @@ var Result = /** @class */ (function () {
      * @param totalItems
      * @param totalHits
      * @param aggregations
-     * @param suggests
+     * @param suggestions
      * @param items
      *
      * @returns {Result}
      */
-    Result.create = function (queryUUID, totalItems, totalHits, aggregations, suggests, items) {
+    Result.create = function (queryUUID, totalItems, totalHits, aggregations, suggestions, items) {
         var result = new Result(queryUUID, totalItems, totalHits);
         result.aggregations = aggregations;
-        result.suggests = suggests;
+        result.suggestions = suggestions;
         result.items = items;
         return result;
     };
@@ -8561,20 +9911,12 @@ var Result = /** @class */ (function () {
             : this.aggregations.hasNotEmptyAggregation(name);
     };
     /**
-     * Add suggest
-     *
-     * @param suggest
-     */
-    Result.prototype.addSuggest = function (suggest) {
-        this.suggests.push(suggest);
-    };
-    /**
-     * Get suggests
+     * Get suggestions
      *
      * @return {string[]}
      */
-    Result.prototype.getSuggests = function () {
-        return this.suggests;
+    Result.prototype.getSuggestions = function () {
+        return this.suggestions;
     };
     /**
      * Get query uuid
@@ -8611,7 +9953,7 @@ var Result = /** @class */ (function () {
     /**
      * to array
      *
-     * @return {{query: any, total_items: number, total_hits: number, items:any[], aggregations: any, suggests: string[]}}
+     * @return {{query: any, total_items: number, total_hits: number, items:any[], aggregations: any, suggestions: string[]}}
      */
     Result.prototype.toArray = function () {
         var array = {
@@ -8622,7 +9964,7 @@ var Result = /** @class */ (function () {
             aggregations: this.aggregations == null
                 ? null
                 : this.aggregations.toArray(),
-            suggests: this.suggests
+            suggests: this.suggestions
         };
         if (this.subresults instanceof Object &&
             Object.keys(this.subresults).length) {
@@ -8652,7 +9994,7 @@ var Result = /** @class */ (function () {
             ? ResultAggregations_1.ResultAggregations.createFromArray(array.aggregations)
             : null, array.suggests
             ? array.suggests
-            : null, array.items instanceof Array
+            : [], array.items instanceof Array
             ? array.items.map(function (itemAsArray) { return Item_1.Item.createFromArray(itemAsArray); })
             : []);
         /**
@@ -8783,7 +10125,7 @@ var ResultAggregation = /** @class */ (function () {
      * @return {{}}
      */
     ResultAggregation.prototype.getAllElements = function () {
-        return tslib_1.__assign({}, this.activeElements, this.counters);
+        return tslib_1.__assign(tslib_1.__assign({}, this.activeElements), this.counters);
     };
     /**
      * Get total elements
@@ -9191,7 +10533,6 @@ exports.__esModule = true;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var Apisearch_1 = __webpack_require__(/*! ./Apisearch */ "./node_modules/apisearch/lib/Apisearch.js");
 exports["default"] = Apisearch_1["default"];
-tslib_1.__exportStar(__webpack_require__(/*! ./Cache/InMemoryCache */ "./node_modules/apisearch/lib/Cache/InMemoryCache.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Config/Config */ "./node_modules/apisearch/lib/Config/Config.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Config/Synonym */ "./node_modules/apisearch/lib/Config/Synonym.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Error/ConnectionError */ "./node_modules/apisearch/lib/Error/ConnectionError.js"), exports);
@@ -9261,7 +10602,6 @@ var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ "./node_modules/
 var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ "./node_modules/axios/lib/helpers/parseHeaders.js");
 var isURLSameOrigin = __webpack_require__(/*! ./../helpers/isURLSameOrigin */ "./node_modules/axios/lib/helpers/isURLSameOrigin.js");
 var createError = __webpack_require__(/*! ../core/createError */ "./node_modules/axios/lib/core/createError.js");
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(/*! ./../helpers/btoa */ "./node_modules/axios/lib/helpers/btoa.js");
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -9273,22 +10613,6 @@ module.exports = function xhrAdapter(config) {
     }
 
     var request = new XMLHttpRequest();
-    var loadEvent = 'onreadystatechange';
-    var xDomain = false;
-
-    // For IE 8/9 CORS support
-    // Only supports POST and GET calls and doesn't returns the response headers.
-    // DON'T do this for testing b/c XMLHttpRequest is mocked, not XDomainRequest.
-    if ( true &&
-        typeof window !== 'undefined' &&
-        window.XDomainRequest && !('withCredentials' in request) &&
-        !isURLSameOrigin(config.url)) {
-      request = new window.XDomainRequest();
-      loadEvent = 'onload';
-      xDomain = true;
-      request.onprogress = function handleProgress() {};
-      request.ontimeout = function handleTimeout() {};
-    }
 
     // HTTP basic authentication
     if (config.auth) {
@@ -9303,8 +10627,8 @@ module.exports = function xhrAdapter(config) {
     request.timeout = config.timeout;
 
     // Listen for ready state
-    request[loadEvent] = function handleLoad() {
-      if (!request || (request.readyState !== 4 && !xDomain)) {
+    request.onreadystatechange = function handleLoad() {
+      if (!request || request.readyState !== 4) {
         return;
       }
 
@@ -9321,9 +10645,8 @@ module.exports = function xhrAdapter(config) {
       var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
       var response = {
         data: responseData,
-        // IE sends 1223 instead of 204 (https://github.com/axios/axios/issues/201)
-        status: request.status === 1223 ? 204 : request.status,
-        statusText: request.status === 1223 ? 'No Content' : request.statusText,
+        status: request.status,
+        statusText: request.statusText,
         headers: responseHeaders,
         config: config,
         request: request
@@ -10136,54 +11459,6 @@ module.exports = function bind(fn, thisArg) {
 
 /***/ }),
 
-/***/ "./node_modules/axios/lib/helpers/btoa.js":
-/*!************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/btoa.js ***!
-  \************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-// btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
-
-var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-function E() {
-  this.message = 'String contains an invalid character';
-}
-E.prototype = new Error;
-E.prototype.code = 5;
-E.prototype.name = 'InvalidCharacterError';
-
-function btoa(input) {
-  var str = String(input);
-  var output = '';
-  for (
-    // initialize result and counter
-    var block, charCode, idx = 0, map = chars;
-    // if the next str index does not exist:
-    //   change the mapping table to "="
-    //   check if d has no fractional digits
-    str.charAt(idx | 0) || (map = '=', idx % 1);
-    // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
-    output += map.charAt(63 & block >> 8 - idx % 1 * 8)
-  ) {
-    charCode = str.charCodeAt(idx += 3 / 4);
-    if (charCode > 0xFF) {
-      throw new E();
-    }
-    block = block << 8 | charCode;
-  }
-  return output;
-}
-
-module.exports = btoa;
-
-
-/***/ }),
-
 /***/ "./node_modules/axios/lib/helpers/buildURL.js":
 /*!****************************************************!*\
   !*** ./node_modules/axios/lib/helpers/buildURL.js ***!
@@ -10598,7 +11873,7 @@ module.exports = function spread(callback) {
 
 
 var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/is-buffer/index.js");
+var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/axios/node_modules/is-buffer/index.js");
 
 /*global toString:true*/
 
@@ -10902,6 +12177,28 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/axios/node_modules/is-buffer/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/axios/node_modules/is-buffer/index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+module.exports = function isBuffer (obj) {
+  return obj != null && obj.constructor != null &&
+    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/base64-js/index.js":
 /*!*****************************************!*\
   !*** ./node_modules/base64-js/index.js ***!
@@ -10977,7 +12274,8 @@ function toByteArray (b64) {
     ? validLen - 4
     : validLen
 
-  for (var i = 0; i < len; i += 4) {
+  var i
+  for (i = 0; i < len; i += 4) {
     tmp =
       (revLookup[b64.charCodeAt(i)] << 18) |
       (revLookup[b64.charCodeAt(i + 1)] << 12) |
@@ -11076,7 +12374,7 @@ function fromByteArray (uint8) {
 /* WEBPACK VAR INJECTION */(function(global) {/*!
  * The buffer module from node.js, for the browser.
  *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @author   Feross Aboukhadijeh <http://feross.org>
  * @license  MIT
  */
 /* eslint-disable no-proto */
@@ -12992,6 +14290,7 @@ function EventEmitter() {
   EventEmitter.init.call(this);
 }
 module.exports = EventEmitter;
+module.exports.once = once;
 
 // Backwards-compat with node 0.10.x
 EventEmitter.EventEmitter = EventEmitter;
@@ -13003,6 +14302,12 @@ EventEmitter.prototype._maxListeners = undefined;
 // By default EventEmitters will print a warning if more than 10 listeners are
 // added to it. This is a useful default which helps finding memory leaks.
 var defaultMaxListeners = 10;
+
+function checkListener(listener) {
+  if (typeof listener !== 'function') {
+    throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
+  }
+}
 
 Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
   enumerable: true,
@@ -13038,14 +14343,14 @@ EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
   return this;
 };
 
-function $getMaxListeners(that) {
+function _getMaxListeners(that) {
   if (that._maxListeners === undefined)
     return EventEmitter.defaultMaxListeners;
   return that._maxListeners;
 }
 
 EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
-  return $getMaxListeners(this);
+  return _getMaxListeners(this);
 };
 
 EventEmitter.prototype.emit = function emit(type) {
@@ -13097,9 +14402,7 @@ function _addListener(target, type, listener, prepend) {
   var events;
   var existing;
 
-  if (typeof listener !== 'function') {
-    throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
-  }
+  checkListener(listener);
 
   events = target._events;
   if (events === undefined) {
@@ -13136,7 +14439,7 @@ function _addListener(target, type, listener, prepend) {
     }
 
     // Check for listener leak
-    m = $getMaxListeners(target);
+    m = _getMaxListeners(target);
     if (m > 0 && existing.length > m && !existing.warned) {
       existing.warned = true;
       // No error code for this since it is a Warning
@@ -13168,12 +14471,12 @@ EventEmitter.prototype.prependListener =
     };
 
 function onceWrapper() {
-  var args = [];
-  for (var i = 0; i < arguments.length; i++) args.push(arguments[i]);
   if (!this.fired) {
     this.target.removeListener(this.type, this.wrapFn);
     this.fired = true;
-    ReflectApply(this.listener, this.target, args);
+    if (arguments.length === 0)
+      return this.listener.call(this.target);
+    return this.listener.apply(this.target, arguments);
   }
 }
 
@@ -13186,18 +14489,14 @@ function _onceWrap(target, type, listener) {
 }
 
 EventEmitter.prototype.once = function once(type, listener) {
-  if (typeof listener !== 'function') {
-    throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
-  }
+  checkListener(listener);
   this.on(type, _onceWrap(this, type, listener));
   return this;
 };
 
 EventEmitter.prototype.prependOnceListener =
     function prependOnceListener(type, listener) {
-      if (typeof listener !== 'function') {
-        throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
-      }
+      checkListener(listener);
       this.prependListener(type, _onceWrap(this, type, listener));
       return this;
     };
@@ -13207,9 +14506,7 @@ EventEmitter.prototype.removeListener =
     function removeListener(type, listener) {
       var list, events, position, i, originalListener;
 
-      if (typeof listener !== 'function') {
-        throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
-      }
+      checkListener(listener);
 
       events = this._events;
       if (events === undefined)
@@ -13383,6 +14680,35 @@ function unwrapListeners(arr) {
     ret[i] = arr[i].listener || arr[i];
   }
   return ret;
+}
+
+function once(emitter, name) {
+  return new Promise(function (resolve, reject) {
+    function eventListener() {
+      if (errorListener !== undefined) {
+        emitter.removeListener('error', errorListener);
+      }
+      resolve([].slice.call(arguments));
+    };
+    var errorListener;
+
+    // Adding an error listener is not optional because
+    // if an error is thrown on an event emitter we cannot
+    // guarantee that the actual event we are waiting will
+    // be fired. The result could be a silent way to create
+    // memory or file descriptor leaks, which is something
+    // we should avoid.
+    if (name !== 'error') {
+      errorListener = function errorListener(err) {
+        emitter.removeListener(name, eventListener);
+        reject(err);
+      };
+
+      emitter.once('error', errorListener);
+    }
+
+    emitter.once(name, eventListener);
+  });
 }
 
 
@@ -13722,7 +15048,7 @@ module.exports = Dispatcher;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/*
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
 Syntax highlighting with language autodetection.
 https://highlightjs.org/
 */
@@ -13735,9 +15061,22 @@ https://highlightjs.org/
 
   // Setup highlight.js for different environments. First is Node.js or
   // CommonJS.
-  if(true) {
+  // `nodeType` is checked to ensure that `exports` is not a HTML element.
+  if( true && !exports.nodeType) {
     factory(exports);
-  } else {}
+  } else if(globalObject) {
+    // Export hljs globally even when using AMD for cases when this script
+    // is loaded with others that may still expect a global hljs.
+    globalObject.hljs = factory({});
+
+    // Finally register the global hljs with AMD.
+    if(true) {
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function() {
+        return globalObject.hljs;
+      }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    }
+  }
 
 }(function(hljs) {
   // Convenience variables for build-in objects
@@ -13745,19 +15084,24 @@ https://highlightjs.org/
       objectKeys = Object.keys;
 
   // Global internal variables used within the highlight.js library.
-  var languages = {},
-      aliases   = {};
+  var languages = Object.create(null),
+      aliases   = Object.create(null);
+
+  // safe/production mode - swallows more errors, tries to keep running
+  // even if a single syntax or parse hits a fatal error
+  var SAFE_MODE = true;
 
   // Regular expressions used throughout the highlight.js library.
   var noHighlightRe    = /^(no-?highlight|plain|text)$/i,
       languagePrefixRe = /\blang(?:uage)?-([\w-]+)\b/i,
       fixMarkupRe      = /((^(<[^>]+>|\t|)+|(?:\n)))/gm;
 
-  // The object will be assigned by the build tool. It used to synchronize API 
+  // The object will be assigned by the build tool. It used to synchronize API
   // of external language files with minified version of the highlight.js library.
   var API_REPLACES;
 
   var spanEndTag = '</span>';
+  var LANGUAGE_NOT_FOUND = "Could not find the language '{}', did you forget to load/include a language module?";
 
   // Global options used when within external APIs. This is modified when
   // calling the `hljs.configure` function.
@@ -13767,6 +15111,9 @@ https://highlightjs.org/
     useBR: false,
     languages: undefined
   };
+
+  // keywords that should have no default relevance value
+  var COMMON_KEYWORDS = 'of and for in not or if then'.split(' ');
 
 
   /* Utility functions */
@@ -13797,7 +15144,12 @@ https://highlightjs.org/
     // language-* takes precedence over non-prefixed class names.
     match = languagePrefixRe.exec(classes);
     if (match) {
-      return getLanguage(match[1]) ? match[1] : 'no-highlight';
+      var language = getLanguage(match[1]);
+      if (!language) {
+        console.warn(LANGUAGE_NOT_FOUND.replace("{}", match[1]));
+        console.warn("Falling back to no-highlight mode for this block.", block);
+      }
+      return language ? match[1] : 'no-highlight';
     }
 
     classes = classes.split(/\s+/);
@@ -13811,6 +15163,12 @@ https://highlightjs.org/
     }
   }
 
+  /**
+   * performs a shallow merge of multiple objects into one
+   *
+   * @arguments list of objects with properties to merge
+   * @returns a single new object
+   */
   function inherit(parent) {  // inherit(parent, override_obj, override_obj, ...)
     var key;
     var result = {};
@@ -13889,7 +15247,9 @@ https://highlightjs.org/
     }
 
     function open(node) {
-      function attr_str(a) {return ' ' + a.nodeName + '="' + escape(a.value).replace('"', '&quot;') + '"';}
+      function attr_str(a) {
+        return ' ' + a.nodeName + '="' + escape(a.value).replace(/"/g, '&quot;') + '"';
+      }
       result += '<' + tag(node) + ArrayProto.map.call(node.attributes, attr_str).join('') + '>';
     }
 
@@ -13932,22 +15292,87 @@ https://highlightjs.org/
 
   /* Initialization */
 
-  function expand_mode(mode) {
+  function dependencyOnParent(mode) {
+    if (!mode) return false;
+
+    return mode.endsWithParent || dependencyOnParent(mode.starts);
+  }
+
+  function expand_or_clone_mode(mode) {
     if (mode.variants && !mode.cached_variants) {
       mode.cached_variants = mode.variants.map(function(variant) {
         return inherit(mode, {variants: null}, variant);
       });
     }
-    return mode.cached_variants || (mode.endsWithParent && [inherit(mode)]) || [mode];
+
+    // EXPAND
+    // if we have variants then essentially "replace" the mode with the variants
+    // this happens in compileMode, where this function is called from
+    if (mode.cached_variants)
+      return mode.cached_variants;
+
+    // CLONE
+    // if we have dependencies on parents then we need a unique
+    // instance of ourselves, so we can be reused with many
+    // different parents without issue
+    if (dependencyOnParent(mode))
+      return [inherit(mode, { starts: mode.starts ? inherit(mode.starts) : null })];
+
+    if (Object.isFrozen(mode))
+      return [inherit(mode)];
+
+    // no special dependency issues, just return ourselves
+    return [mode];
   }
 
   function restoreLanguageApi(obj) {
     if(API_REPLACES && !obj.langApiRestored) {
       obj.langApiRestored = true;
-      for(var key in API_REPLACES)
-        obj[key] && (obj[API_REPLACES[key]] = obj[key]);
+      for(var key in API_REPLACES) {
+        if (obj[key]) {
+          obj[API_REPLACES[key]] = obj[key];
+        }
+      }
       (obj.contains || []).concat(obj.variants || []).forEach(restoreLanguageApi);
     }
+  }
+
+  function compileKeywords(rawKeywords, case_insensitive) {
+      var compiled_keywords = {};
+
+      if (typeof rawKeywords === 'string') { // string
+        splitAndCompile('keyword', rawKeywords);
+      } else {
+        objectKeys(rawKeywords).forEach(function (className) {
+          splitAndCompile(className, rawKeywords[className]);
+        });
+      }
+    return compiled_keywords;
+
+    // ---
+
+    function splitAndCompile(className, str) {
+      if (case_insensitive) {
+        str = str.toLowerCase();
+      }
+      str.split(' ').forEach(function(keyword) {
+        var pair = keyword.split('|');
+        compiled_keywords[pair[0]] = [className, scoreForKeyword(pair[0], pair[1])];
+      });
+    }
+  }
+
+  function scoreForKeyword(keyword, providedScore) {
+    // manual scores always win over common keywords
+    // so you can force a score of 1 if you really insist
+    if (providedScore)
+      return Number(providedScore);
+
+    return commonKeyword(keyword) ? 0 : 1;
+  }
+
+  function commonKeyword(word) {
+    return COMMON_KEYWORDS.indexOf(word.toLowerCase()) != -1;
   }
 
   function compileLanguage(language) {
@@ -13963,8 +15388,15 @@ https://highlightjs.org/
       );
     }
 
+    function reCountMatchGroups(re) {
+      return (new RegExp(re.toString() + '|')).exec('').length - 1;
+    }
+
     // joinRe logically computes regexps.join(separator), but fixes the
     // backreferences so they continue to match.
+    // it also places each individual regular expression into it's own
+    // match group, keeping track of the sequencing of those match groups
+    // is currently an exercise for the caller. :-)
     function joinRe(regexps, separator) {
       // backreferenceRe matches an open parenthesis or backreference. To avoid
       // an incorrect parse, it additionally matches the following:
@@ -13977,11 +15409,13 @@ https://highlightjs.org/
       var numCaptures = 0;
       var ret = '';
       for (var i = 0; i < regexps.length; i++) {
+        numCaptures += 1;
         var offset = numCaptures;
         var re = reStr(regexps[i]);
         if (i > 0) {
           ret += separator;
         }
+        ret += "(";
         while (re.length > 0) {
           var match = backreferenceRe.exec(re);
           if (match == null) {
@@ -14000,8 +15434,73 @@ https://highlightjs.org/
             }
           }
         }
+        ret += ")";
       }
       return ret;
+    }
+
+    function buildModeRegex(mode) {
+
+      var matchIndexes = {};
+      var matcherRe;
+      var regexes = [];
+      var matcher = {};
+      var matchAt = 1;
+
+      function addRule(rule, regex) {
+        matchIndexes[matchAt] = rule;
+        regexes.push([rule, regex]);
+        matchAt += reCountMatchGroups(regex) + 1;
+      }
+
+      var term;
+      for (var i=0; i < mode.contains.length; i++) {
+        var re;
+        term = mode.contains[i];
+        if (term.beginKeywords) {
+          re = '\\.?(?:' + term.begin + ')\\.?';
+        } else {
+          re = term.begin;
+        }
+        addRule(term, re);
+      }
+      if (mode.terminator_end)
+        addRule("end", mode.terminator_end);
+      if (mode.illegal)
+        addRule("illegal", mode.illegal);
+
+      var terminators = regexes.map(function(el) { return el[1]; });
+      matcherRe = langRe(joinRe(terminators, '|'), true);
+
+      matcher.lastIndex = 0;
+      matcher.exec = function(s) {
+        var rule;
+
+        if( regexes.length === 0) return null;
+
+        matcherRe.lastIndex = matcher.lastIndex;
+        var match = matcherRe.exec(s);
+        if (!match) { return null; }
+
+        for(var i = 0; i<match.length; i++) {
+          if (match[i] != undefined && matchIndexes["" +i] != undefined ) {
+            rule = matchIndexes[""+i];
+            break;
+          }
+        }
+
+        // illegal or end match
+        if (typeof rule === "string") {
+          match.type = rule;
+          match.extra = [mode.illegal, mode.terminator_end];
+        } else {
+          match.type = "begin";
+          match.rule = rule;
+        }
+        return match;
+      };
+
+      return matcher;
     }
 
     function compileMode(mode, parent) {
@@ -14010,28 +15509,9 @@ https://highlightjs.org/
       mode.compiled = true;
 
       mode.keywords = mode.keywords || mode.beginKeywords;
-      if (mode.keywords) {
-        var compiled_keywords = {};
+      if (mode.keywords)
+        mode.keywords = compileKeywords(mode.keywords, language.case_insensitive);
 
-        var flatten = function(className, str) {
-          if (language.case_insensitive) {
-            str = str.toLowerCase();
-          }
-          str.split(' ').forEach(function(kw) {
-            var pair = kw.split('|');
-            compiled_keywords[pair[0]] = [className, pair[1] ? Number(pair[1]) : 1];
-          });
-        };
-
-        if (typeof mode.keywords === 'string') { // string
-          flatten('keyword', mode.keywords);
-        } else {
-          objectKeys(mode.keywords).forEach(function (className) {
-            flatten(className, mode.keywords[className]);
-          });
-        }
-        mode.keywords = compiled_keywords;
-      }
       mode.lexemesRe = langRe(mode.lexemes || /\w+/, true);
 
       if (parent) {
@@ -14059,7 +15539,7 @@ https://highlightjs.org/
         mode.contains = [];
       }
       mode.contains = Array.prototype.concat.apply([], mode.contains.map(function(c) {
-        return expand_mode(c === 'self' ? mode : c);
+        return expand_or_clone_mode(c === 'self' ? mode : c);
       }));
       mode.contains.forEach(function(c) {compileMode(c, mode);});
 
@@ -14067,45 +15547,44 @@ https://highlightjs.org/
         compileMode(mode.starts, parent);
       }
 
-      var terminators =
-        mode.contains.map(function(c) {
-          return c.beginKeywords ? '\\.?(?:' + c.begin + ')\\.?' : c.begin;
-        })
-        .concat([mode.terminator_end, mode.illegal])
-        .map(reStr)
-        .filter(Boolean);
-      mode.terminators = terminators.length ? langRe(joinRe(terminators, '|'), true) : {exec: function(/*s*/) {return null;}};
+      mode.terminators = buildModeRegex(mode);
     }
-    
+
+    // self is not valid at the top-level
+    if (language.contains && language.contains.indexOf('self') != -1) {
+      if (!SAFE_MODE) {
+        throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.")
+      } else {
+        // silently remove the broken rule (effectively ignoring it), this has historically
+        // been the behavior in the past, so this removal preserves compatibility with broken
+        // grammars when running in Safe Mode
+        language.contains = language.contains.filter(function(mode) { return mode != 'self'; });
+      }
+    }
     compileMode(language);
   }
 
-  /*
-  Core highlighting function. Accepts a language name, or an alias, and a
-  string with the code to highlight. Returns an object with the following
-  properties:
 
-  - relevance (int)
-  - value (an HTML string with highlighting markup)
-
+  /**
+   * Core highlighting function.
+   *
+   * @param {string} languageName - the language to use for highlighting
+   * @param {string} code - the code to highlight
+   * @param {boolean} ignore_illegals - whether to ignore illegal matches, default is to bail
+   * @param {array<mode>} continuation - array of continuation modes
+   *
+   * @returns an object that represents the result
+   * @property {string} language - the language name
+   * @property {number} relevance - the relevance score
+   * @property {string} value - the highlighted HTML code
+   * @property {mode} top - top of the current mode stack
+   * @property {boolean} illegal - indicates whether any illegal matches were found
   */
-  function highlight(name, value, ignore_illegals, continuation) {
+  function highlight(languageName, code, ignore_illegals, continuation) {
+    var codeToHighlight = code;
 
     function escapeRe(value) {
       return new RegExp(value.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'm');
-    }
-
-    function subMode(lexeme, mode) {
-      var i, length;
-
-      for (i = 0, length = mode.contains.length; i < length; i++) {
-        if (testRe(mode.contains[i].beginRe, lexeme)) {
-          if (mode.contains[i].endSameAsBegin) {
-            mode.contains[i].endRe = escapeRe( mode.contains[i].beginRe.exec(lexeme)[0] );
-          }
-          return mode.contains[i];
-        }
-      }
     }
 
     function endOfMode(mode, lexeme) {
@@ -14120,21 +15599,20 @@ https://highlightjs.org/
       }
     }
 
-    function isIllegal(lexeme, mode) {
-      return !ignore_illegals && testRe(mode.illegalRe, lexeme);
-    }
-
     function keywordMatch(mode, match) {
       var match_str = language.case_insensitive ? match[0].toLowerCase() : match[0];
       return mode.keywords.hasOwnProperty(match_str) && mode.keywords[match_str];
     }
 
-    function buildSpan(classname, insideSpan, leaveOpen, noPrefix) {
+    function buildSpan(className, insideSpan, leaveOpen, noPrefix) {
+      if (!leaveOpen && insideSpan === '') return '';
+      if (!className) return insideSpan;
+
       var classPrefix = noPrefix ? '' : options.classPrefix,
           openSpan    = '<span class="' + classPrefix,
           closeSpan   = leaveOpen ? '' : spanEndTag;
 
-      openSpan += classname + '">';
+      openSpan += className + '">';
 
       return openSpan + insideSpan + closeSpan;
     }
@@ -14176,7 +15654,7 @@ https://highlightjs.org/
                    highlightAuto(mode_buffer, top.subLanguage.length ? top.subLanguage : undefined);
 
       // Counting embedded language score towards the host language may be disabled
-      // with zeroing the containing mode relevance. Usecase in point is Markdown that
+      // with zeroing the containing mode relevance. Use case in point is Markdown that
       // allows XML everywhere and makes every XML snippet to have a much larger Markdown
       // score.
       if (top.relevance > 0) {
@@ -14198,79 +15676,131 @@ https://highlightjs.org/
       top = Object.create(mode, {parent: {value: top}});
     }
 
-    function processLexeme(buffer, lexeme) {
 
-      mode_buffer += buffer;
+    function doBeginMatch(match) {
+      var lexeme = match[0];
+      var new_mode = match.rule;
+
+      if (new_mode && new_mode.endSameAsBegin) {
+        new_mode.endRe = escapeRe( lexeme );
+      }
+
+      if (new_mode.skip) {
+        mode_buffer += lexeme;
+      } else {
+        if (new_mode.excludeBegin) {
+          mode_buffer += lexeme;
+        }
+        processBuffer();
+        if (!new_mode.returnBegin && !new_mode.excludeBegin) {
+          mode_buffer = lexeme;
+        }
+      }
+      startNewMode(new_mode);
+      return new_mode.returnBegin ? 0 : lexeme.length;
+    }
+
+    function doEndMatch(match) {
+      var lexeme = match[0];
+      var matchPlusRemainder = codeToHighlight.substr(match.index);
+      var end_mode = endOfMode(top, matchPlusRemainder);
+      if (!end_mode) { return; }
+
+      var origin = top;
+      if (origin.skip) {
+        mode_buffer += lexeme;
+      } else {
+        if (!(origin.returnEnd || origin.excludeEnd)) {
+          mode_buffer += lexeme;
+        }
+        processBuffer();
+        if (origin.excludeEnd) {
+          mode_buffer = lexeme;
+        }
+      }
+      do {
+        if (top.className) {
+          result += spanEndTag;
+        }
+        if (!top.skip && !top.subLanguage) {
+          relevance += top.relevance;
+        }
+        top = top.parent;
+      } while (top !== end_mode.parent);
+      if (end_mode.starts) {
+        if (end_mode.endSameAsBegin) {
+          end_mode.starts.endRe = end_mode.endRe;
+        }
+        startNewMode(end_mode.starts);
+      }
+      return origin.returnEnd ? 0 : lexeme.length;
+    }
+
+    var lastMatch = {};
+    function processLexeme(text_before_match, match) {
+
+      var lexeme = match && match[0];
+
+      // add non-matched text to the current mode buffer
+      mode_buffer += text_before_match;
 
       if (lexeme == null) {
         processBuffer();
         return 0;
       }
 
-      var new_mode = subMode(lexeme, top);
-      if (new_mode) {
-        if (new_mode.skip) {
-          mode_buffer += lexeme;
-        } else {
-          if (new_mode.excludeBegin) {
-            mode_buffer += lexeme;
-          }
-          processBuffer();
-          if (!new_mode.returnBegin && !new_mode.excludeBegin) {
-            mode_buffer = lexeme;
-          }
-        }
-        startNewMode(new_mode, lexeme);
-        return new_mode.returnBegin ? 0 : lexeme.length;
+      // we've found a 0 width match and we're stuck, so we need to advance
+      // this happens when we have badly behaved rules that have optional matchers to the degree that
+      // sometimes they can end up matching nothing at all
+      // Ref: https://github.com/highlightjs/highlight.js/issues/2140
+      if (lastMatch.type=="begin" && match.type=="end" && lastMatch.index == match.index && lexeme === "") {
+        // spit the "skipped" character that our regex choked on back into the output sequence
+        mode_buffer += codeToHighlight.slice(match.index, match.index + 1);
+        return 1;
       }
 
-      var end_mode = endOfMode(top, lexeme);
-      if (end_mode) {
-        var origin = top;
-        if (origin.skip) {
-          mode_buffer += lexeme;
-        } else {
-          if (!(origin.returnEnd || origin.excludeEnd)) {
-            mode_buffer += lexeme;
-          }
-          processBuffer();
-          if (origin.excludeEnd) {
-            mode_buffer = lexeme;
-          }
-        }
-        do {
-          if (top.className) {
-            result += spanEndTag;
-          }
-          if (!top.skip && !top.subLanguage) {
-            relevance += top.relevance;
-          }
-          top = top.parent;
-        } while (top !== end_mode.parent);
-        if (end_mode.starts) {
-          if (end_mode.endSameAsBegin) {
-            end_mode.starts.endRe = end_mode.endRe;
-          }
-          startNewMode(end_mode.starts, '');
-        }
-        return origin.returnEnd ? 0 : lexeme.length;
+      // edge case for when illegal matches $ (end of line) which is technically
+      // a 0 width match but not a begin/end match so it's not caught by the
+      // first handler (when ignoreIllegals is true)
+      // https://github.com/highlightjs/highlight.js/issues/2522
+      if (lastMatch.type==="illegal" && lexeme === "") {
+        mode_buffer += codeToHighlight.slice(match.index, match.index + 1);
+        return 1;
       }
 
-      if (isIllegal(lexeme, top))
+      lastMatch = match;
+
+      if (match.type==="begin") {
+        return doBeginMatch(match);
+      } else if (match.type==="illegal" && !ignore_illegals) {
+        // illegal match, we do not continue processing
         throw new Error('Illegal lexeme "' + lexeme + '" for mode "' + (top.className || '<unnamed>') + '"');
+      } else if (match.type==="end") {
+        var processed = doEndMatch(match);
+        if (processed != undefined)
+          return processed;
+      }
 
       /*
-      Parser should not reach this point as all types of lexemes should be caught
-      earlier, but if it does due to some bug make sure it advances at least one
-      character forward to prevent infinite looping.
+      Why might be find ourselves here?  Only one occasion now.  An end match that was
+      triggered but could not be completed.  When might this happen?  When an `endSameasBegin`
+      rule sets the end rule to a specific match.  Since the overall mode termination rule that's
+      being used to scan the text isn't recompiled that means that any match that LOOKS like
+      the end (but is not, because it is not an exact match to the beginning) will
+      end up here.  A definite end match, but when `doEndMatch` tries to "reapply"
+      the end rule and fails to match, we wind up here, and just silently ignore the end.
+
+      This causes no real harm other than stopping a few times too many.
       */
+
       mode_buffer += lexeme;
-      return lexeme.length || 1;
+      return lexeme.length;
     }
 
-    var language = getLanguage(name);
+    var language = getLanguage(languageName);
     if (!language) {
-      throw new Error('Unknown language: "' + name + '"');
+      console.error(LANGUAGE_NOT_FOUND.replace("{}", languageName));
+      throw new Error('Unknown language: "' + languageName + '"');
     }
 
     compileLanguage(language);
@@ -14288,13 +15818,13 @@ https://highlightjs.org/
       var match, count, index = 0;
       while (true) {
         top.terminators.lastIndex = index;
-        match = top.terminators.exec(value);
+        match = top.terminators.exec(codeToHighlight);
         if (!match)
           break;
-        count = processLexeme(value.substring(index, match.index), match[0]);
+        count = processLexeme(codeToHighlight.substring(index, match.index), match);
         index = match.index + count;
       }
-      processLexeme(value.substr(index));
+      processLexeme(codeToHighlight.substr(index));
       for(current = top; current.parent; current = current.parent) { // close dangling modes
         if (current.className) {
           result += spanEndTag;
@@ -14303,17 +15833,27 @@ https://highlightjs.org/
       return {
         relevance: relevance,
         value: result,
-        language: name,
+        illegal:false,
+        language: languageName,
         top: top
       };
-    } catch (e) {
-      if (e.message && e.message.indexOf('Illegal') !== -1) {
+    } catch (err) {
+      if (err.message && err.message.indexOf('Illegal') !== -1) {
+        return {
+          illegal: true,
+          relevance: 0,
+          value: escape(codeToHighlight)
+        };
+      } else if (SAFE_MODE) {
         return {
           relevance: 0,
-          value: escape(value)
+          value: escape(codeToHighlight),
+          language: languageName,
+          top: top,
+          errorRaised: err
         };
       } else {
-        throw e;
+        throw err;
       }
     }
   }
@@ -14329,15 +15869,15 @@ https://highlightjs.org/
     detected language, may be absent)
 
   */
-  function highlightAuto(text, languageSubset) {
+  function highlightAuto(code, languageSubset) {
     languageSubset = languageSubset || options.languages || objectKeys(languages);
     var result = {
       relevance: 0,
-      value: escape(text)
+      value: escape(code)
     };
     var second_best = result;
     languageSubset.filter(getLanguage).filter(autoDetection).forEach(function(name) {
-      var current = highlight(name, text, false);
+      var current = highlight(name, code, false);
       current.language = name;
       if (current.relevance > second_best.relevance) {
         second_best = current;
@@ -14361,16 +15901,18 @@ https://highlightjs.org/
 
   */
   function fixMarkup(value) {
-    return !(options.tabReplace || options.useBR)
-      ? value
-      : value.replace(fixMarkupRe, function(match, p1) {
-          if (options.useBR && match === '\n') {
-            return '<br>';
-          } else if (options.tabReplace) {
-            return p1.replace(/\t/g, options.tabReplace);
-          }
-          return '';
-      });
+    if (!(options.tabReplace || options.useBR)) {
+      return value;
+    }
+
+    return value.replace(fixMarkupRe, function(match, p1) {
+        if (options.useBR && match === '\n') {
+          return '<br>';
+        } else if (options.tabReplace) {
+          return p1.replace(/\t/g, options.tabReplace);
+        }
+        return '';
+    });
   }
 
   function buildClassName(prevClassName, currentLang, resultLang) {
@@ -14400,7 +15942,7 @@ https://highlightjs.org/
         return;
 
     if (options.useBR) {
-      node = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+      node = document.createElement('div');
       node.innerHTML = block.innerHTML.replace(/\n/g, '').replace(/<br[ \/]*>/g, '\n');
     } else {
       node = block;
@@ -14410,7 +15952,7 @@ https://highlightjs.org/
 
     originalStream = nodeStream(node);
     if (originalStream.length) {
-      resultNode = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+      resultNode = document.createElement('div');
       resultNode.innerHTML = result.value;
       result.value = mergeStreams(originalStream, nodeStream(resultNode), text);
     }
@@ -14453,13 +15995,29 @@ https://highlightjs.org/
   Attaches highlighting to the page load event.
   */
   function initHighlightingOnLoad() {
-    addEventListener('DOMContentLoaded', initHighlighting, false);
-    addEventListener('load', initHighlighting, false);
+    window.addEventListener('DOMContentLoaded', initHighlighting, false);
+    window.addEventListener('load', initHighlighting, false);
   }
 
+  var PLAINTEXT_LANGUAGE = { disableAutodetect: true };
+
   function registerLanguage(name, language) {
-    var lang = languages[name] = language(hljs);
+    var lang;
+    try { lang = language(hljs); }
+    catch (error) {
+      console.error("Language definition for '{}' could not be registered.".replace("{}", name));
+      // hard or soft error
+      if (!SAFE_MODE) { throw error; } else { console.error(error); }
+      // languages that have serious errors are replaced with essentially a
+      // "plaintext" stand-in so that the code blocks will still get normal
+      // css classes applied to them - and one bad language won't break the
+      // entire highlighter
+      lang = PLAINTEXT_LANGUAGE;
+    }
+    languages[name] = lang;
     restoreLanguageApi(lang);
+    lang.rawDefinition = language.bind(null,hljs);
+
     if (lang.aliases) {
       lang.aliases.forEach(function(alias) {aliases[alias] = name;});
     }
@@ -14467,6 +16025,20 @@ https://highlightjs.org/
 
   function listLanguages() {
     return objectKeys(languages);
+  }
+
+  /*
+    intended usage: When one language truly requires another
+
+    Unlike `getLanguage`, this will throw when the requested language
+    is not available.
+  */
+  function requireLanguage(name) {
+    var lang = getLanguage(name);
+    if (lang) { return lang; }
+
+    var err = new Error('The \'{}\' language is required, but not loaded.'.replace('{}',name));
+    throw err;
   }
 
   function getLanguage(name) {
@@ -14491,8 +16063,10 @@ https://highlightjs.org/
   hljs.registerLanguage = registerLanguage;
   hljs.listLanguages = listLanguages;
   hljs.getLanguage = getLanguage;
+  hljs.requireLanguage = requireLanguage;
   hljs.autoDetection = autoDetection;
   hljs.inherit = inherit;
+  hljs.debugMode = function() { SAFE_MODE = false; }
 
   // Common regexps
   hljs.IDENT_RE = '[a-zA-Z]\\w*';
@@ -14597,6 +16171,48 @@ https://highlightjs.org/
     begin: '\\.\\s*' + hljs.UNDERSCORE_IDENT_RE,
     relevance: 0
   };
+
+  var constants = [
+    hljs.BACKSLASH_ESCAPE,
+    hljs.APOS_STRING_MODE,
+    hljs.QUOTE_STRING_MODE,
+    hljs.PHRASAL_WORDS_MODE,
+    hljs.COMMENT,
+    hljs.C_LINE_COMMENT_MODE,
+    hljs.C_BLOCK_COMMENT_MODE,
+    hljs.HASH_COMMENT_MODE,
+    hljs.NUMBER_MODE,
+    hljs.C_NUMBER_MODE,
+    hljs.BINARY_NUMBER_MODE,
+    hljs.CSS_NUMBER_MODE,
+    hljs.REGEXP_MODE,
+    hljs.TITLE_MODE,
+    hljs.UNDERSCORE_TITLE_MODE,
+    hljs.METHOD_GUARD
+  ]
+  constants.forEach(function(obj) { deepFreeze(obj); });
+
+  // https://github.com/substack/deep-freeze/blob/master/index.js
+  function deepFreeze (o) {
+    Object.freeze(o);
+
+    var objIsFunction = typeof o === 'function';
+
+    Object.getOwnPropertyNames(o).forEach(function (prop) {
+      if (o.hasOwnProperty(prop)
+      && o[prop] !== null
+      && (typeof o[prop] === "object" || typeof o[prop] === "function")
+      // IE11 fix: https://github.com/highlightjs/highlight.js/issues/2318
+      // TODO: remove in the future
+      && (objIsFunction ? prop !== 'caller' && prop !== 'callee' && prop !== 'arguments' : true)
+      && !Object.isFrozen(o[prop])) {
+        deepFreeze(o[prop]);
+      }
+    });
+
+    return o;
+  };
+
 
   return hljs;
 }));
@@ -15377,11 +16993,8 @@ module.exports = function(hljs) {
     };
 
     var ruleDeclarationMode = {
-        begin: regexes.ruleDeclaration + '\\s*=',
-        returnBegin: true,
-        end: /=/,
-        relevance: 0,
-        contains: [{className: "attribute", begin: regexes.ruleDeclaration}]
+        className: "attribute",
+        begin: regexes.ruleDeclaration + '(?=\\s*=)',
     };
 
     return {
@@ -15410,12 +17023,17 @@ module.exports = function(hljs) {
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
+  var HTTP_VERBS = [
+    "GET", "POST", "HEAD", "PUT", "DELETE", "CONNECT", "OPTIONS", "PATCH", "TRACE"
+  ]
   return {
     contains: [
       // IP
       {
         className: 'number',
-        begin: '\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(:\\d{1,5})?\\b'
+        begin: '^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(:\\d{1,5})?\\b',
+        relevance:5
       },
       // Other numbers
       {
@@ -15426,22 +17044,44 @@ module.exports = function(hljs) {
       // Requests
       {
         className: 'string',
-        begin: '"(GET|POST|HEAD|PUT|DELETE|CONNECT|OPTIONS|PATCH|TRACE)', end: '"',
-        keywords: 'GET POST HEAD PUT DELETE CONNECT OPTIONS PATCH TRACE',
+        begin: '"(' + HTTP_VERBS.join("|") + ')', end: '"',
+        keywords: HTTP_VERBS.join(" "),
         illegal: '\\n',
-        relevance: 10
+        relevance: 5,
+        contains: [{
+          begin: 'HTTP/[12]\\.\\d',
+          relevance:5
+        }]
       },
       // Dates
       {
         className: 'string',
+        // dates must have a certain length, this prevents matching
+        // simple array accesses a[123] and [] and other common patterns
+        // found in other languages
+        begin: /\[\d[^\]\n]{8,}\]/,
+        illegal: '\\n',
+        relevance: 1
+      },
+      {
+        className: 'string',
         begin: /\[/, end: /\]/,
-        illegal: '\\n'
+        illegal: '\\n',
+        relevance: 0
+      },
+      // User agent / relevance boost
+      {
+        className: 'string',
+        begin: '"Mozilla/\\d\\.\\d \\\(', end: '"',
+        illegal: '\\n',
+        relevance: 3
       },
       // Strings
       {
         className: 'string',
         begin: '"', end: '"',
-        illegal: '\\n'
+        illegal: '\\n',
+        relevance: 0
       }
     ]
   };
@@ -15748,7 +17388,7 @@ module.exports = function(hljs) {
       'for in|0 break continue while do|0 return if else case switch namespace is cast ' +
       'or and xor not get|0 in inout|10 out override set|0 private public const default|0 ' +
       'final shared external mixin|10 enum typedef funcdef this super import from interface ' +
-      'abstract|0 try catch protected explicit',
+      'abstract|0 try catch protected explicit property',
 
     // avoid close detection with C# and JS
     illegal: '(^using\\s+[A-Za-z0-9_\\.]+;$|\\bfunction\s*[^\\(])',
@@ -15993,23 +17633,24 @@ module.exports = function(hljs) {
     keyword:
       'if for while var new function do return void else break',
     literal:
-      'true false null undefined NaN Infinity PI BackSlash DoubleQuote ForwardSlash NewLine SingleQuote Tab',
+      'BackSlash DoubleQuote false ForwardSlash Infinity NaN NewLine null PI SingleQuote Tab TextFormatting true undefined',
     built_in:
-      'Abs Acos Area AreaGeodetic Asin Atan Atan2 Average Boolean Buffer BufferGeodetic ' +
+      'Abs Acos Angle Attachments Area AreaGeodetic Asin Atan Atan2 Average Bearing Boolean Buffer BufferGeodetic ' +
       'Ceil Centroid Clip Console Constrain Contains Cos Count Crosses Cut Date DateAdd ' +
-      'DateDiff Day Decode DefaultValue Dictionary Difference Disjoint Distance Distinct ' +
-      'DomainCode DomainName Equals Exp Extent Feature FeatureSet FeatureSetById FeatureSetByTitle ' +
-      'FeatureSetByUrl Filter First Floor Geometry Guid HasKey Hour IIf IndexOf Intersection ' +
-      'Intersects IsEmpty Length LengthGeodetic Log Max Mean Millisecond Min Minute Month ' +
+      'DateDiff Day Decode DefaultValue Dictionary Difference Disjoint Distance DistanceGeodetic Distinct ' +
+      'DomainCode DomainName Equals Exp Extent Feature FeatureSet FeatureSetByAssociation FeatureSetById FeatureSetByPortalItem ' +
+      'FeatureSetByRelationshipName FeatureSetByTitle FeatureSetByUrl Filter First Floor Geometry GroupBy Guid HasKey Hour IIf IndexOf ' +
+      'Intersection Intersects IsEmpty IsNan IsSelfIntersecting Length LengthGeodetic Log Max Mean Millisecond Min Minute Month ' +
       'MultiPartToSinglePart Multipoint NextSequenceValue Now Number OrderBy Overlaps Point Polygon ' +
-      'Polyline Pow Random Relate Reverse Round Second SetGeometry Sin Sort Sqrt Stdev Sum ' +
-      'SymmetricDifference Tan Text Timestamp Today ToLocal Top Touches ToUTC TypeOf Union Variance ' +
+      'Polyline Portal Pow Random Relate Reverse RingIsClockWise Round Second SetGeometry Sin Sort Sqrt Stdev Sum ' +
+      'SymmetricDifference Tan Text Timestamp Today ToLocal Top Touches ToUTC TrackCurrentTime ' +
+      'TrackGeometryWindow TrackIndex TrackStartTime TrackWindow TypeOf Union UrlEncode Variance ' +
       'Weekday When Within Year '
   };
   var EXPRESSIONS;
   var SYMBOL = {
     className: 'symbol',
-    begin: '\\$[feature|layer|map|value|view]+'
+    begin: '\\$[datastore|feature|layer|map|measure|sourcefeature|sourcelayer|targetfeature|targetlayer|value|view]+'
   };
   var NUMBER = {
     className: 'number',
@@ -16134,14 +17775,12 @@ module.exports = function(hljs) {
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
-  var CPP = hljs.getLanguage('cpp').exports;
-	return {
-    keywords: {
+
+	var ARDUINO_KW = {
       keyword:
-        'boolean byte word string String array ' + CPP.keywords.keyword,
+        'boolean byte word String',
       built_in:
-        'setup loop while catch for if do goto try switch case else ' +
-        'default break continue return ' +
+        'setup loop' +
         'KeyboardController MouseController SoftwareSerial ' +
         'EthernetServer EthernetClient LiquidCrystal ' +
         'RobotControl GSMVoiceCall EthernetUDP EsploraTFT ' +
@@ -16221,16 +17860,17 @@ module.exports = function(hljs) {
         'SET_PIN_MODE INTERNAL2V56 SYSTEM_RESET LED_BUILTIN ' +
         'INTERNAL1V1 SYSEX_START INTERNAL EXTERNAL ' +
         'DEFAULT OUTPUT INPUT HIGH LOW'
-    },
-    contains: [
-      CPP.preprocessor,
-      hljs.C_LINE_COMMENT_MODE,
-      hljs.C_BLOCK_COMMENT_MODE,
-      hljs.APOS_STRING_MODE,
-      hljs.QUOTE_STRING_MODE,
-      hljs.C_NUMBER_MODE
-    ]
   };
+
+  var ARDUINO = hljs.requireLanguage('cpp').rawDefinition();
+
+  var kws = ARDUINO.keywords;
+
+  kws.keyword += ' ' + ARDUINO_KW.keyword;
+  kws.literal += ' ' + ARDUINO_KW.literal;
+  kws.built_in += ' ' + ARDUINO_KW.built_in;
+
+  return ARDUINO;
 };
 
 /***/ }),
@@ -16704,14 +18344,10 @@ module.exports = function(hljs) {
     aliases: [ 'ahk' ],
     keywords: {
       keyword: 'Break Continue Critical Exit ExitApp Gosub Goto New OnExit Pause return SetBatchLines SetTimer Suspend Thread Throw Until ahk_id ahk_class ahk_pid ahk_exe ahk_group',
-      literal: 'A|0 true false NOT AND OR',
+      literal: 'true false NOT AND OR',
       built_in: 'ComSpec Clipboard ClipboardAll ErrorLevel',
     },
     contains: [
-      {
-        className: 'built_in',
-        begin: 'A_[a-zA-Z0-9]+'
-      },
       BACKTICK_ESCAPE,
       hljs.inherit(hljs.QUOTE_STRING_MODE, {contains: [BACKTICK_ESCAPE]}),
       hljs.COMMENT(';', '$', {relevance: 0}),
@@ -16722,28 +18358,31 @@ module.exports = function(hljs) {
         relevance: 0
       },
       {
-        className: 'subst', // FIXED
-        begin: '%(?=[a-zA-Z0-9#_$@])', end: '%',
-        illegal: '[^a-zA-Z0-9#_$@]'
+        className: 'variable', //subst would be the most accurate however fails the point of highlighting. variable is comparably the most accurate that actually has some effect
+        begin: '%[a-zA-Z0-9#_$@]+%'
       },
       {
         className: 'built_in',
-        begin: '^\\s*\\w+\\s*,'
+        begin: '^\\s*\\w+\\s*(,|%)'
         //I don't really know if this is totally relevant
       },
       {
-        className: 'meta', 
-        begin: '^\\s*#\w+', end:'$',
-        relevance: 0
-      },
-      {
-        className: 'symbol',
-        contains: [BACKTICK_ESCAPE],
+        className: 'title', //symbol would be most accurate however is higlighted just like built_in and that makes up a lot of AutoHotkey code
+		                        //meaning that it would fail to highlight anything
         variants: [
           {begin: '^[^\\n";]+::(?!=)'},
           {begin: '^[^\\n";]+:(?!=)', relevance: 0} // zero relevance as it catches a lot of things
                                                     // followed by a single ':' in many languages
         ]
+      },
+      {
+        className: 'meta', 
+        begin: '^\\s*#\\w+', end:'$',
+        relevance: 0
+      },
+	    {
+        className: 'built_in',
+        begin: 'A_[a-zA-Z0-9]+'
       },
       {
         // consecutive commas, not for highlighting but just for relevance
@@ -16961,7 +18600,7 @@ module.exports = function(hljs) {
       },
       {className: 'symbol',  begin: '^[A-Za-z0-9_.$]+:'},
       {className: 'meta', begin: '#', end: '$'},
-      {  // подстановка в «.macro»
+      {  // substitution within a macro
         className: 'subst',
         begin: '@[0-9]+'
       }
@@ -17101,6 +18740,11 @@ module.exports = function(hljs) {
       }
     ]
   };
+  var ESCAPED_QUOTE = {
+    className: '',
+    begin: /\\"/
+
+  };
   var APOS_STRING = {
     className: 'string',
     begin: /'/, end: /'/
@@ -17149,6 +18793,7 @@ module.exports = function(hljs) {
       },
       hljs.HASH_COMMENT_MODE,
       QUOTE_STRING,
+      ESCAPED_QUOTE,
       APOS_STRING,
       VAR
     ]
@@ -17176,7 +18821,7 @@ module.exports = function(hljs) {
           'CLEAR CLOSE CLS COLOR COM COMMON CONT COS CSNG CSRLIN CVD CVI CVS DATA DATE$ ' +
           'DEFDBL DEFINT DEFSNG DEFSTR DEF|0 SEG USR DELETE DIM DRAW EDIT END ENVIRON ENVIRON$ ' +
           'EOF EQV ERASE ERDEV ERDEV$ ERL ERR ERROR EXP FIELD FILES FIX FOR|0 FRE GET GOSUB|10 GOTO ' +
-          'HEX$ IF|0 THEN ELSE|0 INKEY$ INP INPUT INPUT# INPUT$ INSTR IMP INT IOCTL IOCTL$ KEY ON ' +
+          'HEX$ IF THEN ELSE|0 INKEY$ INP INPUT INPUT# INPUT$ INSTR IMP INT IOCTL IOCTL$ KEY ON ' +
           'OFF LIST KILL LEFT$ LEN LET LINE LLIST LOAD LOC LOCATE LOF LOG LPRINT USING LSET ' +
           'MERGE MID$ MKDIR MKD$ MKI$ MKS$ MOD NAME NEW NEXT NOISE NOT OCT$ ON OR PEN PLAY STRIG OPEN OPTION ' +
           'BASE OUT PAINT PALETTE PCOPY PEEK PMAP POINT POKE POS PRINT PRINT] PSET PRESET ' +
@@ -17291,7 +18936,7 @@ module.exports = function(hljs){
       },
       {
         // this mode works as the only relevance counter
-        begin: /\+\+|\-\-/, returnBegin: true,
+        begin: /(?:\+\+|\-\-)/,
         contains: [LITERAL]
       },
       LITERAL
@@ -17812,13 +19457,13 @@ module.exports = function(hljs) {
           contains: [SUBST, hljs.HASH_COMMENT_MODE]
         },
         {
-          begin: '//[gim]*',
+          begin: '//[gim]{0,3}(?=\\W)',
           relevance: 0
         },
         {
           // regex can't start with space to parse x / 2 / 3 as two divisions
           // regex can't start with *, and it supports an "illegal" in the main mode
-          begin: /\/(?![ *])(\\\/|.)*?\/[gim]*(?=\W|$)/
+          begin: /\/(?![ *]).*?(?![\\]).\/[gim]{0,3}(?=\W)/
         }
       ]
     },
@@ -17917,7 +19562,7 @@ module.exports = function(hljs) {
   return {
     keywords: {
       keyword:
-        '_ as at cofix else end exists exists2 fix for forall fun if IF in let ' +
+        '_|0 as at cofix else end exists exists2 fix for forall fun if IF in let ' +
         'match mod Prop return Set then Type using where with ' +
         'Abort About Add Admit Admitted All Arguments Assumptions Axiom Back BackTo ' +
         'Backtrack Bind Blacklist Canonical Cd Check Class Classes Close Coercion ' +
@@ -18123,11 +19768,24 @@ module.exports = function cos (hljs) {
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
+  function optional(s) {
+    return '(?:' + s + ')?';
+  }
+  var DECLTYPE_AUTO_RE = 'decltype\\(auto\\)'
+  var NAMESPACE_RE = '[a-zA-Z_]\\w*::'
+  var TEMPLATE_ARGUMENT_RE = '<.*?>';
+  var FUNCTION_TYPE_RE = '(' +
+    DECLTYPE_AUTO_RE + '|' +
+    optional(NAMESPACE_RE) +'[a-zA-Z_]\\w*' + optional(TEMPLATE_ARGUMENT_RE) +
+  ')';
   var CPP_PRIMITIVE_TYPES = {
     className: 'keyword',
     begin: '\\b[a-z\\d_]*_t\\b'
   };
 
+  // https://en.cppreference.com/w/cpp/language/escape
+  // \\ \x \xFF \u2837 \u00323747 \374
+  var CHARACTER_ESCAPES = '\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)'
   var STRINGS = {
     className: 'string',
     variants: [
@@ -18136,11 +19794,11 @@ module.exports = function(hljs) {
         illegal: '\\n',
         contains: [hljs.BACKSLASH_ESCAPE]
       },
-      { begin: /(?:u8?|U|L)?R"([^()\\ ]{0,16})\((?:.|\n)*?\)\1"/ },
       {
-        begin: '\'\\\\?.', end: '\'',
+        begin: '(u8?|U|L)?\'(' + CHARACTER_ESCAPES + "|.)", end: '\'',
         illegal: '.'
-      }
+      },
+      { begin: /(?:u8?|U|L)?R"([^()\\ ]{0,16})\((?:.|\n)*?\)\1"/ }
     ]
   };
 
@@ -18160,7 +19818,7 @@ module.exports = function(hljs) {
     keywords: {
       'meta-keyword':
         'if else elif endif define undef warning error line ' +
-        'pragma ifdef ifndef include'
+        'pragma _Pragma ifdef ifndef include'
     },
     contains: [
       {
@@ -18169,7 +19827,7 @@ module.exports = function(hljs) {
       hljs.inherit(STRINGS, {className: 'meta-string'}),
       {
         className: 'meta-string',
-        begin: /<[^\n>]*>/, end: /$/,
+        begin: /<.*?>/, end: /$/,
         illegal: '\\n',
       },
       hljs.C_LINE_COMMENT_MODE,
@@ -18177,29 +19835,36 @@ module.exports = function(hljs) {
     ]
   };
 
-  var FUNCTION_TITLE = hljs.IDENT_RE + '\\s*\\(';
+  var TITLE_MODE = {
+    className: 'title',
+    begin: optional(NAMESPACE_RE) + hljs.IDENT_RE,
+    relevance: 0
+  };
+
+  var FUNCTION_TITLE = optional(NAMESPACE_RE) + hljs.IDENT_RE + '\\s*\\(';
 
   var CPP_KEYWORDS = {
-    keyword: 'int float while private char catch import module export virtual operator sizeof ' +
+    keyword: 'int float while private char char8_t char16_t char32_t catch import module export virtual operator sizeof ' +
       'dynamic_cast|10 typedef const_cast|10 const for static_cast|10 union namespace ' +
       'unsigned long volatile static protected bool template mutable if public friend ' +
-      'do goto auto void enum else break extern using asm case typeid ' +
+      'do goto auto void enum else break extern using asm case typeid wchar_t' +
       'short reinterpret_cast|10 default double register explicit signed typename try this ' +
-      'switch continue inline delete alignof constexpr decltype ' +
-      'noexcept static_assert thread_local restrict _Bool complex _Complex _Imaginary ' +
+      'switch continue inline delete alignas alignof constexpr consteval constinit decltype ' +
+      'concept co_await co_return co_yield requires ' +
+      'noexcept static_assert thread_local restrict final override ' +
       'atomic_bool atomic_char atomic_schar ' +
       'atomic_uchar atomic_short atomic_ushort atomic_int atomic_uint atomic_long atomic_ulong atomic_llong ' +
       'atomic_ullong new throw return ' +
-      'and or not',
-    built_in: 'std string cin cout cerr clog stdin stdout stderr stringstream istringstream ostringstream ' +
+      'and and_eq bitand bitor compl not not_eq or or_eq xor xor_eq',
+    built_in: 'std string wstring cin cout cerr clog stdin stdout stderr stringstream istringstream ostringstream ' +
       'auto_ptr deque list queue stack vector map set bitset multiset multimap unordered_set ' +
-      'unordered_map unordered_multiset unordered_multimap array shared_ptr abort abs acos ' +
+      'unordered_map unordered_multiset unordered_multimap array shared_ptr abort terminate abs acos ' +
       'asin atan2 atan calloc ceil cosh cos exit exp fabs floor fmod fprintf fputs free frexp ' +
-      'fscanf isalnum isalpha iscntrl isdigit isgraph islower isprint ispunct isspace isupper ' +
+      'fscanf future isalnum isalpha iscntrl isdigit isgraph islower isprint ispunct isspace isupper ' +
       'isxdigit tolower toupper labs ldexp log10 log malloc realloc memchr memcmp memcpy memset modf pow ' +
       'printf putchar puts scanf sinh sin snprintf sprintf sqrt sscanf strcat strchr strcmp ' +
       'strcpy strcspn strlen strncat strncmp strncpy strpbrk strrchr strspn strstr tanh tan ' +
-      'vfprintf vprintf vsprintf endl initializer_list unique_ptr',
+      'vfprintf vprintf vsprintf endl initializer_list unique_ptr _Bool complex _Complex imaginary _Imaginary',
     literal: 'true false nullptr NULL'
   };
 
@@ -18211,11 +19876,89 @@ module.exports = function(hljs) {
     STRINGS
   ];
 
+  var EXPRESSION_CONTEXT = {
+    // This mode covers expression context where we can't expect a function
+    // definition and shouldn't highlight anything that looks like one:
+    // `return some()`, `else if()`, `(x*sum(1, 2))`
+    variants: [
+      {begin: /=/, end: /;/},
+      {begin: /\(/, end: /\)/},
+      {beginKeywords: 'new throw return else', end: /;/}
+    ],
+    keywords: CPP_KEYWORDS,
+    contains: EXPRESSION_CONTAINS.concat([
+      {
+        begin: /\(/, end: /\)/,
+        keywords: CPP_KEYWORDS,
+        contains: EXPRESSION_CONTAINS.concat(['self']),
+        relevance: 0
+      }
+    ]),
+    relevance: 0
+  };
+
+  var FUNCTION_DECLARATION = {
+    className: 'function',
+    begin: '(' + FUNCTION_TYPE_RE + '[\\*&\\s]+)+' + FUNCTION_TITLE,
+    returnBegin: true, end: /[{;=]/,
+    excludeEnd: true,
+    keywords: CPP_KEYWORDS,
+    illegal: /[^\w\s\*&:<>]/,
+    contains: [
+
+      { // to prevent it from being confused as the function title
+        begin: DECLTYPE_AUTO_RE,
+        keywords: CPP_KEYWORDS,
+        relevance: 0,
+      },
+      {
+        begin: FUNCTION_TITLE, returnBegin: true,
+        contains: [TITLE_MODE],
+        relevance: 0
+      },
+      {
+        className: 'params',
+        begin: /\(/, end: /\)/,
+        keywords: CPP_KEYWORDS,
+        relevance: 0,
+        contains: [
+          hljs.C_LINE_COMMENT_MODE,
+          hljs.C_BLOCK_COMMENT_MODE,
+          STRINGS,
+          NUMBERS,
+          CPP_PRIMITIVE_TYPES,
+          // Count matching parentheses.
+          {
+            begin: /\(/, end: /\)/,
+            keywords: CPP_KEYWORDS,
+            relevance: 0,
+            contains: [
+              'self',
+              hljs.C_LINE_COMMENT_MODE,
+              hljs.C_BLOCK_COMMENT_MODE,
+              STRINGS,
+              NUMBERS,
+              CPP_PRIMITIVE_TYPES
+            ]
+          }
+        ]
+      },
+      CPP_PRIMITIVE_TYPES,
+      hljs.C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE,
+      PREPROCESSOR
+    ]
+  };
+
   return {
-    aliases: ['c', 'cc', 'h', 'c++', 'h++', 'hpp'],
+    aliases: ['c', 'cc', 'h', 'c++', 'h++', 'hpp', 'hh', 'hxx', 'cxx'],
     keywords: CPP_KEYWORDS,
     illegal: '</',
-    contains: EXPRESSION_CONTAINS.concat([
+    contains: [].concat(
+      EXPRESSION_CONTEXT,
+      FUNCTION_DECLARATION,
+      EXPRESSION_CONTAINS,
+      [
       PREPROCESSOR,
       {
         begin: '\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<', end: '>',
@@ -18225,71 +19968,6 @@ module.exports = function(hljs) {
       {
         begin: hljs.IDENT_RE + '::',
         keywords: CPP_KEYWORDS
-      },
-      {
-        // This mode covers expression context where we can't expect a function
-        // definition and shouldn't highlight anything that looks like one:
-        // `return some()`, `else if()`, `(x*sum(1, 2))`
-        variants: [
-          {begin: /=/, end: /;/},
-          {begin: /\(/, end: /\)/},
-          {beginKeywords: 'new throw return else', end: /;/}
-        ],
-        keywords: CPP_KEYWORDS,
-        contains: EXPRESSION_CONTAINS.concat([
-          {
-            begin: /\(/, end: /\)/,
-            keywords: CPP_KEYWORDS,
-            contains: EXPRESSION_CONTAINS.concat(['self']),
-            relevance: 0
-          }
-        ]),
-        relevance: 0
-      },
-      {
-        className: 'function',
-        begin: '(' + hljs.IDENT_RE + '[\\*&\\s]+)+' + FUNCTION_TITLE,
-        returnBegin: true, end: /[{;=]/,
-        excludeEnd: true,
-        keywords: CPP_KEYWORDS,
-        illegal: /[^\w\s\*&]/,
-        contains: [
-          {
-            begin: FUNCTION_TITLE, returnBegin: true,
-            contains: [hljs.TITLE_MODE],
-            relevance: 0
-          },
-          {
-            className: 'params',
-            begin: /\(/, end: /\)/,
-            keywords: CPP_KEYWORDS,
-            relevance: 0,
-            contains: [
-              hljs.C_LINE_COMMENT_MODE,
-              hljs.C_BLOCK_COMMENT_MODE,
-              STRINGS,
-              NUMBERS,
-              CPP_PRIMITIVE_TYPES,
-              // Count matching parentheses.
-              {
-                begin: /\(/, end: /\)/,
-                keywords: CPP_KEYWORDS,
-                relevance: 0,
-                contains: [
-                  'self',
-                  hljs.C_LINE_COMMENT_MODE,
-                  hljs.C_BLOCK_COMMENT_MODE,
-                  STRINGS,
-                  NUMBERS,
-                  CPP_PRIMITIVE_TYPES
-                ]
-              }
-            ]
-          },
-          hljs.C_LINE_COMMENT_MODE,
-          hljs.C_BLOCK_COMMENT_MODE,
-          PREPROCESSOR
-        ]
       },
       {
         className: 'class',
@@ -18424,7 +20102,7 @@ module.exports = function(hljs) {
   var INT_SUFFIX = '(_*[ui](8|16|32|64|128))?';
   var FLOAT_SUFFIX = '(_*f(32|64))?';
   var CRYSTAL_IDENT_RE = '[a-zA-Z_]\\w*[!?=]?';
-  var CRYSTAL_METHOD_RE = '[a-zA-Z_]\\w*[!?=]?|[-+~]\\@|<<|>>|=~|===?|<=>|[<>]=?|\\*\\*|[-/+%^&*~|]|//|//=|&[-+*]=?|&\\*\\*|\\[\\][=?]?';
+  var CRYSTAL_METHOD_RE = '[a-zA-Z_]\\w*[!?=]?|[-+~]\\@|<<|>>|[=!]~|===?|<=>|[<>]=?|\\*\\*|[-/+%^&*~|]|//|//=|&[-+*]=?|&\\*\\*|\\[\\][=?]?';
   var CRYSTAL_PATH_RE = '[A-Za-z_]\\w*(::\\w+)*(\\?|\\!)?';
   var CRYSTAL_KEYWORDS = {
     keyword:
@@ -18623,13 +20301,13 @@ module.exports = function(hljs) {
       // Normal keywords.
       'abstract as base bool break byte case catch char checked const continue decimal ' +
       'default delegate do double enum event explicit extern finally fixed float ' +
-      'for foreach goto if implicit in int interface internal is lock long nameof ' +
+      'for foreach goto if implicit in int interface internal is lock long ' +
       'object operator out override params private protected public readonly ref sbyte ' +
       'sealed short sizeof stackalloc static string struct switch this try typeof ' +
       'uint ulong unchecked unsafe ushort using virtual void volatile while ' +
       // Contextual keywords.
       'add alias ascending async await by descending dynamic equals from get global group into join ' +
-      'let on orderby partial remove select set value var where yield',
+      'let nameof on orderby partial remove select set value var when where yield',
     literal:
       'null false true'
   };
@@ -18818,7 +20496,7 @@ module.exports = function(hljs) {
     keywords: {
       keyword: 'base-uri child-src connect-src default-src font-src form-action' +
         ' frame-ancestors frame-src img-src media-src object-src plugin-types' +
-        ' report-uri sandbox script-src style-src', 
+        ' report-uri sandbox script-src style-src',
     },
     contains: [
     {
@@ -18843,45 +20521,52 @@ module.exports = function(hljs) {
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
-  var IDENT_RE = '[a-zA-Z-][a-zA-Z0-9_-]*';
-  var RULE = {
-    begin: /[A-Z\_\.\-]+\s*:/, returnBegin: true, end: ';', endsWithParent: true,
+  var FUNCTION_LIKE = {
+    begin: /[\w-]+\(/, returnBegin: true,
     contains: [
       {
-        className: 'attribute',
-        begin: /\S/, end: ':', excludeEnd: true,
-        starts: {
-          endsWithParent: true, excludeEnd: true,
-          contains: [
-            {
-              begin: /[\w-]+\(/, returnBegin: true,
-              contains: [
-                {
-                  className: 'built_in',
-                  begin: /[\w-]+/
-                },
-                {
-                  begin: /\(/, end: /\)/,
-                  contains: [
-                    hljs.APOS_STRING_MODE,
-                    hljs.QUOTE_STRING_MODE
-                  ]
-                }
-              ]
-            },
-            hljs.CSS_NUMBER_MODE,
-            hljs.QUOTE_STRING_MODE,
-            hljs.APOS_STRING_MODE,
-            hljs.C_BLOCK_COMMENT_MODE,
-            {
-              className: 'number', begin: '#[0-9A-Fa-f]+'
-            },
-            {
-              className: 'meta', begin: '!important'
-            }
-          ]
-        }
+        className: 'built_in',
+        begin: /[\w-]+/
+      },
+      {
+        begin: /\(/, end: /\)/,
+        contains: [
+          hljs.APOS_STRING_MODE,
+          hljs.QUOTE_STRING_MODE,
+          hljs.CSS_NUMBER_MODE,
+        ]
       }
+    ]
+  }
+  var ATTRIBUTE = {
+    className: 'attribute',
+    begin: /\S/, end: ':', excludeEnd: true,
+    starts: {
+      endsWithParent: true, excludeEnd: true,
+      contains: [
+        FUNCTION_LIKE,
+        hljs.CSS_NUMBER_MODE,
+        hljs.QUOTE_STRING_MODE,
+        hljs.APOS_STRING_MODE,
+        hljs.C_BLOCK_COMMENT_MODE,
+        {
+          className: 'number', begin: '#[0-9A-Fa-f]+'
+        },
+        {
+          className: 'meta', begin: '!important'
+        }
+      ]
+    }
+  }
+  var AT_IDENTIFIER = '@[a-z-]+' // @font-face
+  var AT_MODIFIERS = "and or not only"
+  var MEDIA_TYPES = "all print screen speech"
+  var AT_PROPERTY_RE = /@\-?\w[\w]*(\-\w+)*/ // @-webkit-keyframes
+  var IDENT_RE = '[a-zA-Z-][a-zA-Z0-9_-]*';
+  var RULE = {
+    begin: /(?:[A-Z\_\.\-]+|--[a-zA-Z0-9_-]+)\s*:/, returnBegin: true, end: ';', endsWithParent: true,
+    contains: [
+      ATTRIBUTE
     ]
   };
 
@@ -18899,16 +20584,23 @@ module.exports = function(hljs) {
       {
         className: 'selector-attr',
         begin: /\[/, end: /\]/,
-        illegal: '$'
+        illegal: '$',
+        contains: [
+          hljs.APOS_STRING_MODE,
+          hljs.QUOTE_STRING_MODE,
+        ]
       },
       {
         className: 'selector-pseudo',
         begin: /:(:)?[a-zA-Z0-9\_\-\+\(\)"'.]+/
       },
+      // matching these here allows us to treat them more like regular CSS
+      // rules so everything between the {} gets regular rule highlighting,
+      // which is what we want for page and font-face
       {
-        begin: '@(font-face|page)',
-        lexemes: '[a-z-]+',
-        keywords: 'font-face page'
+        begin: '@(page|font-face)',
+        lexemes: AT_IDENTIFIER,
+        keywords: '@page @font-face'
       },
       {
         begin: '@', end: '[{;]', // at_rule eating first "{" is a good thing
@@ -18916,16 +20608,23 @@ module.exports = function(hljs) {
                                  // a rule set but instead drops parser into
                                  // the default mode which is how it should be.
         illegal: /:/, // break on Less variables @var: ...
+        returnBegin: true,
         contains: [
           {
             className: 'keyword',
-            begin: /\w+/
+            begin: AT_PROPERTY_RE
           },
           {
             begin: /\s/, endsWithParent: true, excludeEnd: true,
             relevance: 0,
+            keywords: AT_MODIFIERS,
             contains: [
-              hljs.APOS_STRING_MODE, hljs.QUOTE_STRING_MODE,
+              {
+                begin: /[a-z-]+:/,
+                className:"attribute"
+              },
+              hljs.APOS_STRING_MODE,
+              hljs.QUOTE_STRING_MODE,
               hljs.CSS_NUMBER_MODE
             ]
           }
@@ -19223,54 +20922,62 @@ function(hljs) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = function (hljs) {
+module.exports = function(hljs) {
   var SUBST = {
     className: 'subst',
-    variants: [
-       {begin: '\\$[A-Za-z0-9_]+'}
-    ],
+    variants: [{
+      begin: '\\$[A-Za-z0-9_]+'
+    }],
   };
 
   var BRACED_SUBST = {
     className: 'subst',
-    variants: [
-       {begin: '\\${', end: '}'},
-    ],
+    variants: [{
+      begin: '\\${',
+      end: '}'
+    }, ],
     keywords: 'true false null this is new super',
   };
 
   var STRING = {
     className: 'string',
-    variants: [
-      {
-        begin: 'r\'\'\'', end: '\'\'\''
+    variants: [{
+        begin: 'r\'\'\'',
+        end: '\'\'\''
       },
       {
-        begin: 'r"""', end: '"""'
+        begin: 'r"""',
+        end: '"""'
       },
       {
-        begin: 'r\'', end: '\'',
+        begin: 'r\'',
+        end: '\'',
         illegal: '\\n'
       },
       {
-        begin: 'r"', end: '"',
+        begin: 'r"',
+        end: '"',
         illegal: '\\n'
       },
       {
-        begin: '\'\'\'', end: '\'\'\'',
+        begin: '\'\'\'',
+        end: '\'\'\'',
         contains: [hljs.BACKSLASH_ESCAPE, SUBST, BRACED_SUBST]
       },
       {
-        begin: '"""', end: '"""',
+        begin: '"""',
+        end: '"""',
         contains: [hljs.BACKSLASH_ESCAPE, SUBST, BRACED_SUBST]
       },
       {
-        begin: '\'', end: '\'',
+        begin: '\'',
+        end: '\'',
         illegal: '\\n',
         contains: [hljs.BACKSLASH_ESCAPE, SUBST, BRACED_SUBST]
       },
       {
-        begin: '"', end: '"',
+        begin: '"',
+        end: '"',
         illegal: '\\n',
         contains: [hljs.BACKSLASH_ESCAPE, SUBST, BRACED_SUBST]
       }
@@ -19281,15 +20988,16 @@ module.exports = function (hljs) {
   ];
 
   var KEYWORDS = {
-    keyword: 'assert async await break case catch class const continue default do else enum extends false final ' +
-      'finally for if in is new null rethrow return super switch sync this throw true try var void while with yield ' +
-      'abstract as dynamic export external factory get implements import library operator part set static typedef',
+    keyword: 'abstract as assert async await break case catch class const continue covariant default deferred do ' +
+      'dynamic else enum export extends extension external factory false final finally for Function get hide if ' +
+      'implements import in inferface is library mixin new null on operator part rethrow return set show static ' +
+      'super switch sync this throw true try typedef var void while with yield',
     built_in:
       // dart:core
-      'print Comparable DateTime Duration Function Iterable Iterator List Map Match Null Object Pattern RegExp Set ' +
-      'Stopwatch String StringBuffer StringSink Symbol Type Uri bool double int num ' +
+      'Comparable DateTime Duration Function Iterable Iterator List Map Match Null Object Pattern RegExp Set ' +
+      'Stopwatch String StringBuffer StringSink Symbol Type Uri bool double dynamic int num print ' +
       // dart:html
-      'document window querySelector querySelectorAll Element ElementList'
+      'Element ElementList document querySelector querySelectorAll window'
   };
 
   return {
@@ -19298,25 +21006,28 @@ module.exports = function (hljs) {
       STRING,
       hljs.COMMENT(
         '/\\*\\*',
-        '\\*/',
-        {
+        '\\*/', {
           subLanguage: 'markdown'
         }
       ),
       hljs.COMMENT(
-        '///',
-        '$',
-        {
-          subLanguage: 'markdown'
+        '///+\\s*',
+        '$', {
+          contains: [{
+            subLanguage: 'markdown',
+            begin: '.',
+            end: '$',
+          }]
         }
       ),
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
       {
         className: 'class',
-        beginKeywords: 'class interface', end: '{', excludeEnd: true,
-        contains: [
-          {
+        beginKeywords: 'class interface',
+        end: '{',
+        excludeEnd: true,
+        contains: [{
             beginKeywords: 'extends implements'
           },
           hljs.UNDERSCORE_TITLE_MODE
@@ -19324,7 +21035,8 @@ module.exports = function (hljs) {
       },
       hljs.C_NUMBER_MODE,
       {
-        className: 'meta', begin: '@[A-Za-z]+'
+        className: 'meta',
+        begin: '@[A-Za-z]+'
       },
       {
         begin: '=>' // No markup, just a relevance booster
@@ -19441,7 +21153,7 @@ module.exports = function(hljs) {
           {begin: /^\-{3}/, end: /$/},
           {begin: /^\*{3} /, end: /$/},
           {begin: /^\+{3}/, end: /$/},
-          {begin: /\*{5}/, end: /\*{5}$/}
+          {begin: /^\*{15}$/ }
         ]
       },
       {
@@ -19907,7 +21619,7 @@ module.exports = function(hljs) {
 
     var nonTerminalMode = {
         className: "attribute",
-        begin: /^[ ]*[a-zA-Z][a-zA-Z-]*([\s-]+[a-zA-Z][a-zA-Z]*)*/
+        begin: /^[ ]*[a-zA-Z][a-zA-Z-_]*([\s-_]+[a-zA-Z][a-zA-Z]*)*/
     };
 
     var specialSequenceMode = {
@@ -19916,12 +21628,19 @@ module.exports = function(hljs) {
     };
 
     var ruleBodyMode = {
-        begin: /=/, end: /;/,
+        begin: /=/, end: /[.;]/,
         contains: [
             commentMode,
             specialSequenceMode,
-            // terminals
-            hljs.APOS_STRING_MODE, hljs.QUOTE_STRING_MODE
+            {
+              // terminals
+              className: 'string',
+              variants: [
+                hljs.APOS_STRING_MODE,
+                hljs.QUOTE_STRING_MODE,
+                {begin: '`', end: '`'},
+              ]
+            },
         ]
     };
 
@@ -19957,16 +21676,78 @@ module.exports = function(hljs) {
     lexemes: ELIXIR_IDENT_RE,
     keywords: ELIXIR_KEYWORDS
   };
+
+  var SIGIL_DELIMITERS = '[/|([{<"\']'
+  var LOWERCASE_SIGIL = {
+    className: 'string',
+    begin: '~[a-z]' + '(?=' + SIGIL_DELIMITERS + ')',
+    contains: [
+      {
+        endsParent:true,
+        contains: [{
+          contains: [hljs.BACKSLASH_ESCAPE, SUBST],
+          variants: [
+            { begin: /"/, end: /"/ },
+            { begin: /'/, end: /'/ },
+            { begin: /\//, end: /\// },
+            { begin: /\|/, end: /\|/ },
+            { begin: /\(/, end: /\)/ },
+            { begin: /\[/, end: /\]/ },
+            { begin: /\{/, end: /\}/ },
+            { begin: /</, end: />/ }
+          ]
+        }]
+      },
+    ],
+  };
+
+  var UPCASE_SIGIL = {
+    className: 'string',
+    begin: '~[A-Z]' + '(?=' + SIGIL_DELIMITERS + ')',
+    contains: [
+      { begin: /"/, end: /"/ },
+      { begin: /'/, end: /'/ },
+      { begin: /\//, end: /\// },
+      { begin: /\|/, end: /\|/ },
+      { begin: /\(/, end: /\)/ },
+      { begin: /\[/, end: /\]/ },
+      { begin: /\{/, end: /\}/ },
+      { begin: /\</, end: /\>/ }
+    ]
+  };
+
   var STRING = {
     className: 'string',
     contains: [hljs.BACKSLASH_ESCAPE, SUBST],
     variants: [
       {
+        begin: /"""/, end: /"""/,
+      },
+      {
+        begin: /'''/, end: /'''/,
+      },
+      {
+        begin: /~S"""/, end: /"""/,
+        contains: []
+      },
+      {
+        begin: /~S"/, end: /"/,
+        contains: []
+      },
+      {
+        begin: /~S'''/, end: /'''/,
+        contains: []
+      },
+      {
+        begin: /~S'/, end: /'/,
+        contains: []
+      },
+      {
         begin: /'/, end: /'/
       },
       {
         begin: /"/, end: /"/
-      }
+      },
     ]
   };
   var FUNCTION = {
@@ -19985,6 +21766,8 @@ module.exports = function(hljs) {
   });
   var ELIXIR_DEFAULT_CONTAINS = [
     STRING,
+    UPCASE_SIGIL,
+    LOWERCASE_SIGIL,
     hljs.HASH_COMMENT_MODE,
     CLASS,
     FUNCTION,
@@ -20004,7 +21787,7 @@ module.exports = function(hljs) {
     },
     {
       className: 'number',
-      begin: '(\\b0[0-7_]+)|(\\b0x[0-9a-fA-F_]+)|(\\b[1-9][0-9_]*(\\.[0-9_]+)?)|[0_]\\b',
+      begin: '(\\b0o[0-7_]+)|(\\b0b[01_]+)|(\\b0x[0-9a-fA-F_]+)|(-?\\b[1-9][0-9_]*(.[0-9_]+([eE][-+]?[0-9]+)?)?)',
       relevance: 0
     },
     {
@@ -20393,11 +22176,11 @@ module.exports = function(hljs) {
     lexemes: /[a-zA-Z][\w\.]*/,
     // built-in functions imported from https://web.archive.org/web/20160513042710/https://support.office.com/en-us/article/Excel-functions-alphabetical-b3944572-255d-4efb-bb96-c6d90033e188
     keywords: {
-        built_in: 'ABS ACCRINT ACCRINTM ACOS ACOSH ACOT ACOTH AGGREGATE ADDRESS AMORDEGRC AMORLINC AND ARABIC AREAS ASC ASIN ASINH ATAN ATAN2 ATANH AVEDEV AVERAGE AVERAGEA AVERAGEIF AVERAGEIFS BAHTTEXT BASE BESSELI BESSELJ BESSELK BESSELY BETADIST BETA.DIST BETAINV BETA.INV BIN2DEC BIN2HEX BIN2OCT BINOMDIST BINOM.DIST BINOM.DIST.RANGE BINOM.INV BITAND BITLSHIFT BITOR BITRSHIFT BITXOR CALL CEILING CEILING.MATH CEILING.PRECISE CELL CHAR CHIDIST CHIINV CHITEST CHISQ.DIST CHISQ.DIST.RT CHISQ.INV CHISQ.INV.RT CHISQ.TEST CHOOSE CLEAN CODE COLUMN COLUMNS COMBIN COMBINA COMPLEX CONCAT CONCATENATE CONFIDENCE CONFIDENCE.NORM CONFIDENCE.T CONVERT CORREL COS COSH COT COTH COUNT COUNTA COUNTBLANK COUNTIF COUNTIFS COUPDAYBS COUPDAYS COUPDAYSNC COUPNCD COUPNUM COUPPCD COVAR COVARIANCE.P COVARIANCE.S CRITBINOM CSC CSCH CUBEKPIMEMBER CUBEMEMBER CUBEMEMBERPROPERTY CUBERANKEDMEMBER CUBESET CUBESETCOUNT CUBEVALUE CUMIPMT CUMPRINC DATE DATEDIF DATEVALUE DAVERAGE DAY DAYS DAYS360 DB DBCS DCOUNT DCOUNTA DDB DEC2BIN DEC2HEX DEC2OCT DECIMAL DEGREES DELTA DEVSQ DGET DISC DMAX DMIN DOLLAR DOLLARDE DOLLARFR DPRODUCT DSTDEV DSTDEVP DSUM DURATION DVAR DVARP EDATE EFFECT ENCODEURL EOMONTH ERF ERF.PRECISE ERFC ERFC.PRECISE ERROR.TYPE EUROCONVERT EVEN EXACT EXP EXPON.DIST EXPONDIST FACT FACTDOUBLE FALSE|0 F.DIST FDIST F.DIST.RT FILTERXML FIND FINDB F.INV F.INV.RT FINV FISHER FISHERINV FIXED FLOOR FLOOR.MATH FLOOR.PRECISE FORECAST FORECAST.ETS FORECAST.ETS.CONFINT FORECAST.ETS.SEASONALITY FORECAST.ETS.STAT FORECAST.LINEAR FORMULATEXT FREQUENCY F.TEST FTEST FV FVSCHEDULE GAMMA GAMMA.DIST GAMMADIST GAMMA.INV GAMMAINV GAMMALN GAMMALN.PRECISE GAUSS GCD GEOMEAN GESTEP GETPIVOTDATA GROWTH HARMEAN HEX2BIN HEX2DEC HEX2OCT HLOOKUP HOUR HYPERLINK HYPGEOM.DIST HYPGEOMDIST IF|0 IFERROR IFNA IFS IMABS IMAGINARY IMARGUMENT IMCONJUGATE IMCOS IMCOSH IMCOT IMCSC IMCSCH IMDIV IMEXP IMLN IMLOG10 IMLOG2 IMPOWER IMPRODUCT IMREAL IMSEC IMSECH IMSIN IMSINH IMSQRT IMSUB IMSUM IMTAN INDEX INDIRECT INFO INT INTERCEPT INTRATE IPMT IRR ISBLANK ISERR ISERROR ISEVEN ISFORMULA ISLOGICAL ISNA ISNONTEXT ISNUMBER ISODD ISREF ISTEXT ISO.CEILING ISOWEEKNUM ISPMT JIS KURT LARGE LCM LEFT LEFTB LEN LENB LINEST LN LOG LOG10 LOGEST LOGINV LOGNORM.DIST LOGNORMDIST LOGNORM.INV LOOKUP LOWER MATCH MAX MAXA MAXIFS MDETERM MDURATION MEDIAN MID MIDBs MIN MINIFS MINA MINUTE MINVERSE MIRR MMULT MOD MODE MODE.MULT MODE.SNGL MONTH MROUND MULTINOMIAL MUNIT N NA NEGBINOM.DIST NEGBINOMDIST NETWORKDAYS NETWORKDAYS.INTL NOMINAL NORM.DIST NORMDIST NORMINV NORM.INV NORM.S.DIST NORMSDIST NORM.S.INV NORMSINV NOT NOW NPER NPV NUMBERVALUE OCT2BIN OCT2DEC OCT2HEX ODD ODDFPRICE ODDFYIELD ODDLPRICE ODDLYIELD OFFSET OR PDURATION PEARSON PERCENTILE.EXC PERCENTILE.INC PERCENTILE PERCENTRANK.EXC PERCENTRANK.INC PERCENTRANK PERMUT PERMUTATIONA PHI PHONETIC PI PMT POISSON.DIST POISSON POWER PPMT PRICE PRICEDISC PRICEMAT PROB PRODUCT PROPER PV QUARTILE QUARTILE.EXC QUARTILE.INC QUOTIENT RADIANS RAND RANDBETWEEN RANK.AVG RANK.EQ RANK RATE RECEIVED REGISTER.ID REPLACE REPLACEB REPT RIGHT RIGHTB ROMAN ROUND ROUNDDOWN ROUNDUP ROW ROWS RRI RSQ RTD SEARCH SEARCHB SEC SECH SECOND SERIESSUM SHEET SHEETS SIGN SIN SINH SKEW SKEW.P SLN SLOPE SMALL SQL.REQUEST SQRT SQRTPI STANDARDIZE STDEV STDEV.P STDEV.S STDEVA STDEVP STDEVPA STEYX SUBSTITUTE SUBTOTAL SUM SUMIF SUMIFS SUMPRODUCT SUMSQ SUMX2MY2 SUMX2PY2 SUMXMY2 SWITCH SYD T TAN TANH TBILLEQ TBILLPRICE TBILLYIELD T.DIST T.DIST.2T T.DIST.RT TDIST TEXT TEXTJOIN TIME TIMEVALUE T.INV T.INV.2T TINV TODAY TRANSPOSE TREND TRIM TRIMMEAN TRUE|0 TRUNC T.TEST TTEST TYPE UNICHAR UNICODE UPPER VALUE VAR VAR.P VAR.S VARA VARP VARPA VDB VLOOKUP WEBSERVICE WEEKDAY WEEKNUM WEIBULL WEIBULL.DIST WORKDAY WORKDAY.INTL XIRR XNPV XOR YEAR YEARFRAC YIELD YIELDDISC YIELDMAT Z.TEST ZTEST'
+        built_in: 'ABS ACCRINT ACCRINTM ACOS ACOSH ACOT ACOTH AGGREGATE ADDRESS AMORDEGRC AMORLINC AND ARABIC AREAS ASC ASIN ASINH ATAN ATAN2 ATANH AVEDEV AVERAGE AVERAGEA AVERAGEIF AVERAGEIFS BAHTTEXT BASE BESSELI BESSELJ BESSELK BESSELY BETADIST BETA.DIST BETAINV BETA.INV BIN2DEC BIN2HEX BIN2OCT BINOMDIST BINOM.DIST BINOM.DIST.RANGE BINOM.INV BITAND BITLSHIFT BITOR BITRSHIFT BITXOR CALL CEILING CEILING.MATH CEILING.PRECISE CELL CHAR CHIDIST CHIINV CHITEST CHISQ.DIST CHISQ.DIST.RT CHISQ.INV CHISQ.INV.RT CHISQ.TEST CHOOSE CLEAN CODE COLUMN COLUMNS COMBIN COMBINA COMPLEX CONCAT CONCATENATE CONFIDENCE CONFIDENCE.NORM CONFIDENCE.T CONVERT CORREL COS COSH COT COTH COUNT COUNTA COUNTBLANK COUNTIF COUNTIFS COUPDAYBS COUPDAYS COUPDAYSNC COUPNCD COUPNUM COUPPCD COVAR COVARIANCE.P COVARIANCE.S CRITBINOM CSC CSCH CUBEKPIMEMBER CUBEMEMBER CUBEMEMBERPROPERTY CUBERANKEDMEMBER CUBESET CUBESETCOUNT CUBEVALUE CUMIPMT CUMPRINC DATE DATEDIF DATEVALUE DAVERAGE DAY DAYS DAYS360 DB DBCS DCOUNT DCOUNTA DDB DEC2BIN DEC2HEX DEC2OCT DECIMAL DEGREES DELTA DEVSQ DGET DISC DMAX DMIN DOLLAR DOLLARDE DOLLARFR DPRODUCT DSTDEV DSTDEVP DSUM DURATION DVAR DVARP EDATE EFFECT ENCODEURL EOMONTH ERF ERF.PRECISE ERFC ERFC.PRECISE ERROR.TYPE EUROCONVERT EVEN EXACT EXP EXPON.DIST EXPONDIST FACT FACTDOUBLE FALSE|0 F.DIST FDIST F.DIST.RT FILTERXML FIND FINDB F.INV F.INV.RT FINV FISHER FISHERINV FIXED FLOOR FLOOR.MATH FLOOR.PRECISE FORECAST FORECAST.ETS FORECAST.ETS.CONFINT FORECAST.ETS.SEASONALITY FORECAST.ETS.STAT FORECAST.LINEAR FORMULATEXT FREQUENCY F.TEST FTEST FV FVSCHEDULE GAMMA GAMMA.DIST GAMMADIST GAMMA.INV GAMMAINV GAMMALN GAMMALN.PRECISE GAUSS GCD GEOMEAN GESTEP GETPIVOTDATA GROWTH HARMEAN HEX2BIN HEX2DEC HEX2OCT HLOOKUP HOUR HYPERLINK HYPGEOM.DIST HYPGEOMDIST IF IFERROR IFNA IFS IMABS IMAGINARY IMARGUMENT IMCONJUGATE IMCOS IMCOSH IMCOT IMCSC IMCSCH IMDIV IMEXP IMLN IMLOG10 IMLOG2 IMPOWER IMPRODUCT IMREAL IMSEC IMSECH IMSIN IMSINH IMSQRT IMSUB IMSUM IMTAN INDEX INDIRECT INFO INT INTERCEPT INTRATE IPMT IRR ISBLANK ISERR ISERROR ISEVEN ISFORMULA ISLOGICAL ISNA ISNONTEXT ISNUMBER ISODD ISREF ISTEXT ISO.CEILING ISOWEEKNUM ISPMT JIS KURT LARGE LCM LEFT LEFTB LEN LENB LINEST LN LOG LOG10 LOGEST LOGINV LOGNORM.DIST LOGNORMDIST LOGNORM.INV LOOKUP LOWER MATCH MAX MAXA MAXIFS MDETERM MDURATION MEDIAN MID MIDBs MIN MINIFS MINA MINUTE MINVERSE MIRR MMULT MOD MODE MODE.MULT MODE.SNGL MONTH MROUND MULTINOMIAL MUNIT N NA NEGBINOM.DIST NEGBINOMDIST NETWORKDAYS NETWORKDAYS.INTL NOMINAL NORM.DIST NORMDIST NORMINV NORM.INV NORM.S.DIST NORMSDIST NORM.S.INV NORMSINV NOT NOW NPER NPV NUMBERVALUE OCT2BIN OCT2DEC OCT2HEX ODD ODDFPRICE ODDFYIELD ODDLPRICE ODDLYIELD OFFSET OR PDURATION PEARSON PERCENTILE.EXC PERCENTILE.INC PERCENTILE PERCENTRANK.EXC PERCENTRANK.INC PERCENTRANK PERMUT PERMUTATIONA PHI PHONETIC PI PMT POISSON.DIST POISSON POWER PPMT PRICE PRICEDISC PRICEMAT PROB PRODUCT PROPER PV QUARTILE QUARTILE.EXC QUARTILE.INC QUOTIENT RADIANS RAND RANDBETWEEN RANK.AVG RANK.EQ RANK RATE RECEIVED REGISTER.ID REPLACE REPLACEB REPT RIGHT RIGHTB ROMAN ROUND ROUNDDOWN ROUNDUP ROW ROWS RRI RSQ RTD SEARCH SEARCHB SEC SECH SECOND SERIESSUM SHEET SHEETS SIGN SIN SINH SKEW SKEW.P SLN SLOPE SMALL SQL.REQUEST SQRT SQRTPI STANDARDIZE STDEV STDEV.P STDEV.S STDEVA STDEVP STDEVPA STEYX SUBSTITUTE SUBTOTAL SUM SUMIF SUMIFS SUMPRODUCT SUMSQ SUMX2MY2 SUMX2PY2 SUMXMY2 SWITCH SYD T TAN TANH TBILLEQ TBILLPRICE TBILLYIELD T.DIST T.DIST.2T T.DIST.RT TDIST TEXT TEXTJOIN TIME TIMEVALUE T.INV T.INV.2T TINV TODAY TRANSPOSE TREND TRIM TRIMMEAN TRUE|0 TRUNC T.TEST TTEST TYPE UNICHAR UNICODE UPPER VALUE VAR VAR.P VAR.S VARA VARP VARPA VDB VLOOKUP WEBSERVICE WEEKDAY WEEKNUM WEIBULL WEIBULL.DIST WORKDAY WORKDAY.INTL XIRR XNPV XOR YEAR YEARFRAC YIELD YIELDDISC YIELDMAT Z.TEST ZTEST'
     },
     contains: [
       {
-        /* matches a beginning equal sign found in Excel formula examples */ 
+        /* matches a beginning equal sign found in Excel formula examples */
         begin: /^=/,
         end: /[^=]/, returnEnd: true, illegal: /=/, /* only allow single equal sign at front of line */
         relevance: 10
@@ -20544,7 +22327,7 @@ module.exports = function(hljs) {
   var F_KEYWORDS = {
     literal: '.False. .True.',
     keyword: 'kind do while private call intrinsic where elsewhere ' +
-      'type endtype endmodule endselect endinterface end enddo endif if forall endforall only contains default return stop then ' +
+      'type endtype endmodule endselect endinterface end enddo endif if forall endforall only contains default return stop then block endblock ' +
       'public subroutine|10 function program .and. .or. .not. .le. .eq. .ge. .gt. .lt. ' +
       'goto save else use module select case ' +
       'access blank direct exist file fmt form formatted iostat name named nextrec number opened rec recl sequential status unformatted unit ' +
@@ -21396,7 +23179,7 @@ module.exports = function(hljs) {
 
 module.exports = function(hljs) {
   var GML_KEYWORDS = {
-    keywords: 'begin end if then else while do for break continue with until ' +
+    keyword: 'begin end if then else while do for break continue with until ' +
       'repeat exit and or xor not return mod div switch case default var ' +
       'globalvar enum #macro #region #endregion',
     built_in: 'is_real is_string is_array is_undefined is_int32 is_int64 ' +
@@ -22299,14 +24082,14 @@ module.exports = function(hljs) {
         className: 'string',
         variants: [
           hljs.QUOTE_STRING_MODE,
-          {begin: '\'', end: '[^\\\\]\''},
+          hljs.APOS_STRING_MODE,
           {begin: '`', end: '`'},
         ]
       },
       {
         className: 'number',
         variants: [
-          {begin: hljs.C_NUMBER_RE + '[dflsi]', relevance: 1},
+          {begin: hljs.C_NUMBER_RE + '[i]', relevance: 1},
           hljs.C_NUMBER_MODE
         ]
       },
@@ -22315,7 +24098,7 @@ module.exports = function(hljs) {
       },
       {
         className: 'function',
-        beginKeywords: 'func', end: /\s*\{/, excludeEnd: true,
+        beginKeywords: 'func', end: '\\s*(\\{|$)', excludeEnd: true,
         contains: [
           hljs.TITLE_MODE,
           {
@@ -22634,35 +24417,76 @@ function(hljs) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = function(hljs) {
-  var BUILT_INS = {'builtin-name': 'each in with if else unless bindattr action collection debugger log outlet template unbound view yield'};
+module.exports = function (hljs) {
+  var BUILT_INS = {'builtin-name': 'each in with if else unless bindattr action collection debugger log outlet template unbound view yield lookup'};
+
+  var IDENTIFIER_PLAIN_OR_QUOTED = {
+    begin: /".*?"|'.*?'|\[.*?\]|\w+/
+  };
+
+  var EXPRESSION_OR_HELPER_CALL = hljs.inherit(IDENTIFIER_PLAIN_OR_QUOTED, {
+    keywords: BUILT_INS,
+    starts: {
+      // helper params
+      endsWithParent: true,
+      relevance: 0,
+      contains: [hljs.inherit(IDENTIFIER_PLAIN_OR_QUOTED, {relevance: 0})]
+    }
+  });
+
+  var BLOCK_MUSTACHE_CONTENTS = hljs.inherit(EXPRESSION_OR_HELPER_CALL, {
+    className: 'name'
+  });
+
+  var BASIC_MUSTACHE_CONTENTS = hljs.inherit(EXPRESSION_OR_HELPER_CALL, {
+    // relevance 0 for backward compatibility concerning auto-detection
+    relevance: 0
+  });
+
+  var ESCAPE_MUSTACHE_WITH_PRECEEDING_BACKSLASH = {begin: /\\\{\{/, skip: true};
+  var PREVENT_ESCAPE_WITH_ANOTHER_PRECEEDING_BACKSLASH = {begin: /\\\\(?=\{\{)/, skip: true};
+
   return {
     aliases: ['hbs', 'html.hbs', 'html.handlebars'],
     case_insensitive: true,
     subLanguage: 'xml',
     contains: [
-    hljs.COMMENT('{{!(--)?', '(--)?}}'),
+      ESCAPE_MUSTACHE_WITH_PRECEEDING_BACKSLASH,
+      PREVENT_ESCAPE_WITH_ANOTHER_PRECEEDING_BACKSLASH,
+      hljs.COMMENT(/\{\{!--/, /--\}\}/),
+      hljs.COMMENT(/\{\{!/, /\}\}/),
       {
+        // open raw block "{{{{raw}}}} content not evaluated {{{{/raw}}}}"
         className: 'template-tag',
-        begin: /\{\{[#\/]/, end: /\}\}/,
-        contains: [
-          {
-            className: 'name',
-            begin: /[a-zA-Z\.-]+/,
-            keywords: BUILT_INS,
-            starts: {
-              endsWithParent: true, relevance: 0,
-              contains: [
-                hljs.QUOTE_STRING_MODE
-              ]
-            }
-          }
-        ]
+        begin: /\{\{\{\{(?!\/)/, end: /\}\}\}\}/,
+        contains: [BLOCK_MUSTACHE_CONTENTS],
+        starts: {end: /\{\{\{\{\//, returnEnd: true, subLanguage: 'xml'}
       },
       {
+        // close raw block
+        className: 'template-tag',
+        begin: /\{\{\{\{\//, end: /\}\}\}\}/,
+        contains: [BLOCK_MUSTACHE_CONTENTS]
+      },
+      {
+        // open block statement
+        className: 'template-tag',
+        begin: /\{\{[#\/]/, end: /\}\}/,
+        contains: [BLOCK_MUSTACHE_CONTENTS],
+      },
+      {
+        // template variable or helper-call that is NOT html-escaped
+        className: 'template-variable',
+        begin: /\{\{\{/, end: /\}\}\}/,
+        keywords: BUILT_INS,
+        contains: [BASIC_MUSTACHE_CONTENTS]
+      },
+      {
+        // template variable or helper-call that is html-escaped
         className: 'template-variable',
         begin: /\{\{/, end: /\}\}/,
-        keywords: BUILT_INS
+        keywords: BUILT_INS,
+        contains: [BASIC_MUSTACHE_CONTENTS]
       }
     ]
   };
@@ -23292,66 +25116,77 @@ module.exports = function(hljs) {
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
-  var STRING = {
+  var NUMBERS = {
+    className: 'number',
+    relevance: 0,
+    variants: [
+      { begin: /([\+\-]+)?[\d]+_[\d_]+/ },
+      { begin: hljs.NUMBER_RE }
+    ]
+  };
+  var COMMENTS = hljs.COMMENT();
+  COMMENTS.variants = [
+    {begin: /;/, end: /$/},
+    {begin: /#/, end: /$/},
+  ];
+  var VARIABLES = {
+    className: 'variable',
+    variants: [
+      { begin: /\$[\w\d"][\w\d_]*/ },
+      { begin: /\$\{(.*?)}/ }
+    ]
+  };
+  var LITERALS = {
+    className: 'literal',
+    begin: /\bon|off|true|false|yes|no\b/
+  };
+  var STRINGS = {
     className: "string",
     contains: [hljs.BACKSLASH_ESCAPE],
     variants: [
-      {
-        begin: "'''", end: "'''",
-        relevance: 10
-      }, {
-        begin: '"""', end: '"""',
-        relevance: 10
-      }, {
-        begin: '"', end: '"'
-      }, {
-        begin: "'", end: "'"
-      }
+      { begin: "'''", end: "'''", relevance: 10 },
+      { begin: '"""', end: '"""', relevance: 10 },
+      { begin: '"', end: '"' },
+      { begin: "'", end: "'" }
     ]
   };
+  var ARRAY = {
+    begin: /\[/, end: /\]/,
+    contains: [
+      COMMENTS,
+      LITERALS,
+      VARIABLES,
+      STRINGS,
+      NUMBERS,
+      'self'
+    ],
+    relevance:0
+  };
+
   return {
     aliases: ['toml'],
     case_insensitive: true,
     illegal: /\S/,
     contains: [
-      hljs.COMMENT(';', '$'),
-      hljs.HASH_COMMENT_MODE,
+      COMMENTS,
       {
         className: 'section',
-        begin: /^\s*\[+/, end: /\]+/
+        begin: /\[+/, end: /\]+/
       },
       {
-        begin: /^[a-z0-9\[\]_\.-]+\s*=\s*/, end: '$',
-        returnBegin: true,
-        contains: [
-          {
-            className: 'attr',
-            begin: /[a-z0-9\[\]_\.-]+/
-          },
-          {
-            begin: /=/, endsWithParent: true,
-            relevance: 0,
-            contains: [
-              {
-                className: 'literal',
-                begin: /\bon|off|true|false|yes|no\b/
-              },
-              {
-                className: 'variable',
-                variants: [
-                  {begin: /\$[\w\d"][\w\d_]*/},
-                  {begin: /\$\{(.*?)}/}
-                ]
-              },
-              STRING,
-              {
-                className: 'number',
-                begin: /([\+\-]+)?[\d]+_[\d_]+/
-              },
-              hljs.NUMBER_MODE
-            ]
-          }
-        ]
+        begin: /^[a-z0-9\[\]_\.-]+(?=\s*=\s*)/,
+        className: 'attr',
+        starts: {
+          end: /$/,
+          contains: [
+            COMMENTS,
+            ARRAY,
+            LITERALS,
+            VARIABLES,
+            STRINGS,
+            NUMBERS
+          ]
+        }
       }
     ]
   };
@@ -26576,7 +28411,7 @@ module.exports = function(hljs) {
     keywords: KEYWORDS,
     begin: UNDERSCORE_IDENT_RE,
     relevance: 0,
-    containts: [TYPES, METHODS],
+    contains: [TYPES, METHODS],
   };
 
   // Имена функций
@@ -26751,6 +28586,14 @@ module.exports = function(hljs) {
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
+  var FRAGMENT = {
+    begin: '<>',
+    end: '</>'
+  };
+  var XML_TAG = {
+    begin: /<[A-Za-z0-9\\._:-]+/,
+    end: /\/[A-Za-z0-9\\._:-]+>|\/>/
+  };
   var IDENT_RE = '[A-Za-z$_][0-9A-Za-z$_]*';
   var KEYWORDS = {
     keyword:
@@ -26775,9 +28618,9 @@ module.exports = function(hljs) {
   var NUMBER = {
     className: 'number',
     variants: [
-      { begin: '\\b(0[bB][01]+)' },
-      { begin: '\\b(0[oO][0-7]+)' },
-      { begin: hljs.C_NUMBER_RE }
+      { begin: '\\b(0[bB][01]+)n?' },
+      { begin: '\\b(0[oO][0-7]+)n?' },
+      { begin: hljs.C_NUMBER_RE + 'n?' }
     ],
     relevance: 0
   };
@@ -26786,6 +28629,28 @@ module.exports = function(hljs) {
     begin: '\\$\\{', end: '\\}',
     keywords: KEYWORDS,
     contains: []  // defined later
+  };
+  var HTML_TEMPLATE = {
+    begin: 'html`', end: '',
+    starts: {
+      end: '`', returnEnd: false,
+      contains: [
+        hljs.BACKSLASH_ESCAPE,
+        SUBST
+      ],
+      subLanguage: 'xml',
+    }
+  };
+  var CSS_TEMPLATE = {
+    begin: 'css`', end: '',
+    starts: {
+      end: '`', returnEnd: false,
+      contains: [
+        hljs.BACKSLASH_ESCAPE,
+        SUBST
+      ],
+      subLanguage: 'css',
+    }
   };
   var TEMPLATE_STRING = {
     className: 'string',
@@ -26798,17 +28663,19 @@ module.exports = function(hljs) {
   SUBST.contains = [
     hljs.APOS_STRING_MODE,
     hljs.QUOTE_STRING_MODE,
+    HTML_TEMPLATE,
+    CSS_TEMPLATE,
     TEMPLATE_STRING,
     NUMBER,
     hljs.REGEXP_MODE
-  ]
+  ];
   var PARAMS_CONTAINS = SUBST.contains.concat([
     hljs.C_BLOCK_COMMENT_MODE,
     hljs.C_LINE_COMMENT_MODE
   ]);
 
   return {
-    aliases: ['js', 'jsx'],
+    aliases: ['js', 'jsx', 'mjs', 'cjs'],
     keywords: KEYWORDS,
     contains: [
       {
@@ -26822,12 +28689,47 @@ module.exports = function(hljs) {
       },
       hljs.APOS_STRING_MODE,
       hljs.QUOTE_STRING_MODE,
+      HTML_TEMPLATE,
+      CSS_TEMPLATE,
       TEMPLATE_STRING,
       hljs.C_LINE_COMMENT_MODE,
+      hljs.COMMENT(
+        '/\\*\\*',
+        '\\*/',
+        {
+          relevance : 0,
+          contains : [
+            {
+              className : 'doctag',
+              begin : '@[A-Za-z]+',
+              contains : [
+                {
+                  className: 'type',
+                  begin: '\\{',
+                  end: '\\}',
+                  relevance: 0
+                },
+                {
+                  className: 'variable',
+                  begin: IDENT_RE + '(?=\\s*(-)|$)',
+                  endsParent: true,
+                  relevance: 0
+                },
+                // eat spaces (not newlines) so we can find
+                // types or variables
+                {
+                  begin: /(?=[^\n])\s/,
+                  relevance: 0
+                },
+              ]
+            }
+          ]
+        }
+      ),
       hljs.C_BLOCK_COMMENT_MODE,
       NUMBER,
       { // object attr container
-        begin: /[{,]\s*/, relevance: 0,
+        begin: /[{,\n]\s*/, relevance: 0,
         contains: [
           {
             begin: IDENT_RE + '\\s*:', returnBegin: true,
@@ -26867,20 +28769,25 @@ module.exports = function(hljs) {
               }
             ]
           },
-          { // E4X / JSX
-            begin: /</, end: /(\/\w+|\w+\/)>/,
+          {
+            className: '',
+            begin: /\s/,
+            end: /\s*/,
+            skip: true,
+          },
+          { // JSX
+            variants: [
+              { begin: FRAGMENT.begin, end: FRAGMENT.end },
+              { begin: XML_TAG.begin, end: XML_TAG.end }
+            ],
             subLanguage: 'xml',
             contains: [
-              {begin: /<\w+\s*\/>/, skip: true},
               {
-                begin: /<\w+/, end: /(\/\w+|\w+\/)>/, skip: true,
-                contains: [
-                  {begin: /<\w+\s*\/>/, skip: true},
-                  'self'
-                ]
+                begin: XML_TAG.begin, end: XML_TAG.end, skip: true,
+                contains: ['self']
               }
             ]
-          }
+          },
         ],
         relevance: 0
       },
@@ -26987,6 +28894,10 @@ module.exports = function (hljs) {
 
 module.exports = function(hljs) {
   var LITERALS = {literal: 'true false null'};
+  var ALLOWED_COMMENTS = [
+    hljs.C_LINE_COMMENT_MODE,
+    hljs.C_BLOCK_COMMENT_MODE
+  ]
   var TYPES = [
     hljs.QUOTE_STRING_MODE,
     hljs.C_NUMBER_MODE
@@ -27006,7 +28917,7 @@ module.exports = function(hljs) {
         illegal: '\\n',
       },
       hljs.inherit(VALUE_CONTAINER, {begin: /:/})
-    ],
+    ].concat(ALLOWED_COMMENTS),
     illegal: '\\S'
   };
   var ARRAY = {
@@ -27014,7 +28925,10 @@ module.exports = function(hljs) {
     contains: [hljs.inherit(VALUE_CONTAINER)], // inherit is a workaround for a bug that makes shared modes with endsWithParent compile only the ending of one of the parents
     illegal: '\\S'
   };
-  TYPES.splice(TYPES.length, 0, OBJECT, ARRAY);
+  TYPES.push(OBJECT, ARRAY);
+  ALLOWED_COMMENTS.forEach(function(rule) {
+    TYPES.push(rule)
+  })
   return {
     contains: TYPES,
     keywords: LITERALS,
@@ -27269,7 +29183,7 @@ module.exports = function(hljs) {
   // for string templates
   var SUBST = {
     className: 'subst',
-    begin: '\\${', end: '}', contains: [hljs.APOS_STRING_MODE, hljs.C_NUMBER_MODE]
+    begin: '\\${', end: '}', contains: [hljs.C_NUMBER_MODE]
   };
   var VARIABLE = {
     className: 'variable', begin: '\\$' + hljs.UNDERSCORE_IDENT_RE
@@ -27278,7 +29192,7 @@ module.exports = function(hljs) {
     className: 'string',
     variants: [
       {
-        begin: '"""', end: '"""',
+        begin: '"""', end: '"""(?=[^"])',
         contains: [VARIABLE, SUBST]
       },
       // Can't use built-in modes easily, as we want to use STRING in the meta
@@ -27296,6 +29210,7 @@ module.exports = function(hljs) {
       }
     ]
   };
+  SUBST.contains.push(STRING)
 
   var ANNOTATION_USE_SITE = {
     className: 'meta', begin: '@(?:file|property|field|get|set|receiver|param|setparam|delegate)\\s*:(?:\\s*' + hljs.UNDERSCORE_IDENT_RE + ')?'
@@ -27334,6 +29249,23 @@ module.exports = function(hljs) {
     begin: KOTLIN_NUMBER_RE,
     relevance: 0
   };
+  var KOTLIN_NESTED_COMMENT = hljs.COMMENT(
+    '/\\*', '\\*/',
+    { contains: [ hljs.C_BLOCK_COMMENT_MODE ] }
+  );
+  var KOTLIN_PAREN_TYPE = {
+    variants: [
+	  { className: 'type',
+	    begin: hljs.UNDERSCORE_IDENT_RE
+	  },
+	  { begin: /\(/, end: /\)/,
+	    contains: [] //defined later
+	  }
+	]
+  };
+  var KOTLIN_PAREN_TYPE2 = KOTLIN_PAREN_TYPE;
+  KOTLIN_PAREN_TYPE2.variants[1].contains = [ KOTLIN_PAREN_TYPE ];
+  KOTLIN_PAREN_TYPE.variants[1].contains = [ KOTLIN_PAREN_TYPE2 ];
 
   return {
     aliases: ['kt'],
@@ -27351,7 +29283,7 @@ module.exports = function(hljs) {
         }
       ),
       hljs.C_LINE_COMMENT_MODE,
-      hljs.C_BLOCK_COMMENT_MODE,
+      KOTLIN_NESTED_COMMENT,
       KEYWORDS_WITH_LABEL,
       LABEL,
       ANNOTATION_USE_SITE,
@@ -27385,21 +29317,21 @@ module.exports = function(hljs) {
               {
                 begin: /:/, end: /[=,\/]/, endsWithParent: true,
                 contains: [
-                  {className: 'type', begin: hljs.UNDERSCORE_IDENT_RE},
+                  KOTLIN_PAREN_TYPE,
                   hljs.C_LINE_COMMENT_MODE,
-                  hljs.C_BLOCK_COMMENT_MODE
+                  KOTLIN_NESTED_COMMENT
                 ],
                 relevance: 0
               },
               hljs.C_LINE_COMMENT_MODE,
-              hljs.C_BLOCK_COMMENT_MODE,
+              KOTLIN_NESTED_COMMENT,
               ANNOTATION_USE_SITE,
               ANNOTATION,
               STRING,
               hljs.C_NUMBER_MODE
             ]
           },
-          hljs.C_BLOCK_COMMENT_MODE
+          KOTLIN_NESTED_COMMENT
         ]
       },
       {
@@ -27959,7 +29891,11 @@ module.exports = function(hljs) {
 
 module.exports = function(hljs) {
   var VARIABLE = {
-    begin: '\\b[gtps][A-Z]+[A-Za-z0-9_\\-]*\\b|\\$_[A-Z]+',
+    className: 'variable',
+    variants: [
+      {begin: '\\b([gtps][A-Z]{1}[a-zA-Z0-9]*)(\\[.+\\])?(?:\\s*?)'},
+      {begin: '\\$_[A-Z]+'}
+    ],
     relevance: 0
   };
   var COMMENT_MODES = [
@@ -28002,12 +29938,12 @@ module.exports = function(hljs) {
         'put abs acos aliasReference annuity arrayDecode arrayEncode asin atan atan2 average avg avgDev base64Decode ' +
         'base64Encode baseConvert binaryDecode binaryEncode byteOffset byteToNum cachedURL cachedURLs charToNum ' +
         'cipherNames codepointOffset codepointProperty codepointToNum codeunitOffset commandNames compound compress ' +
-        'constantNames cos date dateFormat decompress directories ' +
+        'constantNames cos date dateFormat decompress difference directories ' +
         'diskSpace DNSServers exp exp1 exp2 exp10 extents files flushEvents folders format functionNames geometricMean global ' +
         'globals hasMemory harmonicMean hostAddress hostAddressToName hostName hostNameToAddress isNumber ISOToMac itemOffset ' +
         'keys len length libURLErrorData libUrlFormData libURLftpCommand libURLLastHTTPHeaders libURLLastRHHeaders ' +
         'libUrlMultipartFormAddPart libUrlMultipartFormData libURLVersion lineOffset ln ln1 localNames log log2 log10 ' +
-        'longFilePath lower macToISO matchChunk matchText matrixMultiply max md5Digest median merge millisec ' +
+        'longFilePath lower macToISO matchChunk matchText matrixMultiply max md5Digest median merge messageAuthenticationCode messageDigest millisec ' +
         'millisecs millisecond milliseconds min monthNames nativeCharToNum normalizeText num number numToByte numToChar ' +
         'numToCodepoint numToNativeChar offset open openfiles openProcesses openProcessIDs openSockets ' +
         'paragraphOffset paramCount param params peerAddress pendingMessages platform popStdDev populationStandardDeviation ' +
@@ -28037,9 +29973,9 @@ module.exports = function(hljs) {
         'xsltLoadStylesheetFromFile add breakpoint cancel clear local variable file word line folder directory URL close socket process ' +
         'combine constant convert create new alias folder directory decrypt delete variable word line folder ' +
         'directory URL dispatch divide do encrypt filter get include intersect kill libURLDownloadToFile ' +
-        'libURLFollowHttpRedirects libURLftpUpload libURLftpUploadFile libURLresetAll libUrlSetAuthCallback ' +
+        'libURLFollowHttpRedirects libURLftpUpload libURLftpUploadFile libURLresetAll libUrlSetAuthCallback libURLSetDriver ' +
         'libURLSetCustomHTTPHeaders libUrlSetExpect100 libURLSetFTPListCommand libURLSetFTPMode libURLSetFTPStopTime ' +
-        'libURLSetStatusCallback load multiply socket prepare process post seek rel relative read from process rename ' +
+        'libURLSetStatusCallback load extension loadedExtensions multiply socket prepare process post seek rel relative read from process rename ' +
         'replace require resetAll resolve revAddXMLNode revAppendXML revCloseCursor revCloseDatabase revCommitDatabase ' +
         'revCopyFile revCopyFolder revCopyXMLNode revDeleteFolder revDeleteXMLNode revDeleteAllXMLTrees ' +
         'revDeleteXMLTree revExecuteSQL revGoURL revInsertXMLNode revMoveFolder revMoveToFirstRecord revMoveToLastRecord ' +
@@ -28050,7 +29986,7 @@ module.exports = function(hljs) {
         'revZipAddItemWithFile revZipAddUncompressedItemWithData revZipAddUncompressedItemWithFile revZipCancel ' +
         'revZipCloseArchive revZipDeleteItem revZipExtractItemToFile revZipExtractItemToVariable revZipSetProgressCallback ' +
         'revZipRenameItem revZipReplaceItemWithData revZipReplaceItemWithFile revZipOpenArchive send set sort split start stop ' +
-        'subtract union unload wait write'
+        'subtract symmetric union unload vectorDotProduct wait write'
     },
     contains: [
       VARIABLE,
@@ -28131,7 +30067,7 @@ module.exports = function(hljs) {
       'switch continue typeof delete debugger case default function var with ' +
       // LiveScript keywords
       'then unless until loop of by when and or is isnt not it that otherwise from to til fallthrough super ' +
-      'case default function var void const let enum export import native ' +
+      'case default function var void const let enum export import native list map ' +
       '__hasProp __extends __slice __bind __indexOf',
     literal:
       // JS literals
@@ -28196,7 +30132,7 @@ module.exports = function(hljs) {
         {
           // regex can't start with space to parse x / 2 / 3 as two divisions
           // regex can't start with *, and it supports an "illegal" in the main mode
-          begin: /\/(?![ *])(\\\/|.)*?\/[gim]*(?=\W|$)/
+          begin: /\/(?![ *])(\\\/|.)*?\/[gim]*(?=\W)/
         }
       ]
     },
@@ -28225,6 +30161,10 @@ module.exports = function(hljs) {
     ]
   };
 
+  var SYMBOLS = {
+    begin: '(#=>|=>|\\|>>|-?->|\\!->)'
+  };
+
   return {
     aliases: ['ls'],
     keywords: KEYWORDS,
@@ -28232,6 +30172,7 @@ module.exports = function(hljs) {
     contains: EXPRESSIONS.concat([
       hljs.COMMENT('\\/\\*', '\\*\\/'),
       hljs.HASH_COMMENT_MODE,
+      SYMBOLS, // relevance booster
       {
         className: 'function',
         contains: [TITLE, PARAMS],
@@ -28407,7 +30348,7 @@ module.exports = function(hljs) {
                 begin: '\\b(?:PI|TWO_PI|PI_BY_TWO|DEG_TO_RAD|RAD_TO_DEG|SQRT2)\\b'
             },
             {
-                begin: '\\b(?:XP_ERROR_(?:EXPERIENCES_DISABLED|EXPERIENCE_(?:DISABLED|SUSPENDED)|INVALID_(?:EXPERIENCE|PARAMETERS)|KEY_NOT_FOUND|MATURITY_EXCEEDED|NONE|NOT_(?:FOUND|PERMITTED(?:_LAND)?)|NO_EXPERIENCE|QUOTA_EXCEEDED|RETRY_UPDATE|STORAGE_EXCEPTION|STORE_DISABLED|THROTTLED|UNKNOWN_ERROR)|JSON_APPEND|STATUS_(?:PHYSICS|ROTATE_[XYZ]|PHANTOM|SANDBOX|BLOCK_GRAB(?:_OBJECT)?|(?:DIE|RETURN)_AT_EDGE|CAST_SHADOWS|OK|MALFORMED_PARAMS|TYPE_MISMATCH|BOUNDS_ERROR|NOT_(?:FOUND|SUPPORTED)|INTERNAL_ERROR|WHITELIST_FAILED)|AGENT(?:_(?:BY_(?:LEGACY_|USER)NAME|FLYING|ATTACHMENTS|SCRIPTED|MOUSELOOK|SITTING|ON_OBJECT|AWAY|WALKING|IN_AIR|TYPING|CROUCHING|BUSY|ALWAYS_RUN|AUTOPILOT|LIST_(?:PARCEL(?:_OWNER)?|REGION)))?|CAMERA_(?:PITCH|DISTANCE|BEHINDNESS_(?:ANGLE|LAG)|(?:FOCUS|POSITION)(?:_(?:THRESHOLD|LOCKED|LAG))?|FOCUS_OFFSET|ACTIVE)|ANIM_ON|LOOP|REVERSE|PING_PONG|SMOOTH|ROTATE|SCALE|ALL_SIDES|LINK_(?:ROOT|SET|ALL_(?:OTHERS|CHILDREN)|THIS)|ACTIVE|PASS(?:IVE|_(?:ALWAYS|IF_NOT_HANDLED|NEVER))|SCRIPTED|CONTROL_(?:FWD|BACK|(?:ROT_)?(?:LEFT|RIGHT)|UP|DOWN|(?:ML_)?LBUTTON)|PERMISSION_(?:RETURN_OBJECTS|DEBIT|OVERRIDE_ANIMATIONS|SILENT_ESTATE_MANAGEMENT|TAKE_CONTROLS|TRIGGER_ANIMATION|ATTACH|CHANGE_LINKS|(?:CONTROL|TRACK)_CAMERA|TELEPORT)|INVENTORY_(?:TEXTURE|SOUND|OBJECT|SCRIPT|LANDMARK|CLOTHING|NOTECARD|BODYPART|ANIMATION|GESTURE|ALL|NONE)|CHANGED_(?:INVENTORY|COLOR|SHAPE|SCALE|TEXTURE|LINK|ALLOWED_DROP|OWNER|REGION(?:_START)?|TELEPORT|MEDIA)|OBJECT_(?:CLICK_ACTION|HOVER_HEIGHT|LAST_OWNER_ID|(?:PHYSICS|SERVER|STREAMING)_COST|UNKNOWN_DETAIL|CHARACTER_TIME|PHANTOM|PHYSICS|TEMP_ON_REZ|NAME|DESC|POS|PRIM_(?:COUNT|EQUIVALENCE)|RETURN_(?:PARCEL(?:_OWNER)?|REGION)|REZZER_KEY|ROO?T|VELOCITY|OMEGA|OWNER|GROUP|CREATOR|ATTACHED_POINT|RENDER_WEIGHT|(?:BODY_SHAPE|PATHFINDING)_TYPE|(?:RUNNING|TOTAL)_SCRIPT_COUNT|TOTAL_INVENTORY_COUNT|SCRIPT_(?:MEMORY|TIME))|TYPE_(?:INTEGER|FLOAT|STRING|KEY|VECTOR|ROTATION|INVALID)|(?:DEBUG|PUBLIC)_CHANNEL|ATTACH_(?:AVATAR_CENTER|CHEST|HEAD|BACK|PELVIS|MOUTH|CHIN|NECK|NOSE|BELLY|[LR](?:SHOULDER|HAND|FOOT|EAR|EYE|[UL](?:ARM|LEG)|HIP)|(?:LEFT|RIGHT)_PEC|HUD_(?:CENTER_[12]|TOP_(?:RIGHT|CENTER|LEFT)|BOTTOM(?:_(?:RIGHT|LEFT))?)|[LR]HAND_RING1|TAIL_(?:BASE|TIP)|[LR]WING|FACE_(?:JAW|[LR]EAR|[LR]EYE|TOUNGE)|GROIN|HIND_[LR]FOOT)|LAND_(?:LEVEL|RAISE|LOWER|SMOOTH|NOISE|REVERT)|DATA_(?:ONLINE|NAME|BORN|SIM_(?:POS|STATUS|RATING)|PAYINFO)|PAYMENT_INFO_(?:ON_FILE|USED)|REMOTE_DATA_(?:CHANNEL|REQUEST|REPLY)|PSYS_(?:PART_(?:BF_(?:ZERO|ONE(?:_MINUS_(?:DEST_COLOR|SOURCE_(ALPHA|COLOR)))?|DEST_COLOR|SOURCE_(ALPHA|COLOR))|BLEND_FUNC_(DEST|SOURCE)|FLAGS|(?:START|END)_(?:COLOR|ALPHA|SCALE|GLOW)|MAX_AGE|(?:RIBBON|WIND|INTERP_(?:COLOR|SCALE)|BOUNCE|FOLLOW_(?:SRC|VELOCITY)|TARGET_(?:POS|LINEAR)|EMISSIVE)_MASK)|SRC_(?:MAX_AGE|PATTERN|ANGLE_(?:BEGIN|END)|BURST_(?:RATE|PART_COUNT|RADIUS|SPEED_(?:MIN|MAX))|ACCEL|TEXTURE|TARGET_KEY|OMEGA|PATTERN_(?:DROP|EXPLODE|ANGLE(?:_CONE(?:_EMPTY)?)?)))|VEHICLE_(?:REFERENCE_FRAME|TYPE_(?:NONE|SLED|CAR|BOAT|AIRPLANE|BALLOON)|(?:LINEAR|ANGULAR)_(?:FRICTION_TIMESCALE|MOTOR_DIRECTION)|LINEAR_MOTOR_OFFSET|HOVER_(?:HEIGHT|EFFICIENCY|TIMESCALE)|BUOYANCY|(?:LINEAR|ANGULAR)_(?:DEFLECTION_(?:EFFICIENCY|TIMESCALE)|MOTOR_(?:DECAY_)?TIMESCALE)|VERTICAL_ATTRACTION_(?:EFFICIENCY|TIMESCALE)|BANKING_(?:EFFICIENCY|MIX|TIMESCALE)|FLAG_(?:NO_DEFLECTION_UP|LIMIT_(?:ROLL_ONLY|MOTOR_UP)|HOVER_(?:(?:WATER|TERRAIN|UP)_ONLY|GLOBAL_HEIGHT)|MOUSELOOK_(?:STEER|BANK)|CAMERA_DECOUPLED))|PRIM_(?:ALPHA_MODE(?:_(?:BLEND|EMISSIVE|MASK|NONE))?|NORMAL|SPECULAR|TYPE(?:_(?:BOX|CYLINDER|PRISM|SPHERE|TORUS|TUBE|RING|SCULPT))?|HOLE_(?:DEFAULT|CIRCLE|SQUARE|TRIANGLE)|MATERIAL(?:_(?:STONE|METAL|GLASS|WOOD|FLESH|PLASTIC|RUBBER))?|SHINY_(?:NONE|LOW|MEDIUM|HIGH)|BUMP_(?:NONE|BRIGHT|DARK|WOOD|BARK|BRICKS|CHECKER|CONCRETE|TILE|STONE|DISKS|GRAVEL|BLOBS|SIDING|LARGETILE|STUCCO|SUCTION|WEAVE)|TEXGEN_(?:DEFAULT|PLANAR)|SCULPT_(?:TYPE_(?:SPHERE|TORUS|PLANE|CYLINDER|MASK)|FLAG_(?:MIRROR|INVERT))|PHYSICS(?:_(?:SHAPE_(?:CONVEX|NONE|PRIM|TYPE)))?|(?:POS|ROT)_LOCAL|SLICE|TEXT|FLEXIBLE|POINT_LIGHT|TEMP_ON_REZ|PHANTOM|POSITION|SIZE|ROTATION|TEXTURE|NAME|OMEGA|DESC|LINK_TARGET|COLOR|BUMP_SHINY|FULLBRIGHT|TEXGEN|GLOW|MEDIA_(?:ALT_IMAGE_ENABLE|CONTROLS|(?:CURRENT|HOME)_URL|AUTO_(?:LOOP|PLAY|SCALE|ZOOM)|FIRST_CLICK_INTERACT|(?:WIDTH|HEIGHT)_PIXELS|WHITELIST(?:_ENABLE)?|PERMS_(?:INTERACT|CONTROL)|PARAM_MAX|CONTROLS_(?:STANDARD|MINI)|PERM_(?:NONE|OWNER|GROUP|ANYONE)|MAX_(?:URL_LENGTH|WHITELIST_(?:SIZE|COUNT)|(?:WIDTH|HEIGHT)_PIXELS)))|MASK_(?:BASE|OWNER|GROUP|EVERYONE|NEXT)|PERM_(?:TRANSFER|MODIFY|COPY|MOVE|ALL)|PARCEL_(?:MEDIA_COMMAND_(?:STOP|PAUSE|PLAY|LOOP|TEXTURE|URL|TIME|AGENT|UNLOAD|AUTO_ALIGN|TYPE|SIZE|DESC|LOOP_SET)|FLAG_(?:ALLOW_(?:FLY|(?:GROUP_)?SCRIPTS|LANDMARK|TERRAFORM|DAMAGE|CREATE_(?:GROUP_)?OBJECTS)|USE_(?:ACCESS_(?:GROUP|LIST)|BAN_LIST|LAND_PASS_LIST)|LOCAL_SOUND_ONLY|RESTRICT_PUSHOBJECT|ALLOW_(?:GROUP|ALL)_OBJECT_ENTRY)|COUNT_(?:TOTAL|OWNER|GROUP|OTHER|SELECTED|TEMP)|DETAILS_(?:NAME|DESC|OWNER|GROUP|AREA|ID|SEE_AVATARS))|LIST_STAT_(?:MAX|MIN|MEAN|MEDIAN|STD_DEV|SUM(?:_SQUARES)?|NUM_COUNT|GEOMETRIC_MEAN|RANGE)|PAY_(?:HIDE|DEFAULT)|REGION_FLAG_(?:ALLOW_DAMAGE|FIXED_SUN|BLOCK_TERRAFORM|SANDBOX|DISABLE_(?:COLLISIONS|PHYSICS)|BLOCK_FLY|ALLOW_DIRECT_TELEPORT|RESTRICT_PUSHOBJECT)|HTTP_(?:METHOD|MIMETYPE|BODY_(?:MAXLENGTH|TRUNCATED)|CUSTOM_HEADER|PRAGMA_NO_CACHE|VERBOSE_THROTTLE|VERIFY_CERT)|STRING_(?:TRIM(?:_(?:HEAD|TAIL))?)|CLICK_ACTION_(?:NONE|TOUCH|SIT|BUY|PAY|OPEN(?:_MEDIA)?|PLAY|ZOOM)|TOUCH_INVALID_FACE|PROFILE_(?:NONE|SCRIPT_MEMORY)|RC_(?:DATA_FLAGS|DETECT_PHANTOM|GET_(?:LINK_NUM|NORMAL|ROOT_KEY)|MAX_HITS|REJECT_(?:TYPES|AGENTS|(?:NON)?PHYSICAL|LAND))|RCERR_(?:CAST_TIME_EXCEEDED|SIM_PERF_LOW|UNKNOWN)|ESTATE_ACCESS_(?:ALLOWED_(?:AGENT|GROUP)_(?:ADD|REMOVE)|BANNED_AGENT_(?:ADD|REMOVE))|DENSITY|FRICTION|RESTITUTION|GRAVITY_MULTIPLIER|KFM_(?:COMMAND|CMD_(?:PLAY|STOP|PAUSE)|MODE|FORWARD|LOOP|PING_PONG|REVERSE|DATA|ROTATION|TRANSLATION)|ERR_(?:GENERIC|PARCEL_PERMISSIONS|MALFORMED_PARAMS|RUNTIME_PERMISSIONS|THROTTLED)|CHARACTER_(?:CMD_(?:(?:SMOOTH_)?STOP|JUMP)|DESIRED_(?:TURN_)?SPEED|RADIUS|STAY_WITHIN_PARCEL|LENGTH|ORIENTATION|ACCOUNT_FOR_SKIPPED_FRAMES|AVOIDANCE_MODE|TYPE(?:_(?:[ABCD]|NONE))?|MAX_(?:DECEL|TURN_RADIUS|(?:ACCEL|SPEED)))|PURSUIT_(?:OFFSET|FUZZ_FACTOR|GOAL_TOLERANCE|INTERCEPT)|REQUIRE_LINE_OF_SIGHT|FORCE_DIRECT_PATH|VERTICAL|HORIZONTAL|AVOID_(?:CHARACTERS|DYNAMIC_OBSTACLES|NONE)|PU_(?:EVADE_(?:HIDDEN|SPOTTED)|FAILURE_(?:DYNAMIC_PATHFINDING_DISABLED|INVALID_(?:GOAL|START)|NO_(?:NAVMESH|VALID_DESTINATION)|OTHER|TARGET_GONE|(?:PARCEL_)?UNREACHABLE)|(?:GOAL|SLOWDOWN_DISTANCE)_REACHED)|TRAVERSAL_TYPE(?:_(?:FAST|NONE|SLOW))?|CONTENT_TYPE_(?:ATOM|FORM|HTML|JSON|LLSD|RSS|TEXT|XHTML|XML)|GCNP_(?:RADIUS|STATIC)|(?:PATROL|WANDER)_PAUSE_AT_WAYPOINTS|OPT_(?:AVATAR|CHARACTER|EXCLUSION_VOLUME|LEGACY_LINKSET|MATERIAL_VOLUME|OTHER|STATIC_OBSTACLE|WALKABLE)|SIM_STAT_PCT_CHARS_STEPPED)\\b'
+                begin: '\\b(?:XP_ERROR_(?:EXPERIENCES_DISABLED|EXPERIENCE_(?:DISABLED|SUSPENDED)|INVALID_(?:EXPERIENCE|PARAMETERS)|KEY_NOT_FOUND|MATURITY_EXCEEDED|NONE|NOT_(?:FOUND|PERMITTED(?:_LAND)?)|NO_EXPERIENCE|QUOTA_EXCEEDED|RETRY_UPDATE|STORAGE_EXCEPTION|STORE_DISABLED|THROTTLED|UNKNOWN_ERROR)|JSON_APPEND|STATUS_(?:PHYSICS|ROTATE_[XYZ]|PHANTOM|SANDBOX|BLOCK_GRAB(?:_OBJECT)?|(?:DIE|RETURN)_AT_EDGE|CAST_SHADOWS|OK|MALFORMED_PARAMS|TYPE_MISMATCH|BOUNDS_ERROR|NOT_(?:FOUND|SUPPORTED)|INTERNAL_ERROR|WHITELIST_FAILED)|AGENT(?:_(?:BY_(?:LEGACY_|USER)NAME|FLYING|ATTACHMENTS|SCRIPTED|MOUSELOOK|SITTING|ON_OBJECT|AWAY|WALKING|IN_AIR|TYPING|CROUCHING|BUSY|ALWAYS_RUN|AUTOPILOT|LIST_(?:PARCEL(?:_OWNER)?|REGION)))?|CAMERA_(?:PITCH|DISTANCE|BEHINDNESS_(?:ANGLE|LAG)|(?:FOCUS|POSITION)(?:_(?:THRESHOLD|LOCKED|LAG))?|FOCUS_OFFSET|ACTIVE)|ANIM_ON|LOOP|REVERSE|PING_PONG|SMOOTH|ROTATE|SCALE|ALL_SIDES|LINK_(?:ROOT|SET|ALL_(?:OTHERS|CHILDREN)|THIS)|ACTIVE|PASS(?:IVE|_(?:ALWAYS|IF_NOT_HANDLED|NEVER))|SCRIPTED|CONTROL_(?:FWD|BACK|(?:ROT_)?(?:LEFT|RIGHT)|UP|DOWN|(?:ML_)?LBUTTON)|PERMISSION_(?:RETURN_OBJECTS|DEBIT|OVERRIDE_ANIMATIONS|SILENT_ESTATE_MANAGEMENT|TAKE_CONTROLS|TRIGGER_ANIMATION|ATTACH|CHANGE_LINKS|(?:CONTROL|TRACK)_CAMERA|TELEPORT)|INVENTORY_(?:TEXTURE|SOUND|OBJECT|SCRIPT|LANDMARK|CLOTHING|NOTECARD|BODYPART|ANIMATION|GESTURE|ALL|NONE)|CHANGED_(?:INVENTORY|COLOR|SHAPE|SCALE|TEXTURE|LINK|ALLOWED_DROP|OWNER|REGION(?:_START)?|TELEPORT|MEDIA)|OBJECT_(?:CLICK_ACTION|HOVER_HEIGHT|LAST_OWNER_ID|(?:PHYSICS|SERVER|STREAMING)_COST|UNKNOWN_DETAIL|CHARACTER_TIME|PHANTOM|PHYSICS|TEMP_(?:ATTACHED|ON_REZ)|NAME|DESC|POS|PRIM_(?:COUNT|EQUIVALENCE)|RETURN_(?:PARCEL(?:_OWNER)?|REGION)|REZZER_KEY|ROO?T|VELOCITY|OMEGA|OWNER|GROUP(?:_TAG)?|CREATOR|ATTACHED_(?:POINT|SLOTS_AVAILABLE)|RENDER_WEIGHT|(?:BODY_SHAPE|PATHFINDING)_TYPE|(?:RUNNING|TOTAL)_SCRIPT_COUNT|TOTAL_INVENTORY_COUNT|SCRIPT_(?:MEMORY|TIME))|TYPE_(?:INTEGER|FLOAT|STRING|KEY|VECTOR|ROTATION|INVALID)|(?:DEBUG|PUBLIC)_CHANNEL|ATTACH_(?:AVATAR_CENTER|CHEST|HEAD|BACK|PELVIS|MOUTH|CHIN|NECK|NOSE|BELLY|[LR](?:SHOULDER|HAND|FOOT|EAR|EYE|[UL](?:ARM|LEG)|HIP)|(?:LEFT|RIGHT)_PEC|HUD_(?:CENTER_[12]|TOP_(?:RIGHT|CENTER|LEFT)|BOTTOM(?:_(?:RIGHT|LEFT))?)|[LR]HAND_RING1|TAIL_(?:BASE|TIP)|[LR]WING|FACE_(?:JAW|[LR]EAR|[LR]EYE|TOUNGE)|GROIN|HIND_[LR]FOOT)|LAND_(?:LEVEL|RAISE|LOWER|SMOOTH|NOISE|REVERT)|DATA_(?:ONLINE|NAME|BORN|SIM_(?:POS|STATUS|RATING)|PAYINFO)|PAYMENT_INFO_(?:ON_FILE|USED)|REMOTE_DATA_(?:CHANNEL|REQUEST|REPLY)|PSYS_(?:PART_(?:BF_(?:ZERO|ONE(?:_MINUS_(?:DEST_COLOR|SOURCE_(ALPHA|COLOR)))?|DEST_COLOR|SOURCE_(ALPHA|COLOR))|BLEND_FUNC_(DEST|SOURCE)|FLAGS|(?:START|END)_(?:COLOR|ALPHA|SCALE|GLOW)|MAX_AGE|(?:RIBBON|WIND|INTERP_(?:COLOR|SCALE)|BOUNCE|FOLLOW_(?:SRC|VELOCITY)|TARGET_(?:POS|LINEAR)|EMISSIVE)_MASK)|SRC_(?:MAX_AGE|PATTERN|ANGLE_(?:BEGIN|END)|BURST_(?:RATE|PART_COUNT|RADIUS|SPEED_(?:MIN|MAX))|ACCEL|TEXTURE|TARGET_KEY|OMEGA|PATTERN_(?:DROP|EXPLODE|ANGLE(?:_CONE(?:_EMPTY)?)?)))|VEHICLE_(?:REFERENCE_FRAME|TYPE_(?:NONE|SLED|CAR|BOAT|AIRPLANE|BALLOON)|(?:LINEAR|ANGULAR)_(?:FRICTION_TIMESCALE|MOTOR_DIRECTION)|LINEAR_MOTOR_OFFSET|HOVER_(?:HEIGHT|EFFICIENCY|TIMESCALE)|BUOYANCY|(?:LINEAR|ANGULAR)_(?:DEFLECTION_(?:EFFICIENCY|TIMESCALE)|MOTOR_(?:DECAY_)?TIMESCALE)|VERTICAL_ATTRACTION_(?:EFFICIENCY|TIMESCALE)|BANKING_(?:EFFICIENCY|MIX|TIMESCALE)|FLAG_(?:NO_DEFLECTION_UP|LIMIT_(?:ROLL_ONLY|MOTOR_UP)|HOVER_(?:(?:WATER|TERRAIN|UP)_ONLY|GLOBAL_HEIGHT)|MOUSELOOK_(?:STEER|BANK)|CAMERA_DECOUPLED))|PRIM_(?:ALLOW_UNSIT|ALPHA_MODE(?:_(?:BLEND|EMISSIVE|MASK|NONE))?|NORMAL|SPECULAR|TYPE(?:_(?:BOX|CYLINDER|PRISM|SPHERE|TORUS|TUBE|RING|SCULPT))?|HOLE_(?:DEFAULT|CIRCLE|SQUARE|TRIANGLE)|MATERIAL(?:_(?:STONE|METAL|GLASS|WOOD|FLESH|PLASTIC|RUBBER))?|SHINY_(?:NONE|LOW|MEDIUM|HIGH)|BUMP_(?:NONE|BRIGHT|DARK|WOOD|BARK|BRICKS|CHECKER|CONCRETE|TILE|STONE|DISKS|GRAVEL|BLOBS|SIDING|LARGETILE|STUCCO|SUCTION|WEAVE)|TEXGEN_(?:DEFAULT|PLANAR)|SCRIPTED_SIT_ONLY|SCULPT_(?:TYPE_(?:SPHERE|TORUS|PLANE|CYLINDER|MASK)|FLAG_(?:MIRROR|INVERT))|PHYSICS(?:_(?:SHAPE_(?:CONVEX|NONE|PRIM|TYPE)))?|(?:POS|ROT)_LOCAL|SLICE|TEXT|FLEXIBLE|POINT_LIGHT|TEMP_ON_REZ|PHANTOM|POSITION|SIT_TARGET|SIZE|ROTATION|TEXTURE|NAME|OMEGA|DESC|LINK_TARGET|COLOR|BUMP_SHINY|FULLBRIGHT|TEXGEN|GLOW|MEDIA_(?:ALT_IMAGE_ENABLE|CONTROLS|(?:CURRENT|HOME)_URL|AUTO_(?:LOOP|PLAY|SCALE|ZOOM)|FIRST_CLICK_INTERACT|(?:WIDTH|HEIGHT)_PIXELS|WHITELIST(?:_ENABLE)?|PERMS_(?:INTERACT|CONTROL)|PARAM_MAX|CONTROLS_(?:STANDARD|MINI)|PERM_(?:NONE|OWNER|GROUP|ANYONE)|MAX_(?:URL_LENGTH|WHITELIST_(?:SIZE|COUNT)|(?:WIDTH|HEIGHT)_PIXELS)))|MASK_(?:BASE|OWNER|GROUP|EVERYONE|NEXT)|PERM_(?:TRANSFER|MODIFY|COPY|MOVE|ALL)|PARCEL_(?:MEDIA_COMMAND_(?:STOP|PAUSE|PLAY|LOOP|TEXTURE|URL|TIME|AGENT|UNLOAD|AUTO_ALIGN|TYPE|SIZE|DESC|LOOP_SET)|FLAG_(?:ALLOW_(?:FLY|(?:GROUP_)?SCRIPTS|LANDMARK|TERRAFORM|DAMAGE|CREATE_(?:GROUP_)?OBJECTS)|USE_(?:ACCESS_(?:GROUP|LIST)|BAN_LIST|LAND_PASS_LIST)|LOCAL_SOUND_ONLY|RESTRICT_PUSHOBJECT|ALLOW_(?:GROUP|ALL)_OBJECT_ENTRY)|COUNT_(?:TOTAL|OWNER|GROUP|OTHER|SELECTED|TEMP)|DETAILS_(?:NAME|DESC|OWNER|GROUP|AREA|ID|SEE_AVATARS))|LIST_STAT_(?:MAX|MIN|MEAN|MEDIAN|STD_DEV|SUM(?:_SQUARES)?|NUM_COUNT|GEOMETRIC_MEAN|RANGE)|PAY_(?:HIDE|DEFAULT)|REGION_FLAG_(?:ALLOW_DAMAGE|FIXED_SUN|BLOCK_TERRAFORM|SANDBOX|DISABLE_(?:COLLISIONS|PHYSICS)|BLOCK_FLY|ALLOW_DIRECT_TELEPORT|RESTRICT_PUSHOBJECT)|HTTP_(?:METHOD|MIMETYPE|BODY_(?:MAXLENGTH|TRUNCATED)|CUSTOM_HEADER|PRAGMA_NO_CACHE|VERBOSE_THROTTLE|VERIFY_CERT)|SIT_(?:INVALID_(?:AGENT|LINK_OBJECT)|NO(?:T_EXPERIENCE|_(?:ACCESS|EXPERIENCE_PERMISSION|SIT_TARGET)))|STRING_(?:TRIM(?:_(?:HEAD|TAIL))?)|CLICK_ACTION_(?:NONE|TOUCH|SIT|BUY|PAY|OPEN(?:_MEDIA)?|PLAY|ZOOM)|TOUCH_INVALID_FACE|PROFILE_(?:NONE|SCRIPT_MEMORY)|RC_(?:DATA_FLAGS|DETECT_PHANTOM|GET_(?:LINK_NUM|NORMAL|ROOT_KEY)|MAX_HITS|REJECT_(?:TYPES|AGENTS|(?:NON)?PHYSICAL|LAND))|RCERR_(?:CAST_TIME_EXCEEDED|SIM_PERF_LOW|UNKNOWN)|ESTATE_ACCESS_(?:ALLOWED_(?:AGENT|GROUP)_(?:ADD|REMOVE)|BANNED_AGENT_(?:ADD|REMOVE))|DENSITY|FRICTION|RESTITUTION|GRAVITY_MULTIPLIER|KFM_(?:COMMAND|CMD_(?:PLAY|STOP|PAUSE)|MODE|FORWARD|LOOP|PING_PONG|REVERSE|DATA|ROTATION|TRANSLATION)|ERR_(?:GENERIC|PARCEL_PERMISSIONS|MALFORMED_PARAMS|RUNTIME_PERMISSIONS|THROTTLED)|CHARACTER_(?:CMD_(?:(?:SMOOTH_)?STOP|JUMP)|DESIRED_(?:TURN_)?SPEED|RADIUS|STAY_WITHIN_PARCEL|LENGTH|ORIENTATION|ACCOUNT_FOR_SKIPPED_FRAMES|AVOIDANCE_MODE|TYPE(?:_(?:[ABCD]|NONE))?|MAX_(?:DECEL|TURN_RADIUS|(?:ACCEL|SPEED)))|PURSUIT_(?:OFFSET|FUZZ_FACTOR|GOAL_TOLERANCE|INTERCEPT)|REQUIRE_LINE_OF_SIGHT|FORCE_DIRECT_PATH|VERTICAL|HORIZONTAL|AVOID_(?:CHARACTERS|DYNAMIC_OBSTACLES|NONE)|PU_(?:EVADE_(?:HIDDEN|SPOTTED)|FAILURE_(?:DYNAMIC_PATHFINDING_DISABLED|INVALID_(?:GOAL|START)|NO_(?:NAVMESH|VALID_DESTINATION)|OTHER|TARGET_GONE|(?:PARCEL_)?UNREACHABLE)|(?:GOAL|SLOWDOWN_DISTANCE)_REACHED)|TRAVERSAL_TYPE(?:_(?:FAST|NONE|SLOW))?|CONTENT_TYPE_(?:ATOM|FORM|HTML|JSON|LLSD|RSS|TEXT|XHTML|XML)|GCNP_(?:RADIUS|STATIC)|(?:PATROL|WANDER)_PAUSE_AT_WAYPOINTS|OPT_(?:AVATAR|CHARACTER|EXCLUSION_VOLUME|LEGACY_LINKSET|MATERIAL_VOLUME|OTHER|STATIC_OBSTACLE|WALKABLE)|SIM_STAT_PCT_CHARS_STEPPED)\\b'
             },
             {
                 begin: '\\b(?:FALSE|TRUE)\\b'
@@ -28426,7 +30367,7 @@ module.exports = function(hljs) {
 
     var LSL_FUNCTIONS = {
         className: 'built_in',
-        begin: '\\b(?:ll(?:AgentInExperience|(?:Create|DataSize|Delete|KeyCount|Keys|Read|Update)KeyValue|GetExperience(?:Details|ErrorMessage)|ReturnObjectsBy(?:ID|Owner)|Json(?:2List|[GS]etValue|ValueType)|Sin|Cos|Tan|Atan2|Sqrt|Pow|Abs|Fabs|Frand|Floor|Ceil|Round|Vec(?:Mag|Norm|Dist)|Rot(?:Between|2(?:Euler|Fwd|Left|Up))|(?:Euler|Axes)2Rot|Whisper|(?:Region|Owner)?Say|Shout|Listen(?:Control|Remove)?|Sensor(?:Repeat|Remove)?|Detected(?:Name|Key|Owner|Type|Pos|Vel|Grab|Rot|Group|LinkNumber)|Die|Ground|Wind|(?:[GS]et)(?:AnimationOverride|MemoryLimit|PrimMediaParams|ParcelMusicURL|Object(?:Desc|Name)|PhysicsMaterial|Status|Scale|Color|Alpha|Texture|Pos|Rot|Force|Torque)|ResetAnimationOverride|(?:Scale|Offset|Rotate)Texture|(?:Rot)?Target(?:Remove)?|(?:Stop)?MoveToTarget|Apply(?:Rotational)?Impulse|Set(?:KeyframedMotion|ContentType|RegionPos|(?:Angular)?Velocity|Buoyancy|HoverHeight|ForceAndTorque|TimerEvent|ScriptState|Damage|TextureAnim|Sound(?:Queueing|Radius)|Vehicle(?:Type|(?:Float|Vector|Rotation)Param)|(?:Touch|Sit)?Text|Camera(?:Eye|At)Offset|PrimitiveParams|ClickAction|Link(?:Alpha|Color|PrimitiveParams(?:Fast)?|Texture(?:Anim)?|Camera|Media)|RemoteScriptAccessPin|PayPrice|LocalRot)|ScaleByFactor|Get(?:(?:Max|Min)ScaleFactor|ClosestNavPoint|StaticPath|SimStats|Env|PrimitiveParams|Link(?:PrimitiveParams|Number(?:OfSides)?|Key|Name|Media)|HTTPHeader|FreeURLs|Object(?:Details|PermMask|PrimCount)|Parcel(?:MaxPrims|Details|Prim(?:Count|Owners))|Attached(?:List)?|(?:SPMax|Free|Used)Memory|Region(?:Name|TimeDilation|FPS|Corner|AgentCount)|Root(?:Position|Rotation)|UnixTime|(?:Parcel|Region)Flags|(?:Wall|GMT)clock|SimulatorHostname|BoundingBox|GeometricCenter|Creator|NumberOf(?:Prims|NotecardLines|Sides)|Animation(?:List)?|(?:Camera|Local)(?:Pos|Rot)|Vel|Accel|Omega|Time(?:stamp|OfDay)|(?:Object|CenterOf)?Mass|MassMKS|Energy|Owner|(?:Owner)?Key|SunDirection|Texture(?:Offset|Scale|Rot)|Inventory(?:Number|Name|Key|Type|Creator|PermMask)|Permissions(?:Key)?|StartParameter|List(?:Length|EntryType)|Date|Agent(?:Size|Info|Language|List)|LandOwnerAt|NotecardLine|Script(?:Name|State))|(?:Get|Reset|GetAndReset)Time|PlaySound(?:Slave)?|LoopSound(?:Master|Slave)?|(?:Trigger|Stop|Preload)Sound|(?:(?:Get|Delete)Sub|Insert)String|To(?:Upper|Lower)|Give(?:InventoryList|Money)|RezObject|(?:Stop)?LookAt|Sleep|CollisionFilter|(?:Take|Release)Controls|DetachFromAvatar|AttachToAvatar(?:Temp)?|InstantMessage|(?:GetNext)?Email|StopHover|MinEventDelay|RotLookAt|String(?:Length|Trim)|(?:Start|Stop)Animation|TargetOmega|Request(?:Experience)?Permissions|(?:Create|Break)Link|BreakAllLinks|(?:Give|Remove)Inventory|Water|PassTouches|Request(?:Agent|Inventory)Data|TeleportAgent(?:Home|GlobalCoords)?|ModifyLand|CollisionSound|ResetScript|MessageLinked|PushObject|PassCollisions|AxisAngle2Rot|Rot2(?:Axis|Angle)|A(?:cos|sin)|AngleBetween|AllowInventoryDrop|SubStringIndex|List2(?:CSV|Integer|Json|Float|String|Key|Vector|Rot|List(?:Strided)?)|DeleteSubList|List(?:Statistics|Sort|Randomize|(?:Insert|Find|Replace)List)|EdgeOfWorld|AdjustSoundVolume|Key2Name|TriggerSoundLimited|EjectFromLand|(?:CSV|ParseString)2List|OverMyLand|SameGroup|UnSit|Ground(?:Slope|Normal|Contour)|GroundRepel|(?:Set|Remove)VehicleFlags|(?:AvatarOn)?(?:Link)?SitTarget|Script(?:Danger|Profiler)|Dialog|VolumeDetect|ResetOtherScript|RemoteLoadScriptPin|(?:Open|Close)RemoteDataChannel|SendRemoteData|RemoteDataReply|(?:Integer|String)ToBase64|XorBase64|Log(?:10)?|Base64To(?:String|Integer)|ParseStringKeepNulls|RezAtRoot|RequestSimulatorData|ForceMouselook|(?:Load|Release|(?:E|Une)scape)URL|ParcelMedia(?:CommandList|Query)|ModPow|MapDestination|(?:RemoveFrom|AddTo|Reset)Land(?:Pass|Ban)List|(?:Set|Clear)CameraParams|HTTP(?:Request|Response)|TextBox|DetectedTouch(?:UV|Face|Pos|(?:N|Bin)ormal|ST)|(?:MD5|SHA1|DumpList2)String|Request(?:Secure)?URL|Clear(?:Prim|Link)Media|(?:Link)?ParticleSystem|(?:Get|Request)(?:Username|DisplayName)|RegionSayTo|CastRay|GenerateKey|TransferLindenDollars|ManageEstateAccess|(?:Create|Delete)Character|ExecCharacterCmd|Evade|FleeFrom|NavigateTo|PatrolPoints|Pursue|UpdateCharacter|WanderWithin))\\b'
+        begin: '\\b(?:ll(?:AgentInExperience|(?:Create|DataSize|Delete|KeyCount|Keys|Read|Update)KeyValue|GetExperience(?:Details|ErrorMessage)|ReturnObjectsBy(?:ID|Owner)|Json(?:2List|[GS]etValue|ValueType)|Sin|Cos|Tan|Atan2|Sqrt|Pow|Abs|Fabs|Frand|Floor|Ceil|Round|Vec(?:Mag|Norm|Dist)|Rot(?:Between|2(?:Euler|Fwd|Left|Up))|(?:Euler|Axes)2Rot|Whisper|(?:Region|Owner)?Say|Shout|Listen(?:Control|Remove)?|Sensor(?:Repeat|Remove)?|Detected(?:Name|Key|Owner|Type|Pos|Vel|Grab|Rot|Group|LinkNumber)|Die|Ground|Wind|(?:[GS]et)(?:AnimationOverride|MemoryLimit|PrimMediaParams|ParcelMusicURL|Object(?:Desc|Name)|PhysicsMaterial|Status|Scale|Color|Alpha|Texture|Pos|Rot|Force|Torque)|ResetAnimationOverride|(?:Scale|Offset|Rotate)Texture|(?:Rot)?Target(?:Remove)?|(?:Stop)?MoveToTarget|Apply(?:Rotational)?Impulse|Set(?:KeyframedMotion|ContentType|RegionPos|(?:Angular)?Velocity|Buoyancy|HoverHeight|ForceAndTorque|TimerEvent|ScriptState|Damage|TextureAnim|Sound(?:Queueing|Radius)|Vehicle(?:Type|(?:Float|Vector|Rotation)Param)|(?:Touch|Sit)?Text|Camera(?:Eye|At)Offset|PrimitiveParams|ClickAction|Link(?:Alpha|Color|PrimitiveParams(?:Fast)?|Texture(?:Anim)?|Camera|Media)|RemoteScriptAccessPin|PayPrice|LocalRot)|ScaleByFactor|Get(?:(?:Max|Min)ScaleFactor|ClosestNavPoint|StaticPath|SimStats|Env|PrimitiveParams|Link(?:PrimitiveParams|Number(?:OfSides)?|Key|Name|Media)|HTTPHeader|FreeURLs|Object(?:Details|PermMask|PrimCount)|Parcel(?:MaxPrims|Details|Prim(?:Count|Owners))|Attached(?:List)?|(?:SPMax|Free|Used)Memory|Region(?:Name|TimeDilation|FPS|Corner|AgentCount)|Root(?:Position|Rotation)|UnixTime|(?:Parcel|Region)Flags|(?:Wall|GMT)clock|SimulatorHostname|BoundingBox|GeometricCenter|Creator|NumberOf(?:Prims|NotecardLines|Sides)|Animation(?:List)?|(?:Camera|Local)(?:Pos|Rot)|Vel|Accel|Omega|Time(?:stamp|OfDay)|(?:Object|CenterOf)?Mass|MassMKS|Energy|Owner|(?:Owner)?Key|SunDirection|Texture(?:Offset|Scale|Rot)|Inventory(?:Number|Name|Key|Type|Creator|PermMask)|Permissions(?:Key)?|StartParameter|List(?:Length|EntryType)|Date|Agent(?:Size|Info|Language|List)|LandOwnerAt|NotecardLine|Script(?:Name|State))|(?:Get|Reset|GetAndReset)Time|PlaySound(?:Slave)?|LoopSound(?:Master|Slave)?|(?:Trigger|Stop|Preload)Sound|(?:(?:Get|Delete)Sub|Insert)String|To(?:Upper|Lower)|Give(?:InventoryList|Money)|RezObject|(?:Stop)?LookAt|Sleep|CollisionFilter|(?:Take|Release)Controls|DetachFromAvatar|AttachToAvatar(?:Temp)?|InstantMessage|(?:GetNext)?Email|StopHover|MinEventDelay|RotLookAt|String(?:Length|Trim)|(?:Start|Stop)Animation|TargetOmega|Request(?:Experience)?Permissions|(?:Create|Break)Link|BreakAllLinks|(?:Give|Remove)Inventory|Water|PassTouches|Request(?:Agent|Inventory)Data|TeleportAgent(?:Home|GlobalCoords)?|ModifyLand|CollisionSound|ResetScript|MessageLinked|PushObject|PassCollisions|AxisAngle2Rot|Rot2(?:Axis|Angle)|A(?:cos|sin)|AngleBetween|AllowInventoryDrop|SubStringIndex|List2(?:CSV|Integer|Json|Float|String|Key|Vector|Rot|List(?:Strided)?)|DeleteSubList|List(?:Statistics|Sort|Randomize|(?:Insert|Find|Replace)List)|EdgeOfWorld|AdjustSoundVolume|Key2Name|TriggerSoundLimited|EjectFromLand|(?:CSV|ParseString)2List|OverMyLand|SameGroup|UnSit|Ground(?:Slope|Normal|Contour)|GroundRepel|(?:Set|Remove)VehicleFlags|SitOnLink|(?:AvatarOn)?(?:Link)?SitTarget|Script(?:Danger|Profiler)|Dialog|VolumeDetect|ResetOtherScript|RemoteLoadScriptPin|(?:Open|Close)RemoteDataChannel|SendRemoteData|RemoteDataReply|(?:Integer|String)ToBase64|XorBase64|Log(?:10)?|Base64To(?:String|Integer)|ParseStringKeepNulls|RezAtRoot|RequestSimulatorData|ForceMouselook|(?:Load|Release|(?:E|Une)scape)URL|ParcelMedia(?:CommandList|Query)|ModPow|MapDestination|(?:RemoveFrom|AddTo|Reset)Land(?:Pass|Ban)List|(?:Set|Clear)CameraParams|HTTP(?:Request|Response)|TextBox|DetectedTouch(?:UV|Face|Pos|(?:N|Bin)ormal|ST)|(?:MD5|SHA1|DumpList2)String|Request(?:Secure)?URL|Clear(?:Prim|Link)Media|(?:Link)?ParticleSystem|(?:Get|Request)(?:Username|DisplayName)|RegionSayTo|CastRay|GenerateKey|TransferLindenDollars|ManageEstateAccess|(?:Create|Delete)Character|ExecCharacterCmd|Evade|FleeFrom|NavigateTo|PatrolPoints|Pursue|UpdateCharacter|WanderWithin))\\b'
     };
 
     return {
@@ -28438,7 +30379,8 @@ module.exports = function(hljs) {
                 variants: [
                     hljs.COMMENT('//', '$'),
                     hljs.COMMENT('/\\*', '\\*/')
-                ]
+                ],
+                relevance: 0
             },
             LSL_NUMBERS,
             {
@@ -28585,16 +30527,8 @@ module.exports = function(hljs) {
     ]
   };
   /* Variable assignment */
-  var VAR_ASSIG = {
-    begin: '^' + hljs.UNDERSCORE_IDENT_RE + '\\s*[:+?]?=',
-    illegal: '\\n',
-    returnBegin: true,
-    contains: [
-      {
-        begin: '^' + hljs.UNDERSCORE_IDENT_RE, end: '[:+?]?=',
-        excludeEnd: true,
-      }
-    ]
+  var ASSIGNMENT = {
+    begin: '^' + hljs.UNDERSCORE_IDENT_RE + '\\s*(?=[:+?]?=)'
   };
   /* Meta targets (.PHONY) */
   var META = {
@@ -28620,7 +30554,7 @@ module.exports = function(hljs) {
       VARIABLE,
       QUOTE_STRING,
       FUNC,
-      VAR_ASSIG,
+      ASSIGNMENT,
       META,
       TARGET,
     ]
@@ -28657,7 +30591,7 @@ module.exports = function(hljs) {
       // lists (indicators only)
       {
         className: 'bullet',
-        begin: '^([*+-]|(\\d+\\.))\\s+'
+        begin: '^\\s*([*+-]|(\\d+\\.))\\s+'
       },
       // strong segments
       {
@@ -28684,13 +30618,13 @@ module.exports = function(hljs) {
         className: 'code',
         variants: [
           {
-            begin: '^```\w*\s*$', end: '^```\s*$'
+            begin: '^```\\w*\\s*$', end: '^```[ ]*$'
           },
           {
             begin: '`.+?`'
           },
           {
-            begin: '^( {4}|\t)', end: '$',
+            begin: '^( {4}|\\t)', end: '$',
             relevance: 0
           }
         ]
@@ -28755,58 +30689,49 @@ module.exports = function(hljs) {
 
 module.exports = function(hljs) {
   return {
-    aliases: ['mma'],
+    aliases: ['mma', 'wl'],
     lexemes: '(\\$|\\b)' + hljs.IDENT_RE + '\\b',
-    keywords: 'AbelianGroup Abort AbortKernels AbortProtect Above Abs Absolute AbsoluteCorrelation AbsoluteCorrelationFunction AbsoluteCurrentValue AbsoluteDashing AbsoluteFileName AbsoluteOptions AbsolutePointSize AbsoluteThickness AbsoluteTime AbsoluteTiming AccountingForm Accumulate Accuracy AccuracyGoal ActionDelay ActionMenu ActionMenuBox ActionMenuBoxOptions Active ActiveItem ActiveStyle AcyclicGraphQ AddOnHelpPath AddTo AdjacencyGraph AdjacencyList AdjacencyMatrix AdjustmentBox AdjustmentBoxOptions AdjustTimeSeriesForecast AffineTransform After AiryAi AiryAiPrime AiryAiZero AiryBi AiryBiPrime AiryBiZero AlgebraicIntegerQ AlgebraicNumber AlgebraicNumberDenominator AlgebraicNumberNorm AlgebraicNumberPolynomial AlgebraicNumberTrace AlgebraicRules AlgebraicRulesData Algebraics AlgebraicUnitQ Alignment AlignmentMarker AlignmentPoint All AllowedDimensions AllowGroupClose AllowInlineCells AllowKernelInitialization AllowReverseGroupClose AllowScriptLevelChange AlphaChannel AlternatingGroup AlternativeHypothesis Alternatives AmbientLight Analytic AnchoredSearch And AndersonDarlingTest AngerJ AngleBracket AngularGauge Animate AnimationCycleOffset AnimationCycleRepetitions AnimationDirection AnimationDisplayTime AnimationRate AnimationRepetitions AnimationRunning Animator AnimatorBox AnimatorBoxOptions AnimatorElements Annotation Annuity AnnuityDue Antialiasing Antisymmetric Apart ApartSquareFree Appearance AppearanceElements AppellF1 Append AppendTo Apply ArcCos ArcCosh ArcCot ArcCoth ArcCsc ArcCsch ArcSec ArcSech ArcSin ArcSinDistribution ArcSinh ArcTan ArcTanh Arg ArgMax ArgMin ArgumentCountQ ARIMAProcess ArithmeticGeometricMean ARMAProcess ARProcess Array ArrayComponents ArrayDepth ArrayFlatten ArrayPad ArrayPlot ArrayQ ArrayReshape ArrayRules Arrays Arrow Arrow3DBox ArrowBox Arrowheads AspectRatio AspectRatioFixed Assert Assuming Assumptions AstronomicalData Asynchronous AsynchronousTaskObject AsynchronousTasks AtomQ Attributes AugmentedSymmetricPolynomial AutoAction AutoDelete AutoEvaluateEvents AutoGeneratedPackage AutoIndent AutoIndentSpacings AutoItalicWords AutoloadPath AutoMatch Automatic AutomaticImageSize AutoMultiplicationSymbol AutoNumberFormatting AutoOpenNotebooks AutoOpenPalettes AutorunSequencing AutoScaling AutoScroll AutoSpacing AutoStyleOptions AutoStyleWords Axes AxesEdge AxesLabel AxesOrigin AxesStyle Axis ' +
-      'BabyMonsterGroupB Back Background BackgroundTasksSettings Backslash Backsubstitution Backward Band BandpassFilter BandstopFilter BarabasiAlbertGraphDistribution BarChart BarChart3D BarLegend BarlowProschanImportance BarnesG BarOrigin BarSpacing BartlettHannWindow BartlettWindow BaseForm Baseline BaselinePosition BaseStyle BatesDistribution BattleLemarieWavelet Because BeckmannDistribution Beep Before Begin BeginDialogPacket BeginFrontEndInteractionPacket BeginPackage BellB BellY Below BenfordDistribution BeniniDistribution BenktanderGibratDistribution BenktanderWeibullDistribution BernoulliB BernoulliDistribution BernoulliGraphDistribution BernoulliProcess BernsteinBasis BesselFilterModel BesselI BesselJ BesselJZero BesselK BesselY BesselYZero Beta BetaBinomialDistribution BetaDistribution BetaNegativeBinomialDistribution BetaPrimeDistribution BetaRegularized BetweennessCentrality BezierCurve BezierCurve3DBox BezierCurve3DBoxOptions BezierCurveBox BezierCurveBoxOptions BezierFunction BilateralFilter Binarize BinaryFormat BinaryImageQ BinaryRead BinaryReadList BinaryWrite BinCounts BinLists Binomial BinomialDistribution BinomialProcess BinormalDistribution BiorthogonalSplineWavelet BipartiteGraphQ BirnbaumImportance BirnbaumSaundersDistribution BitAnd BitClear BitGet BitLength BitNot BitOr BitSet BitShiftLeft BitShiftRight BitXor Black BlackmanHarrisWindow BlackmanNuttallWindow BlackmanWindow Blank BlankForm BlankNullSequence BlankSequence Blend Block BlockRandom BlomqvistBeta BlomqvistBetaTest Blue Blur BodePlot BohmanWindow Bold Bookmarks Boole BooleanConsecutiveFunction BooleanConvert BooleanCountingFunction BooleanFunction BooleanGraph BooleanMaxterms BooleanMinimize BooleanMinterms Booleans BooleanTable BooleanVariables BorderDimensions BorelTannerDistribution Bottom BottomHatTransform BoundaryStyle Bounds Box BoxBaselineShift BoxData BoxDimensions Boxed Boxes BoxForm BoxFormFormatTypes BoxFrame BoxID BoxMargins BoxMatrix BoxRatios BoxRotation BoxRotationPoint BoxStyle BoxWhiskerChart Bra BracketingBar BraKet BrayCurtisDistance BreadthFirstScan Break Brown BrownForsytheTest BrownianBridgeProcess BrowserCategory BSplineBasis BSplineCurve BSplineCurve3DBox BSplineCurveBox BSplineCurveBoxOptions BSplineFunction BSplineSurface BSplineSurface3DBox BubbleChart BubbleChart3D BubbleScale BubbleSizes BulletGauge BusinessDayQ ButterflyGraph ButterworthFilterModel Button ButtonBar ButtonBox ButtonBoxOptions ButtonCell ButtonContents ButtonData ButtonEvaluator ButtonExpandable ButtonFrame ButtonFunction ButtonMargins ButtonMinHeight ButtonNote ButtonNotebook ButtonSource ButtonStyle ButtonStyleMenuListing Byte ByteCount ByteOrdering ' +
-      'C CachedValue CacheGraphics CalendarData CalendarType CallPacket CanberraDistance Cancel CancelButton CandlestickChart Cap CapForm CapitalDifferentialD CardinalBSplineBasis CarmichaelLambda Cases Cashflow Casoratian Catalan CatalanNumber Catch CauchyDistribution CauchyWindow CayleyGraph CDF CDFDeploy CDFInformation CDFWavelet Ceiling Cell CellAutoOverwrite CellBaseline CellBoundingBox CellBracketOptions CellChangeTimes CellContents CellContext CellDingbat CellDynamicExpression CellEditDuplicate CellElementsBoundingBox CellElementSpacings CellEpilog CellEvaluationDuplicate CellEvaluationFunction CellEventActions CellFrame CellFrameColor CellFrameLabelMargins CellFrameLabels CellFrameMargins CellGroup CellGroupData CellGrouping CellGroupingRules CellHorizontalScrolling CellID CellLabel CellLabelAutoDelete CellLabelMargins CellLabelPositioning CellMargins CellObject CellOpen CellPrint CellProlog Cells CellSize CellStyle CellTags CellularAutomaton CensoredDistribution Censoring Center CenterDot CentralMoment CentralMomentGeneratingFunction CForm ChampernowneNumber ChanVeseBinarize Character CharacterEncoding CharacterEncodingsPath CharacteristicFunction CharacteristicPolynomial CharacterRange Characters ChartBaseStyle ChartElementData ChartElementDataFunction ChartElementFunction ChartElements ChartLabels ChartLayout ChartLegends ChartStyle Chebyshev1FilterModel Chebyshev2FilterModel ChebyshevDistance ChebyshevT ChebyshevU Check CheckAbort CheckAll Checkbox CheckboxBar CheckboxBox CheckboxBoxOptions ChemicalData ChessboardDistance ChiDistribution ChineseRemainder ChiSquareDistribution ChoiceButtons ChoiceDialog CholeskyDecomposition Chop Circle CircleBox CircleDot CircleMinus CirclePlus CircleTimes CirculantGraph CityData Clear ClearAll ClearAttributes ClearSystemCache ClebschGordan ClickPane Clip ClipboardNotebook ClipFill ClippingStyle ClipPlanes ClipRange Clock ClockGauge ClockwiseContourIntegral Close Closed CloseKernels ClosenessCentrality Closing ClosingAutoSave ClosingEvent ClusteringComponents CMYKColor Coarse Coefficient CoefficientArrays CoefficientDomain CoefficientList CoefficientRules CoifletWavelet Collect Colon ColonForm ColorCombine ColorConvert ColorData ColorDataFunction ColorFunction ColorFunctionScaling Colorize ColorNegate ColorOutput ColorProfileData ColorQuantize ColorReplace ColorRules ColorSelectorSettings ColorSeparate ColorSetter ColorSetterBox ColorSetterBoxOptions ColorSlider ColorSpace Column ColumnAlignments ColumnBackgrounds ColumnForm ColumnLines ColumnsEqual ColumnSpacings ColumnWidths CommonDefaultFormatTypes Commonest CommonestFilter CommonUnits CommunityBoundaryStyle CommunityGraphPlot CommunityLabels CommunityRegionStyle CompatibleUnitQ CompilationOptions CompilationTarget Compile Compiled CompiledFunction Complement CompleteGraph CompleteGraphQ CompleteKaryTree CompletionsListPacket Complex Complexes ComplexExpand ComplexInfinity ComplexityFunction ComponentMeasurements ' +
-      'ComponentwiseContextMenu Compose ComposeList ComposeSeries Composition CompoundExpression CompoundPoissonDistribution CompoundPoissonProcess CompoundRenewalProcess Compress CompressedData Condition ConditionalExpression Conditioned Cone ConeBox ConfidenceLevel ConfidenceRange ConfidenceTransform ConfigurationPath Congruent Conjugate ConjugateTranspose Conjunction Connect ConnectedComponents ConnectedGraphQ ConnesWindow ConoverTest ConsoleMessage ConsoleMessagePacket ConsolePrint Constant ConstantArray Constants ConstrainedMax ConstrainedMin ContentPadding ContentsBoundingBox ContentSelectable ContentSize Context ContextMenu Contexts ContextToFilename ContextToFileName Continuation Continue ContinuedFraction ContinuedFractionK ContinuousAction ContinuousMarkovProcess ContinuousTimeModelQ ContinuousWaveletData ContinuousWaveletTransform ContourDetect ContourGraphics ContourIntegral ContourLabels ContourLines ContourPlot ContourPlot3D Contours ContourShading ContourSmoothing ContourStyle ContraharmonicMean Control ControlActive ControlAlignment ControllabilityGramian ControllabilityMatrix ControllableDecomposition ControllableModelQ ControllerDuration ControllerInformation ControllerInformationData ControllerLinking ControllerManipulate ControllerMethod ControllerPath ControllerState ControlPlacement ControlsRendering ControlType Convergents ConversionOptions ConversionRules ConvertToBitmapPacket ConvertToPostScript ConvertToPostScriptPacket Convolve ConwayGroupCo1 ConwayGroupCo2 ConwayGroupCo3 CoordinateChartData CoordinatesToolOptions CoordinateTransform CoordinateTransformData CoprimeQ Coproduct CopulaDistribution Copyable CopyDirectory CopyFile CopyTag CopyToClipboard CornerFilter CornerNeighbors Correlation CorrelationDistance CorrelationFunction CorrelationTest Cos Cosh CoshIntegral CosineDistance CosineWindow CosIntegral Cot Coth Count CounterAssignments CounterBox CounterBoxOptions CounterClockwiseContourIntegral CounterEvaluator CounterFunction CounterIncrements CounterStyle CounterStyleMenuListing CountRoots CountryData Covariance CovarianceEstimatorFunction CovarianceFunction CoxianDistribution CoxIngersollRossProcess CoxModel CoxModelFit CramerVonMisesTest CreateArchive CreateDialog CreateDirectory CreateDocument CreateIntermediateDirectories CreatePalette CreatePalettePacket CreateScheduledTask CreateTemporary CreateWindow CriticalityFailureImportance CriticalitySuccessImportance CriticalSection Cross CrossingDetect CrossMatrix Csc Csch CubeRoot Cubics Cuboid CuboidBox Cumulant CumulantGeneratingFunction Cup CupCap Curl CurlyDoubleQuote CurlyQuote CurrentImage CurrentlySpeakingPacket CurrentValue CurvatureFlowFilter CurveClosed Cyan CycleGraph CycleIndexPolynomial Cycles CyclicGroup Cyclotomic Cylinder CylinderBox CylindricalDecomposition ' +
-      'D DagumDistribution DamerauLevenshteinDistance DampingFactor Darker Dashed Dashing DataCompression DataDistribution DataRange DataReversed Date DateDelimiters DateDifference DateFunction DateList DateListLogPlot DateListPlot DatePattern DatePlus DateRange DateString DateTicksFormat DaubechiesWavelet DavisDistribution DawsonF DayCount DayCountConvention DayMatchQ DayName DayPlus DayRange DayRound DeBruijnGraph Debug DebugTag Decimal DeclareKnownSymbols DeclarePackage Decompose Decrement DedekindEta Default DefaultAxesStyle DefaultBaseStyle DefaultBoxStyle DefaultButton DefaultColor DefaultControlPlacement DefaultDuplicateCellStyle DefaultDuration DefaultElement DefaultFaceGridsStyle DefaultFieldHintStyle DefaultFont DefaultFontProperties DefaultFormatType DefaultFormatTypeForStyle DefaultFrameStyle DefaultFrameTicksStyle DefaultGridLinesStyle DefaultInlineFormatType DefaultInputFormatType DefaultLabelStyle DefaultMenuStyle DefaultNaturalLanguage DefaultNewCellStyle DefaultNewInlineCellStyle DefaultNotebook DefaultOptions DefaultOutputFormatType DefaultStyle DefaultStyleDefinitions DefaultTextFormatType DefaultTextInlineFormatType DefaultTicksStyle DefaultTooltipStyle DefaultValues Defer DefineExternal DefineInputStreamMethod DefineOutputStreamMethod Definition Degree DegreeCentrality DegreeGraphDistribution DegreeLexicographic DegreeReverseLexicographic Deinitialization Del Deletable Delete DeleteBorderComponents DeleteCases DeleteContents DeleteDirectory DeleteDuplicates DeleteFile DeleteSmallComponents DeleteWithContents DeletionWarning Delimiter DelimiterFlashTime DelimiterMatching Delimiters Denominator DensityGraphics DensityHistogram DensityPlot DependentVariables Deploy Deployed Depth DepthFirstScan Derivative DerivativeFilter DescriptorStateSpace DesignMatrix Det DGaussianWavelet DiacriticalPositioning Diagonal DiagonalMatrix Dialog DialogIndent DialogInput DialogLevel DialogNotebook DialogProlog DialogReturn DialogSymbols Diamond DiamondMatrix DiceDissimilarity DictionaryLookup DifferenceDelta DifferenceOrder DifferenceRoot DifferenceRootReduce Differences DifferentialD DifferentialRoot DifferentialRootReduce DifferentiatorFilter DigitBlock DigitBlockMinimum DigitCharacter DigitCount DigitQ DihedralGroup Dilation Dimensions DiracComb DiracDelta DirectedEdge DirectedEdges DirectedGraph DirectedGraphQ DirectedInfinity Direction Directive Directory DirectoryName DirectoryQ DirectoryStack DirichletCharacter DirichletConvolve DirichletDistribution DirichletL DirichletTransform DirichletWindow DisableConsolePrintPacket DiscreteChirpZTransform DiscreteConvolve DiscreteDelta DiscreteHadamardTransform DiscreteIndicator DiscreteLQEstimatorGains DiscreteLQRegulatorGains DiscreteLyapunovSolve DiscreteMarkovProcess DiscretePlot DiscretePlot3D DiscreteRatio DiscreteRiccatiSolve DiscreteShift DiscreteTimeModelQ DiscreteUniformDistribution DiscreteVariables DiscreteWaveletData DiscreteWaveletPacketTransform ' +
-      'DiscreteWaveletTransform Discriminant Disjunction Disk DiskBox DiskMatrix Dispatch DispersionEstimatorFunction Display DisplayAllSteps DisplayEndPacket DisplayFlushImagePacket DisplayForm DisplayFunction DisplayPacket DisplayRules DisplaySetSizePacket DisplayString DisplayTemporary DisplayWith DisplayWithRef DisplayWithVariable DistanceFunction DistanceTransform Distribute Distributed DistributedContexts DistributeDefinitions DistributionChart DistributionDomain DistributionFitTest DistributionParameterAssumptions DistributionParameterQ Dithering Div Divergence Divide DivideBy Dividers Divisible Divisors DivisorSigma DivisorSum DMSList DMSString Do DockedCells DocumentNotebook DominantColors DOSTextFormat Dot DotDashed DotEqual Dotted DoubleBracketingBar DoubleContourIntegral DoubleDownArrow DoubleLeftArrow DoubleLeftRightArrow DoubleLeftTee DoubleLongLeftArrow DoubleLongLeftRightArrow DoubleLongRightArrow DoubleRightArrow DoubleRightTee DoubleUpArrow DoubleUpDownArrow DoubleVerticalBar DoublyInfinite Down DownArrow DownArrowBar DownArrowUpArrow DownLeftRightVector DownLeftTeeVector DownLeftVector DownLeftVectorBar DownRightTeeVector DownRightVector DownRightVectorBar Downsample DownTee DownTeeArrow DownValues DragAndDrop DrawEdges DrawFrontFaces DrawHighlighted Drop DSolve Dt DualLinearProgramming DualSystemsModel DumpGet DumpSave DuplicateFreeQ Dynamic DynamicBox DynamicBoxOptions DynamicEvaluationTimeout DynamicLocation DynamicModule DynamicModuleBox DynamicModuleBoxOptions DynamicModuleParent DynamicModuleValues DynamicName DynamicNamespace DynamicReference DynamicSetting DynamicUpdating DynamicWrapper DynamicWrapperBox DynamicWrapperBoxOptions ' +
-      'E EccentricityCentrality EdgeAdd EdgeBetweennessCentrality EdgeCapacity EdgeCapForm EdgeColor EdgeConnectivity EdgeCost EdgeCount EdgeCoverQ EdgeDashing EdgeDelete EdgeDetect EdgeForm EdgeIndex EdgeJoinForm EdgeLabeling EdgeLabels EdgeLabelStyle EdgeList EdgeOpacity EdgeQ EdgeRenderingFunction EdgeRules EdgeShapeFunction EdgeStyle EdgeThickness EdgeWeight Editable EditButtonSettings EditCellTagsSettings EditDistance EffectiveInterest Eigensystem Eigenvalues EigenvectorCentrality Eigenvectors Element ElementData Eliminate EliminationOrder EllipticE EllipticExp EllipticExpPrime EllipticF EllipticFilterModel EllipticK EllipticLog EllipticNomeQ EllipticPi EllipticReducedHalfPeriods EllipticTheta EllipticThetaPrime EmitSound EmphasizeSyntaxErrors EmpiricalDistribution Empty EmptyGraphQ EnableConsolePrintPacket Enabled Encode End EndAdd EndDialogPacket EndFrontEndInteractionPacket EndOfFile EndOfLine EndOfString EndPackage EngineeringForm Enter EnterExpressionPacket EnterTextPacket Entropy EntropyFilter Environment Epilog Equal EqualColumns EqualRows EqualTilde EquatedTo Equilibrium EquirippleFilterKernel Equivalent Erf Erfc Erfi ErlangB ErlangC ErlangDistribution Erosion ErrorBox ErrorBoxOptions ErrorNorm ErrorPacket ErrorsDialogSettings EstimatedDistribution EstimatedProcess EstimatorGains EstimatorRegulator EuclideanDistance EulerE EulerGamma EulerianGraphQ EulerPhi Evaluatable Evaluate Evaluated EvaluatePacket EvaluationCell EvaluationCompletionAction EvaluationElements EvaluationMode EvaluationMonitor EvaluationNotebook EvaluationObject EvaluationOrder Evaluator EvaluatorNames EvenQ EventData EventEvaluator EventHandler EventHandlerTag EventLabels ExactBlackmanWindow ExactNumberQ ExactRootIsolation ExampleData Except ExcludedForms ExcludePods Exclusions ExclusionsStyle Exists Exit ExitDialog Exp Expand ExpandAll ExpandDenominator ExpandFileName ExpandNumerator Expectation ExpectationE ExpectedValue ExpGammaDistribution ExpIntegralE ExpIntegralEi Exponent ExponentFunction ExponentialDistribution ExponentialFamily ExponentialGeneratingFunction ExponentialMovingAverage ExponentialPowerDistribution ExponentPosition ExponentStep Export ExportAutoReplacements ExportPacket ExportString Expression ExpressionCell ExpressionPacket ExpToTrig ExtendedGCD Extension ExtentElementFunction ExtentMarkers ExtentSize ExternalCall ExternalDataCharacterEncoding Extract ExtractArchive ExtremeValueDistribution ' +
-      'FaceForm FaceGrids FaceGridsStyle Factor FactorComplete Factorial Factorial2 FactorialMoment FactorialMomentGeneratingFunction FactorialPower FactorInteger FactorList FactorSquareFree FactorSquareFreeList FactorTerms FactorTermsList Fail FailureDistribution False FARIMAProcess FEDisableConsolePrintPacket FeedbackSector FeedbackSectorStyle FeedbackType FEEnableConsolePrintPacket Fibonacci FieldHint FieldHintStyle FieldMasked FieldSize File FileBaseName FileByteCount FileDate FileExistsQ FileExtension FileFormat FileHash FileInformation FileName FileNameDepth FileNameDialogSettings FileNameDrop FileNameJoin FileNames FileNameSetter FileNameSplit FileNameTake FilePrint FileType FilledCurve FilledCurveBox Filling FillingStyle FillingTransform FilterRules FinancialBond FinancialData FinancialDerivative FinancialIndicator Find FindArgMax FindArgMin FindClique FindClusters FindCurvePath FindDistributionParameters FindDivisions FindEdgeCover FindEdgeCut FindEulerianCycle FindFaces FindFile FindFit FindGeneratingFunction FindGeoLocation FindGeometricTransform FindGraphCommunities FindGraphIsomorphism FindGraphPartition FindHamiltonianCycle FindIndependentEdgeSet FindIndependentVertexSet FindInstance FindIntegerNullVector FindKClan FindKClique FindKClub FindKPlex FindLibrary FindLinearRecurrence FindList FindMaximum FindMaximumFlow FindMaxValue FindMinimum FindMinimumCostFlow FindMinimumCut FindMinValue FindPermutation FindPostmanTour FindProcessParameters FindRoot FindSequenceFunction FindSettings FindShortestPath FindShortestTour FindThreshold FindVertexCover FindVertexCut Fine FinishDynamic FiniteAbelianGroupCount FiniteGroupCount FiniteGroupData First FirstPassageTimeDistribution FischerGroupFi22 FischerGroupFi23 FischerGroupFi24Prime FisherHypergeometricDistribution FisherRatioTest FisherZDistribution Fit FitAll FittedModel FixedPoint FixedPointList FlashSelection Flat Flatten FlattenAt FlatTopWindow FlipView Floor FlushPrintOutputPacket Fold FoldList Font FontColor FontFamily FontForm FontName FontOpacity FontPostScriptName FontProperties FontReencoding FontSize FontSlant FontSubstitutions FontTracking FontVariations FontWeight For ForAll Format FormatRules FormatType FormatTypeAutoConvert FormatValues FormBox FormBoxOptions FortranForm Forward ForwardBackward Fourier FourierCoefficient FourierCosCoefficient FourierCosSeries FourierCosTransform FourierDCT FourierDCTFilter FourierDCTMatrix FourierDST FourierDSTMatrix FourierMatrix FourierParameters FourierSequenceTransform FourierSeries FourierSinCoefficient FourierSinSeries FourierSinTransform FourierTransform FourierTrigSeries FractionalBrownianMotionProcess FractionalPart FractionBox FractionBoxOptions FractionLine Frame FrameBox FrameBoxOptions Framed FrameInset FrameLabel Frameless FrameMargins FrameStyle FrameTicks FrameTicksStyle FRatioDistribution FrechetDistribution FreeQ FrequencySamplingFilterKernel FresnelC FresnelS Friday FrobeniusNumber FrobeniusSolve ' +
-      'FromCharacterCode FromCoefficientRules FromContinuedFraction FromDate FromDigits FromDMS Front FrontEndDynamicExpression FrontEndEventActions FrontEndExecute FrontEndObject FrontEndResource FrontEndResourceString FrontEndStackSize FrontEndToken FrontEndTokenExecute FrontEndValueCache FrontEndVersion FrontFaceColor FrontFaceOpacity Full FullAxes FullDefinition FullForm FullGraphics FullOptions FullSimplify Function FunctionExpand FunctionInterpolation FunctionSpace FussellVeselyImportance ' +
-      'GaborFilter GaborMatrix GaborWavelet GainMargins GainPhaseMargins Gamma GammaDistribution GammaRegularized GapPenalty Gather GatherBy GaugeFaceElementFunction GaugeFaceStyle GaugeFrameElementFunction GaugeFrameSize GaugeFrameStyle GaugeLabels GaugeMarkers GaugeStyle GaussianFilter GaussianIntegers GaussianMatrix GaussianWindow GCD GegenbauerC General GeneralizedLinearModelFit GenerateConditions GeneratedCell GeneratedParameters GeneratingFunction Generic GenericCylindricalDecomposition GenomeData GenomeLookup GeodesicClosing GeodesicDilation GeodesicErosion GeodesicOpening GeoDestination GeodesyData GeoDirection GeoDistance GeoGridPosition GeometricBrownianMotionProcess GeometricDistribution GeometricMean GeometricMeanFilter GeometricTransformation GeometricTransformation3DBox GeometricTransformation3DBoxOptions GeometricTransformationBox GeometricTransformationBoxOptions GeoPosition GeoPositionENU GeoPositionXYZ GeoProjectionData GestureHandler GestureHandlerTag Get GetBoundingBoxSizePacket GetContext GetEnvironment GetFileName GetFrontEndOptionsDataPacket GetLinebreakInformationPacket GetMenusPacket GetPageBreakInformationPacket Glaisher GlobalClusteringCoefficient GlobalPreferences GlobalSession Glow GoldenRatio GompertzMakehamDistribution GoodmanKruskalGamma GoodmanKruskalGammaTest Goto Grad Gradient GradientFilter GradientOrientationFilter Graph GraphAssortativity GraphCenter GraphComplement GraphData GraphDensity GraphDiameter GraphDifference GraphDisjointUnion ' +
-      'GraphDistance GraphDistanceMatrix GraphElementData GraphEmbedding GraphHighlight GraphHighlightStyle GraphHub Graphics Graphics3D Graphics3DBox Graphics3DBoxOptions GraphicsArray GraphicsBaseline GraphicsBox GraphicsBoxOptions GraphicsColor GraphicsColumn GraphicsComplex GraphicsComplex3DBox GraphicsComplex3DBoxOptions GraphicsComplexBox GraphicsComplexBoxOptions GraphicsContents GraphicsData GraphicsGrid GraphicsGridBox GraphicsGroup GraphicsGroup3DBox GraphicsGroup3DBoxOptions GraphicsGroupBox GraphicsGroupBoxOptions GraphicsGrouping GraphicsHighlightColor GraphicsRow GraphicsSpacing GraphicsStyle GraphIntersection GraphLayout GraphLinkEfficiency GraphPeriphery GraphPlot GraphPlot3D GraphPower GraphPropertyDistribution GraphQ GraphRadius GraphReciprocity GraphRoot GraphStyle GraphUnion Gray GrayLevel GreatCircleDistance Greater GreaterEqual GreaterEqualLess GreaterFullEqual GreaterGreater GreaterLess GreaterSlantEqual GreaterTilde Green Grid GridBaseline GridBox GridBoxAlignment GridBoxBackground GridBoxDividers GridBoxFrame GridBoxItemSize GridBoxItemStyle GridBoxOptions GridBoxSpacings GridCreationSettings GridDefaultElement GridElementStyleOptions GridFrame GridFrameMargins GridGraph GridLines GridLinesStyle GroebnerBasis GroupActionBase GroupCentralizer GroupElementFromWord GroupElementPosition GroupElementQ GroupElements GroupElementToWord GroupGenerators GroupMultiplicationTable GroupOrbits GroupOrder GroupPageBreakWithin GroupSetwiseStabilizer GroupStabilizer GroupStabilizerChain Gudermannian GumbelDistribution ' +
-      'HaarWavelet HadamardMatrix HalfNormalDistribution HamiltonianGraphQ HammingDistance HammingWindow HankelH1 HankelH2 HankelMatrix HannPoissonWindow HannWindow HaradaNortonGroupHN HararyGraph HarmonicMean HarmonicMeanFilter HarmonicNumber Hash HashTable Haversine HazardFunction Head HeadCompose Heads HeavisideLambda HeavisidePi HeavisideTheta HeldGroupHe HeldPart HelpBrowserLookup HelpBrowserNotebook HelpBrowserSettings HermiteDecomposition HermiteH HermitianMatrixQ HessenbergDecomposition Hessian HexadecimalCharacter Hexahedron HexahedronBox HexahedronBoxOptions HiddenSurface HighlightGraph HighlightImage HighpassFilter HigmanSimsGroupHS HilbertFilter HilbertMatrix Histogram Histogram3D HistogramDistribution HistogramList HistogramTransform HistogramTransformInterpolation HitMissTransform HITSCentrality HodgeDual HoeffdingD HoeffdingDTest Hold HoldAll HoldAllComplete HoldComplete HoldFirst HoldForm HoldPattern HoldRest HolidayCalendar HomeDirectory HomePage Horizontal HorizontalForm HorizontalGauge HorizontalScrollPosition HornerForm HotellingTSquareDistribution HoytDistribution HTMLSave Hue HumpDownHump HumpEqual HurwitzLerchPhi HurwitzZeta HyperbolicDistribution HypercubeGraph HyperexponentialDistribution Hyperfactorial Hypergeometric0F1 Hypergeometric0F1Regularized Hypergeometric1F1 Hypergeometric1F1Regularized Hypergeometric2F1 Hypergeometric2F1Regularized HypergeometricDistribution HypergeometricPFQ HypergeometricPFQRegularized HypergeometricU Hyperlink HyperlinkCreationSettings Hyphenation HyphenationOptions HypoexponentialDistribution HypothesisTestData ' +
-      'I Identity IdentityMatrix If IgnoreCase Im Image Image3D Image3DSlices ImageAccumulate ImageAdd ImageAdjust ImageAlign ImageApply ImageAspectRatio ImageAssemble ImageCache ImageCacheValid ImageCapture ImageChannels ImageClip ImageColorSpace ImageCompose ImageConvolve ImageCooccurrence ImageCorners ImageCorrelate ImageCorrespondingPoints ImageCrop ImageData ImageDataPacket ImageDeconvolve ImageDemosaic ImageDifference ImageDimensions ImageDistance ImageEffect ImageFeatureTrack ImageFileApply ImageFileFilter ImageFileScan ImageFilter ImageForestingComponents ImageForwardTransformation ImageHistogram ImageKeypoints ImageLevels ImageLines ImageMargins ImageMarkers ImageMeasurements ImageMultiply ImageOffset ImagePad ImagePadding ImagePartition ImagePeriodogram ImagePerspectiveTransformation ImageQ ImageRangeCache ImageReflect ImageRegion ImageResize ImageResolution ImageRotate ImageRotated ImageScaled ImageScan ImageSize ImageSizeAction ImageSizeCache ImageSizeMultipliers ImageSizeRaw ImageSubtract ImageTake ImageTransformation ImageTrim ImageType ImageValue ImageValuePositions Implies Import ImportAutoReplacements ImportString ImprovementImportance In IncidenceGraph IncidenceList IncidenceMatrix IncludeConstantBasis IncludeFileExtension IncludePods IncludeSingularTerm Increment Indent IndentingNewlineSpacings IndentMaxFraction IndependenceTest IndependentEdgeSetQ IndependentUnit IndependentVertexSetQ Indeterminate IndexCreationOptions Indexed IndexGraph IndexTag Inequality InexactNumberQ InexactNumbers Infinity Infix Information Inherited InheritScope Initialization InitializationCell InitializationCellEvaluation InitializationCellWarning InlineCounterAssignments InlineCounterIncrements InlineRules Inner Inpaint Input InputAliases InputAssumptions InputAutoReplacements InputField InputFieldBox InputFieldBoxOptions InputForm InputGrouping InputNamePacket InputNotebook InputPacket InputSettings InputStream InputString InputStringPacket InputToBoxFormPacket Insert InsertionPointObject InsertResults Inset Inset3DBox Inset3DBoxOptions InsetBox InsetBoxOptions Install InstallService InString Integer IntegerDigits IntegerExponent IntegerLength IntegerPart IntegerPartitions IntegerQ Integers IntegerString Integral Integrate Interactive InteractiveTradingChart Interlaced Interleaving InternallyBalancedDecomposition InterpolatingFunction InterpolatingPolynomial Interpolation InterpolationOrder InterpolationPoints InterpolationPrecision Interpretation InterpretationBox InterpretationBoxOptions InterpretationFunction ' +
-      'InterpretTemplate InterquartileRange Interrupt InterruptSettings Intersection Interval IntervalIntersection IntervalMemberQ IntervalUnion Inverse InverseBetaRegularized InverseCDF InverseChiSquareDistribution InverseContinuousWaveletTransform InverseDistanceTransform InverseEllipticNomeQ InverseErf InverseErfc InverseFourier InverseFourierCosTransform InverseFourierSequenceTransform InverseFourierSinTransform InverseFourierTransform InverseFunction InverseFunctions InverseGammaDistribution InverseGammaRegularized InverseGaussianDistribution InverseGudermannian InverseHaversine InverseJacobiCD InverseJacobiCN InverseJacobiCS InverseJacobiDC InverseJacobiDN InverseJacobiDS InverseJacobiNC InverseJacobiND InverseJacobiNS InverseJacobiSC InverseJacobiSD InverseJacobiSN InverseLaplaceTransform InversePermutation InverseRadon InverseSeries InverseSurvivalFunction InverseWaveletTransform InverseWeierstrassP InverseZTransform Invisible InvisibleApplication InvisibleTimes IrreduciblePolynomialQ IsolatingInterval IsomorphicGraphQ IsotopeData Italic Item ItemBox ItemBoxOptions ItemSize ItemStyle ItoProcess ' +
-      'JaccardDissimilarity JacobiAmplitude Jacobian JacobiCD JacobiCN JacobiCS JacobiDC JacobiDN JacobiDS JacobiNC JacobiND JacobiNS JacobiP JacobiSC JacobiSD JacobiSN JacobiSymbol JacobiZeta JankoGroupJ1 JankoGroupJ2 JankoGroupJ3 JankoGroupJ4 JarqueBeraALMTest JohnsonDistribution Join Joined JoinedCurve JoinedCurveBox JoinForm JordanDecomposition JordanModelDecomposition ' +
-      'K KagiChart KaiserBesselWindow KaiserWindow KalmanEstimator KalmanFilter KarhunenLoeveDecomposition KaryTree KatzCentrality KCoreComponents KDistribution KelvinBei KelvinBer KelvinKei KelvinKer KendallTau KendallTauTest KernelExecute KernelMixtureDistribution KernelObject Kernels Ket Khinchin KirchhoffGraph KirchhoffMatrix KleinInvariantJ KnightTourGraph KnotData KnownUnitQ KolmogorovSmirnovTest KroneckerDelta KroneckerModelDecomposition KroneckerProduct KroneckerSymbol KuiperTest KumaraswamyDistribution Kurtosis KuwaharaFilter ' +
-      'Label Labeled LabeledSlider LabelingFunction LabelStyle LaguerreL LambdaComponents LambertW LanczosWindow LandauDistribution Language LanguageCategory LaplaceDistribution LaplaceTransform Laplacian LaplacianFilter LaplacianGaussianFilter Large Larger Last Latitude LatitudeLongitude LatticeData LatticeReduce Launch LaunchKernels LayeredGraphPlot LayerSizeFunction LayoutInformation LCM LeafCount LeapYearQ LeastSquares LeastSquaresFilterKernel Left LeftArrow LeftArrowBar LeftArrowRightArrow LeftDownTeeVector LeftDownVector LeftDownVectorBar LeftRightArrow LeftRightVector LeftTee LeftTeeArrow LeftTeeVector LeftTriangle LeftTriangleBar LeftTriangleEqual LeftUpDownVector LeftUpTeeVector LeftUpVector LeftUpVectorBar LeftVector LeftVectorBar LegendAppearance Legended LegendFunction LegendLabel LegendLayout LegendMargins LegendMarkers LegendMarkerSize LegendreP LegendreQ LegendreType Length LengthWhile LerchPhi Less LessEqual LessEqualGreater LessFullEqual LessGreater LessLess LessSlantEqual LessTilde LetterCharacter LetterQ Level LeveneTest LeviCivitaTensor LevyDistribution Lexicographic LibraryFunction LibraryFunctionError LibraryFunctionInformation LibraryFunctionLoad LibraryFunctionUnload LibraryLoad LibraryUnload LicenseID LiftingFilterData LiftingWaveletTransform LightBlue LightBrown LightCyan Lighter LightGray LightGreen Lighting LightingAngle LightMagenta LightOrange LightPink LightPurple LightRed LightSources LightYellow Likelihood Limit LimitsPositioning LimitsPositioningTokens LindleyDistribution Line Line3DBox LinearFilter LinearFractionalTransform LinearModelFit LinearOffsetFunction LinearProgramming LinearRecurrence LinearSolve LinearSolveFunction LineBox LineBreak LinebreakAdjustments LineBreakChart LineBreakWithin LineColor LineForm LineGraph LineIndent LineIndentMaxFraction LineIntegralConvolutionPlot LineIntegralConvolutionScale LineLegend LineOpacity LineSpacing LineWrapParts LinkActivate LinkClose LinkConnect LinkConnectedQ LinkCreate LinkError LinkFlush LinkFunction LinkHost LinkInterrupt LinkLaunch LinkMode LinkObject LinkOpen LinkOptions LinkPatterns LinkProtocol LinkRead LinkReadHeld LinkReadyQ Links LinkWrite LinkWriteHeld LiouvilleLambda List Listable ListAnimate ListContourPlot ListContourPlot3D ListConvolve ListCorrelate ListCurvePathPlot ListDeconvolve ListDensityPlot Listen ListFourierSequenceTransform ListInterpolation ListLineIntegralConvolutionPlot ListLinePlot ListLogLinearPlot ListLogLogPlot ListLogPlot ListPicker ListPickerBox ListPickerBoxBackground ListPickerBoxOptions ListPlay ListPlot ListPlot3D ListPointPlot3D ListPolarPlot ListQ ListStreamDensityPlot ListStreamPlot ListSurfacePlot3D ListVectorDensityPlot ListVectorPlot ListVectorPlot3D ListZTransform Literal LiteralSearch LocalClusteringCoefficient LocalizeVariables LocationEquivalenceTest LocationTest Locator LocatorAutoCreate LocatorBox LocatorBoxOptions LocatorCentering LocatorPane LocatorPaneBox LocatorPaneBoxOptions ' +
-      'LocatorRegion Locked Log Log10 Log2 LogBarnesG LogGamma LogGammaDistribution LogicalExpand LogIntegral LogisticDistribution LogitModelFit LogLikelihood LogLinearPlot LogLogisticDistribution LogLogPlot LogMultinormalDistribution LogNormalDistribution LogPlot LogRankTest LogSeriesDistribution LongEqual Longest LongestAscendingSequence LongestCommonSequence LongestCommonSequencePositions LongestCommonSubsequence LongestCommonSubsequencePositions LongestMatch LongForm Longitude LongLeftArrow LongLeftRightArrow LongRightArrow Loopback LoopFreeGraphQ LowerCaseQ LowerLeftArrow LowerRightArrow LowerTriangularize LowpassFilter LQEstimatorGains LQGRegulator LQOutputRegulatorGains LQRegulatorGains LUBackSubstitution LucasL LuccioSamiComponents LUDecomposition LyapunovSolve LyonsGroupLy ' +
-      'MachineID MachineName MachineNumberQ MachinePrecision MacintoshSystemPageSetup Magenta Magnification Magnify MainSolve MaintainDynamicCaches Majority MakeBoxes MakeExpression MakeRules MangoldtLambda ManhattanDistance Manipulate Manipulator MannWhitneyTest MantissaExponent Manual Map MapAll MapAt MapIndexed MAProcess MapThread MarcumQ MardiaCombinedTest MardiaKurtosisTest MardiaSkewnessTest MarginalDistribution MarkovProcessProperties Masking MatchingDissimilarity MatchLocalNameQ MatchLocalNames MatchQ Material MathematicaNotation MathieuC MathieuCharacteristicA MathieuCharacteristicB MathieuCharacteristicExponent MathieuCPrime MathieuGroupM11 MathieuGroupM12 MathieuGroupM22 MathieuGroupM23 MathieuGroupM24 MathieuS MathieuSPrime MathMLForm MathMLText Matrices MatrixExp MatrixForm MatrixFunction MatrixLog MatrixPlot MatrixPower MatrixQ MatrixRank Max MaxBend MaxDetect MaxExtraBandwidths MaxExtraConditions MaxFeatures MaxFilter Maximize MaxIterations MaxMemoryUsed MaxMixtureKernels MaxPlotPoints MaxPoints MaxRecursion MaxStableDistribution MaxStepFraction MaxSteps MaxStepSize MaxValue MaxwellDistribution McLaughlinGroupMcL Mean MeanClusteringCoefficient MeanDegreeConnectivity MeanDeviation MeanFilter MeanGraphDistance MeanNeighborDegree MeanShift MeanShiftFilter Median MedianDeviation MedianFilter Medium MeijerG MeixnerDistribution MemberQ MemoryConstrained MemoryInUse Menu MenuAppearance MenuCommandKey MenuEvaluator MenuItem MenuPacket MenuSortingValue MenuStyle MenuView MergeDifferences Mesh MeshFunctions MeshRange MeshShading MeshStyle Message MessageDialog MessageList MessageName MessageOptions MessagePacket Messages MessagesNotebook MetaCharacters MetaInformation Method MethodOptions MexicanHatWavelet MeyerWavelet Min MinDetect MinFilter MinimalPolynomial MinimalStateSpaceModel Minimize Minors MinRecursion MinSize MinStableDistribution Minus MinusPlus MinValue Missing MissingDataMethod MittagLefflerE MixedRadix MixedRadixQuantity MixtureDistribution Mod Modal Mode Modular ModularLambda Module Modulus MoebiusMu Moment Momentary MomentConvert MomentEvaluate MomentGeneratingFunction Monday Monitor MonomialList MonomialOrder MonsterGroupM MorletWavelet MorphologicalBinarize MorphologicalBranchPoints MorphologicalComponents MorphologicalEulerNumber MorphologicalGraph MorphologicalPerimeter MorphologicalTransform Most MouseAnnotation MouseAppearance MouseAppearanceTag MouseButtons Mouseover MousePointerNote MousePosition MovingAverage MovingMedian MoyalDistribution MultiedgeStyle MultilaunchWarning MultiLetterItalics MultiLetterStyle MultilineFunction Multinomial MultinomialDistribution MultinormalDistribution MultiplicativeOrder Multiplicity Multiselection MultivariateHypergeometricDistribution MultivariatePoissonDistribution MultivariateTDistribution ' +
-      'N NakagamiDistribution NameQ Names NamespaceBox Nand NArgMax NArgMin NBernoulliB NCache NDSolve NDSolveValue Nearest NearestFunction NeedCurrentFrontEndPackagePacket NeedCurrentFrontEndSymbolsPacket NeedlemanWunschSimilarity Needs Negative NegativeBinomialDistribution NegativeMultinomialDistribution NeighborhoodGraph Nest NestedGreaterGreater NestedLessLess NestedScriptRules NestList NestWhile NestWhileList NevilleThetaC NevilleThetaD NevilleThetaN NevilleThetaS NewPrimitiveStyle NExpectation Next NextPrime NHoldAll NHoldFirst NHoldRest NicholsGridLines NicholsPlot NIntegrate NMaximize NMaxValue NMinimize NMinValue NominalVariables NonAssociative NoncentralBetaDistribution NoncentralChiSquareDistribution NoncentralFRatioDistribution NoncentralStudentTDistribution NonCommutativeMultiply NonConstants None NonlinearModelFit NonlocalMeansFilter NonNegative NonPositive Nor NorlundB Norm Normal NormalDistribution NormalGrouping Normalize NormalizedSquaredEuclideanDistance NormalsFunction NormFunction Not NotCongruent NotCupCap NotDoubleVerticalBar Notebook NotebookApply NotebookAutoSave NotebookClose NotebookConvertSettings NotebookCreate NotebookCreateReturnObject NotebookDefault NotebookDelete NotebookDirectory NotebookDynamicExpression NotebookEvaluate NotebookEventActions NotebookFileName NotebookFind NotebookFindReturnObject NotebookGet NotebookGetLayoutInformationPacket NotebookGetMisspellingsPacket NotebookInformation NotebookInterfaceObject NotebookLocate NotebookObject NotebookOpen NotebookOpenReturnObject NotebookPath NotebookPrint NotebookPut NotebookPutReturnObject NotebookRead NotebookResetGeneratedCells Notebooks NotebookSave NotebookSaveAs NotebookSelection NotebookSetupLayoutInformationPacket NotebooksMenu NotebookWrite NotElement NotEqualTilde NotExists NotGreater NotGreaterEqual NotGreaterFullEqual NotGreaterGreater NotGreaterLess NotGreaterSlantEqual NotGreaterTilde NotHumpDownHump NotHumpEqual NotLeftTriangle NotLeftTriangleBar NotLeftTriangleEqual NotLess NotLessEqual NotLessFullEqual NotLessGreater NotLessLess NotLessSlantEqual NotLessTilde NotNestedGreaterGreater NotNestedLessLess NotPrecedes NotPrecedesEqual NotPrecedesSlantEqual NotPrecedesTilde NotReverseElement NotRightTriangle NotRightTriangleBar NotRightTriangleEqual NotSquareSubset NotSquareSubsetEqual NotSquareSuperset NotSquareSupersetEqual NotSubset NotSubsetEqual NotSucceeds NotSucceedsEqual NotSucceedsSlantEqual NotSucceedsTilde NotSuperset NotSupersetEqual NotTilde NotTildeEqual NotTildeFullEqual NotTildeTilde NotVerticalBar NProbability NProduct NProductFactors NRoots NSolve NSum NSumTerms Null NullRecords NullSpace NullWords Number NumberFieldClassNumber NumberFieldDiscriminant NumberFieldFundamentalUnits NumberFieldIntegralBasis NumberFieldNormRepresentatives NumberFieldRegulator NumberFieldRootsOfUnity NumberFieldSignature NumberForm NumberFormat NumberMarks NumberMultiplier NumberPadding NumberPoint NumberQ NumberSeparator ' +
-      'NumberSigns NumberString Numerator NumericFunction NumericQ NuttallWindow NValues NyquistGridLines NyquistPlot ' +
-      'O ObservabilityGramian ObservabilityMatrix ObservableDecomposition ObservableModelQ OddQ Off Offset OLEData On ONanGroupON OneIdentity Opacity Open OpenAppend Opener OpenerBox OpenerBoxOptions OpenerView OpenFunctionInspectorPacket Opening OpenRead OpenSpecialOptions OpenTemporary OpenWrite Operate OperatingSystem OptimumFlowData Optional OptionInspectorSettings OptionQ Options OptionsPacket OptionsPattern OptionValue OptionValueBox OptionValueBoxOptions Or Orange Order OrderDistribution OrderedQ Ordering Orderless OrnsteinUhlenbeckProcess Orthogonalize Out Outer OutputAutoOverwrite OutputControllabilityMatrix OutputControllableModelQ OutputForm OutputFormData OutputGrouping OutputMathEditExpression OutputNamePacket OutputResponse OutputSizeLimit OutputStream Over OverBar OverDot Overflow OverHat Overlaps Overlay OverlayBox OverlayBoxOptions Overscript OverscriptBox OverscriptBoxOptions OverTilde OverVector OwenT OwnValues ' +
-      'PackingMethod PaddedForm Padding PadeApproximant PadLeft PadRight PageBreakAbove PageBreakBelow PageBreakWithin PageFooterLines PageFooters PageHeaderLines PageHeaders PageHeight PageRankCentrality PageWidth PairedBarChart PairedHistogram PairedSmoothHistogram PairedTTest PairedZTest PaletteNotebook PalettePath Pane PaneBox PaneBoxOptions Panel PanelBox PanelBoxOptions Paneled PaneSelector PaneSelectorBox PaneSelectorBoxOptions PaperWidth ParabolicCylinderD ParagraphIndent ParagraphSpacing ParallelArray ParallelCombine ParallelDo ParallelEvaluate Parallelization Parallelize ParallelMap ParallelNeeds ParallelProduct ParallelSubmit ParallelSum ParallelTable ParallelTry Parameter ParameterEstimator ParameterMixtureDistribution ParameterVariables ParametricFunction ParametricNDSolve ParametricNDSolveValue ParametricPlot ParametricPlot3D ParentConnect ParentDirectory ParentForm Parenthesize ParentList ParetoDistribution Part PartialCorrelationFunction PartialD ParticleData Partition PartitionsP PartitionsQ ParzenWindow PascalDistribution PassEventsDown PassEventsUp Paste PasteBoxFormInlineCells PasteButton Path PathGraph PathGraphQ Pattern PatternSequence PatternTest PauliMatrix PaulWavelet Pause PausedTime PDF PearsonChiSquareTest PearsonCorrelationTest PearsonDistribution PerformanceGoal PeriodicInterpolation Periodogram PeriodogramArray PermutationCycles PermutationCyclesQ PermutationGroup PermutationLength PermutationList PermutationListQ PermutationMax PermutationMin PermutationOrder PermutationPower PermutationProduct PermutationReplace Permutations PermutationSupport Permute PeronaMalikFilter Perpendicular PERTDistribution PetersenGraph PhaseMargins Pi Pick PIDData PIDDerivativeFilter PIDFeedforward PIDTune Piecewise PiecewiseExpand PieChart PieChart3D PillaiTrace PillaiTraceTest Pink Pivoting PixelConstrained PixelValue PixelValuePositions Placed Placeholder PlaceholderReplace Plain PlanarGraphQ Play PlayRange Plot Plot3D Plot3Matrix PlotDivision PlotJoined PlotLabel PlotLayout PlotLegends PlotMarkers PlotPoints PlotRange PlotRangeClipping PlotRangePadding PlotRegion PlotStyle Plus PlusMinus Pochhammer PodStates PodWidth Point Point3DBox PointBox PointFigureChart PointForm PointLegend PointSize PoissonConsulDistribution PoissonDistribution PoissonProcess PoissonWindow PolarAxes PolarAxesOrigin PolarGridLines PolarPlot PolarTicks PoleZeroMarkers PolyaAeppliDistribution PolyGamma Polygon Polygon3DBox Polygon3DBoxOptions PolygonBox PolygonBoxOptions PolygonHoleScale PolygonIntersections PolygonScale PolyhedronData PolyLog PolynomialExtendedGCD PolynomialForm PolynomialGCD PolynomialLCM PolynomialMod PolynomialQ PolynomialQuotient PolynomialQuotientRemainder PolynomialReduce PolynomialRemainder Polynomials PopupMenu PopupMenuBox PopupMenuBoxOptions PopupView PopupWindow Position Positive PositiveDefiniteMatrixQ PossibleZeroQ Postfix PostScript Power PowerDistribution PowerExpand PowerMod PowerModList ' +
-      'PowerSpectralDensity PowersRepresentations PowerSymmetricPolynomial Precedence PrecedenceForm Precedes PrecedesEqual PrecedesSlantEqual PrecedesTilde Precision PrecisionGoal PreDecrement PredictionRoot PreemptProtect PreferencesPath Prefix PreIncrement Prepend PrependTo PreserveImageOptions Previous PriceGraphDistribution PrimaryPlaceholder Prime PrimeNu PrimeOmega PrimePi PrimePowerQ PrimeQ Primes PrimeZetaP PrimitiveRoot PrincipalComponents PrincipalValue Print PrintAction PrintForm PrintingCopies PrintingOptions PrintingPageRange PrintingStartingPageNumber PrintingStyleEnvironment PrintPrecision PrintTemporary Prism PrismBox PrismBoxOptions PrivateCellOptions PrivateEvaluationOptions PrivateFontOptions PrivateFrontEndOptions PrivateNotebookOptions PrivatePaths Probability ProbabilityDistribution ProbabilityPlot ProbabilityPr ProbabilityScalePlot ProbitModelFit ProcessEstimator ProcessParameterAssumptions ProcessParameterQ ProcessStateDomain ProcessTimeDomain Product ProductDistribution ProductLog ProgressIndicator ProgressIndicatorBox ProgressIndicatorBoxOptions Projection Prolog PromptForm Properties Property PropertyList PropertyValue Proportion Proportional Protect Protected ProteinData Pruning PseudoInverse Purple Put PutAppend Pyramid PyramidBox PyramidBoxOptions ' +
-      'QBinomial QFactorial QGamma QHypergeometricPFQ QPochhammer QPolyGamma QRDecomposition QuadraticIrrationalQ Quantile QuantilePlot Quantity QuantityForm QuantityMagnitude QuantityQ QuantityUnit Quartics QuartileDeviation Quartiles QuartileSkewness QueueingNetworkProcess QueueingProcess QueueProperties Quiet Quit Quotient QuotientRemainder ' +
-      'RadialityCentrality RadicalBox RadicalBoxOptions RadioButton RadioButtonBar RadioButtonBox RadioButtonBoxOptions Radon RamanujanTau RamanujanTauL RamanujanTauTheta RamanujanTauZ Random RandomChoice RandomComplex RandomFunction RandomGraph RandomImage RandomInteger RandomPermutation RandomPrime RandomReal RandomSample RandomSeed RandomVariate RandomWalkProcess Range RangeFilter RangeSpecification RankedMax RankedMin Raster Raster3D Raster3DBox Raster3DBoxOptions RasterArray RasterBox RasterBoxOptions Rasterize RasterSize Rational RationalFunctions Rationalize Rationals Ratios Raw RawArray RawBoxes RawData RawMedium RayleighDistribution Re Read ReadList ReadProtected Real RealBlockDiagonalForm RealDigits RealExponent Reals Reap Record RecordLists RecordSeparators Rectangle RectangleBox RectangleBoxOptions RectangleChart RectangleChart3D RecurrenceFilter RecurrenceTable RecurringDigitsForm Red Reduce RefBox ReferenceLineStyle ReferenceMarkers ReferenceMarkerStyle Refine ReflectionMatrix ReflectionTransform Refresh RefreshRate RegionBinarize RegionFunction RegionPlot RegionPlot3D RegularExpression Regularization Reinstall Release ReleaseHold ReliabilityDistribution ReliefImage ReliefPlot Remove RemoveAlphaChannel RemoveAsynchronousTask Removed RemoveInputStreamMethod RemoveOutputStreamMethod RemoveProperty RemoveScheduledTask RenameDirectory RenameFile RenderAll RenderingOptions RenewalProcess RenkoChart Repeated RepeatedNull RepeatedString Replace ReplaceAll ReplaceHeldPart ReplaceImageValue ReplaceList ReplacePart ReplacePixelValue ReplaceRepeated Resampling Rescale RescalingTransform ResetDirectory ResetMenusPacket ResetScheduledTask Residue Resolve Rest Resultant ResumePacket Return ReturnExpressionPacket ReturnInputFormPacket ReturnPacket ReturnTextPacket Reverse ReverseBiorthogonalSplineWavelet ReverseElement ReverseEquilibrium ReverseGraph ReverseUpEquilibrium RevolutionAxis RevolutionPlot3D RGBColor RiccatiSolve RiceDistribution RidgeFilter RiemannR RiemannSiegelTheta RiemannSiegelZ Riffle Right RightArrow RightArrowBar RightArrowLeftArrow RightCosetRepresentative RightDownTeeVector RightDownVector RightDownVectorBar RightTee RightTeeArrow RightTeeVector RightTriangle RightTriangleBar RightTriangleEqual RightUpDownVector RightUpTeeVector RightUpVector RightUpVectorBar RightVector RightVectorBar RiskAchievementImportance RiskReductionImportance RogersTanimotoDissimilarity Root RootApproximant RootIntervals RootLocusPlot RootMeanSquare RootOfUnityQ RootReduce Roots RootSum Rotate RotateLabel RotateLeft RotateRight RotationAction RotationBox RotationBoxOptions RotationMatrix RotationTransform Round RoundImplies RoundingRadius Row RowAlignments RowBackgrounds RowBox RowHeights RowLines RowMinHeight RowReduce RowsEqual RowSpacings RSolve RudvalisGroupRu Rule RuleCondition RuleDelayed RuleForm RulerUnits Run RunScheduledTask RunThrough RuntimeAttributes RuntimeOptions RussellRaoDissimilarity ' +
-      'SameQ SameTest SampleDepth SampledSoundFunction SampledSoundList SampleRate SamplingPeriod SARIMAProcess SARMAProcess SatisfiabilityCount SatisfiabilityInstances SatisfiableQ Saturday Save Saveable SaveAutoDelete SaveDefinitions SawtoothWave Scale Scaled ScaleDivisions ScaledMousePosition ScaleOrigin ScalePadding ScaleRanges ScaleRangeStyle ScalingFunctions ScalingMatrix ScalingTransform Scan ScheduledTaskActiveQ ScheduledTaskData ScheduledTaskObject ScheduledTasks SchurDecomposition ScientificForm ScreenRectangle ScreenStyleEnvironment ScriptBaselineShifts ScriptLevel ScriptMinSize ScriptRules ScriptSizeMultipliers Scrollbars ScrollingOptions ScrollPosition Sec Sech SechDistribution SectionGrouping SectorChart SectorChart3D SectorOrigin SectorSpacing SeedRandom Select Selectable SelectComponents SelectedCells SelectedNotebook Selection SelectionAnimate SelectionCell SelectionCellCreateCell SelectionCellDefaultStyle SelectionCellParentStyle SelectionCreateCell SelectionDebuggerTag SelectionDuplicateCell SelectionEvaluate SelectionEvaluateCreateCell SelectionMove SelectionPlaceholder SelectionSetStyle SelectWithContents SelfLoops SelfLoopStyle SemialgebraicComponentInstances SendMail Sequence SequenceAlignment SequenceForm SequenceHold SequenceLimit Series SeriesCoefficient SeriesData SessionTime Set SetAccuracy SetAlphaChannel SetAttributes Setbacks SetBoxFormNamesPacket SetDelayed SetDirectory SetEnvironment SetEvaluationNotebook SetFileDate SetFileLoadingContext SetNotebookStatusLine SetOptions SetOptionsPacket SetPrecision SetProperty SetSelectedNotebook SetSharedFunction SetSharedVariable SetSpeechParametersPacket SetStreamPosition SetSystemOptions Setter SetterBar SetterBox SetterBoxOptions Setting SetValue Shading Shallow ShannonWavelet ShapiroWilkTest Share Sharpen ShearingMatrix ShearingTransform ShenCastanMatrix Short ShortDownArrow Shortest ShortestMatch ShortestPathFunction ShortLeftArrow ShortRightArrow ShortUpArrow Show ShowAutoStyles ShowCellBracket ShowCellLabel ShowCellTags ShowClosedCellArea ShowContents ShowControls ShowCursorTracker ShowGroupOpenCloseIcon ShowGroupOpener ShowInvisibleCharacters ShowPageBreaks ShowPredictiveInterface ShowSelection ShowShortBoxForm ShowSpecialCharacters ShowStringCharacters ShowSyntaxStyles ShrinkingDelay ShrinkWrapBoundingBox SiegelTheta SiegelTukeyTest Sign Signature SignedRankTest SignificanceLevel SignPadding SignTest SimilarityRules SimpleGraph SimpleGraphQ Simplify Sin Sinc SinghMaddalaDistribution SingleEvaluation SingleLetterItalics SingleLetterStyle SingularValueDecomposition SingularValueList SingularValuePlot SingularValues Sinh SinhIntegral SinIntegral SixJSymbol Skeleton SkeletonTransform SkellamDistribution Skewness SkewNormalDistribution Skip SliceDistribution Slider Slider2D Slider2DBox Slider2DBoxOptions SliderBox SliderBoxOptions SlideView Slot SlotSequence Small SmallCircle Smaller SmithDelayCompensator SmithWatermanSimilarity ' +
-      'SmoothDensityHistogram SmoothHistogram SmoothHistogram3D SmoothKernelDistribution SocialMediaData Socket SokalSneathDissimilarity Solve SolveAlways SolveDelayed Sort SortBy Sound SoundAndGraphics SoundNote SoundVolume Sow Space SpaceForm Spacer Spacings Span SpanAdjustments SpanCharacterRounding SpanFromAbove SpanFromBoth SpanFromLeft SpanLineThickness SpanMaxSize SpanMinSize SpanningCharacters SpanSymmetric SparseArray SpatialGraphDistribution Speak SpeakTextPacket SpearmanRankTest SpearmanRho Spectrogram SpectrogramArray Specularity SpellingCorrection SpellingDictionaries SpellingDictionariesPath SpellingOptions SpellingSuggestionsPacket Sphere SphereBox SphericalBesselJ SphericalBesselY SphericalHankelH1 SphericalHankelH2 SphericalHarmonicY SphericalPlot3D SphericalRegion SpheroidalEigenvalue SpheroidalJoiningFactor SpheroidalPS SpheroidalPSPrime SpheroidalQS SpheroidalQSPrime SpheroidalRadialFactor SpheroidalS1 SpheroidalS1Prime SpheroidalS2 SpheroidalS2Prime Splice SplicedDistribution SplineClosed SplineDegree SplineKnots SplineWeights Split SplitBy SpokenString Sqrt SqrtBox SqrtBoxOptions Square SquaredEuclideanDistance SquareFreeQ SquareIntersection SquaresR SquareSubset SquareSubsetEqual SquareSuperset SquareSupersetEqual SquareUnion SquareWave StabilityMargins StabilityMarginsStyle StableDistribution Stack StackBegin StackComplete StackInhibit StandardDeviation StandardDeviationFilter StandardForm Standardize StandbyDistribution Star StarGraph StartAsynchronousTask StartingStepSize StartOfLine StartOfString StartScheduledTask StartupSound StateDimensions StateFeedbackGains StateOutputEstimator StateResponse StateSpaceModel StateSpaceRealization StateSpaceTransform StationaryDistribution StationaryWaveletPacketTransform StationaryWaveletTransform StatusArea StatusCentrality StepMonitor StieltjesGamma StirlingS1 StirlingS2 StopAsynchronousTask StopScheduledTask StrataVariables StratonovichProcess StreamColorFunction StreamColorFunctionScaling StreamDensityPlot StreamPlot StreamPoints StreamPosition Streams StreamScale StreamStyle String StringBreak StringByteCount StringCases StringCount StringDrop StringExpression StringForm StringFormat StringFreeQ StringInsert StringJoin StringLength StringMatchQ StringPosition StringQ StringReplace StringReplaceList StringReplacePart StringReverse StringRotateLeft StringRotateRight StringSkeleton StringSplit StringTake StringToStream StringTrim StripBoxes StripOnInput StripWrapperBoxes StrokeForm StructuralImportance StructuredArray StructuredSelection StruveH StruveL Stub StudentTDistribution Style StyleBox StyleBoxAutoDelete StyleBoxOptions StyleData StyleDefinitions StyleForm StyleKeyMapping StyleMenuListing StyleNameDialogSettings StyleNames StylePrint StyleSheetPath Subfactorial Subgraph SubMinus SubPlus SubresultantPolynomialRemainders ' +
-      'SubresultantPolynomials Subresultants Subscript SubscriptBox SubscriptBoxOptions Subscripted Subset SubsetEqual Subsets SubStar Subsuperscript SubsuperscriptBox SubsuperscriptBoxOptions Subtract SubtractFrom SubValues Succeeds SucceedsEqual SucceedsSlantEqual SucceedsTilde SuchThat Sum SumConvergence Sunday SuperDagger SuperMinus SuperPlus Superscript SuperscriptBox SuperscriptBoxOptions Superset SupersetEqual SuperStar Surd SurdForm SurfaceColor SurfaceGraphics SurvivalDistribution SurvivalFunction SurvivalModel SurvivalModelFit SuspendPacket SuzukiDistribution SuzukiGroupSuz SwatchLegend Switch Symbol SymbolName SymletWavelet Symmetric SymmetricGroup SymmetricMatrixQ SymmetricPolynomial SymmetricReduction Symmetrize SymmetrizedArray SymmetrizedArrayRules SymmetrizedDependentComponents SymmetrizedIndependentComponents SymmetrizedReplacePart SynchronousInitialization SynchronousUpdating Syntax SyntaxForm SyntaxInformation SyntaxLength SyntaxPacket SyntaxQ SystemDialogInput SystemException SystemHelpPath SystemInformation SystemInformationData SystemOpen SystemOptions SystemsModelDelay SystemsModelDelayApproximate SystemsModelDelete SystemsModelDimensions SystemsModelExtract SystemsModelFeedbackConnect SystemsModelLabels SystemsModelOrder SystemsModelParallelConnect SystemsModelSeriesConnect SystemsModelStateFeedbackConnect SystemStub ' +
-      'Tab TabFilling Table TableAlignments TableDepth TableDirections TableForm TableHeadings TableSpacing TableView TableViewBox TabSpacings TabView TabViewBox TabViewBoxOptions TagBox TagBoxNote TagBoxOptions TaggingRules TagSet TagSetDelayed TagStyle TagUnset Take TakeWhile Tally Tan Tanh TargetFunctions TargetUnits TautologyQ TelegraphProcess TemplateBox TemplateBoxOptions TemplateSlotSequence TemporalData Temporary TemporaryVariable TensorContract TensorDimensions TensorExpand TensorProduct TensorQ TensorRank TensorReduce TensorSymmetry TensorTranspose TensorWedge Tetrahedron TetrahedronBox TetrahedronBoxOptions TeXForm TeXSave Text Text3DBox Text3DBoxOptions TextAlignment TextBand TextBoundingBox TextBox TextCell TextClipboardType TextData TextForm TextJustification TextLine TextPacket TextParagraph TextRecognize TextRendering TextStyle Texture TextureCoordinateFunction TextureCoordinateScaling Therefore ThermometerGauge Thick Thickness Thin Thinning ThisLink ThompsonGroupTh Thread ThreeJSymbol Threshold Through Throw Thumbnail Thursday Ticks TicksStyle Tilde TildeEqual TildeFullEqual TildeTilde TimeConstrained TimeConstraint Times TimesBy TimeSeriesForecast TimeSeriesInvertibility TimeUsed TimeValue TimeZone Timing Tiny TitleGrouping TitsGroupT ToBoxes ToCharacterCode ToColor ToContinuousTimeModel ToDate ToDiscreteTimeModel ToeplitzMatrix ToExpression ToFileName Together Toggle ToggleFalse Toggler TogglerBar TogglerBox TogglerBoxOptions ToHeldExpression ToInvertibleTimeSeries TokenWords Tolerance ToLowerCase ToNumberField TooBig Tooltip TooltipBox TooltipBoxOptions TooltipDelay TooltipStyle Top TopHatTransform TopologicalSort ToRadicals ToRules ToString Total TotalHeight TotalVariationFilter TotalWidth TouchscreenAutoZoom TouchscreenControlPlacement ToUpperCase Tr Trace TraceAbove TraceAction TraceBackward TraceDepth TraceDialog TraceForward TraceInternal TraceLevel TraceOff TraceOn TraceOriginal TracePrint TraceScan TrackedSymbols TradingChart TraditionalForm TraditionalFunctionNotation TraditionalNotation TraditionalOrder TransferFunctionCancel TransferFunctionExpand TransferFunctionFactor TransferFunctionModel TransferFunctionPoles TransferFunctionTransform TransferFunctionZeros TransformationFunction TransformationFunctions TransformationMatrix TransformedDistribution TransformedField Translate TranslationTransform TransparentColor Transpose TreeForm TreeGraph TreeGraphQ TreePlot TrendStyle TriangleWave TriangularDistribution Trig TrigExpand TrigFactor TrigFactorList Trigger TrigReduce TrigToExp TrimmedMean True TrueQ TruncatedDistribution TsallisQExponentialDistribution TsallisQGaussianDistribution TTest Tube TubeBezierCurveBox TubeBezierCurveBoxOptions TubeBox TubeBSplineCurveBox TubeBSplineCurveBoxOptions Tuesday TukeyLambdaDistribution TukeyWindow Tuples TuranGraph TuringMachine ' +
-      'Transparent ' +
-      'UnateQ Uncompress Undefined UnderBar Underflow Underlined Underoverscript UnderoverscriptBox UnderoverscriptBoxOptions Underscript UnderscriptBox UnderscriptBoxOptions UndirectedEdge UndirectedGraph UndirectedGraphQ UndocumentedTestFEParserPacket UndocumentedTestGetSelectionPacket Unequal Unevaluated UniformDistribution UniformGraphDistribution UniformSumDistribution Uninstall Union UnionPlus Unique UnitBox UnitConvert UnitDimensions Unitize UnitRootTest UnitSimplify UnitStep UnitTriangle UnitVector Unprotect UnsameQ UnsavedVariables Unset UnsetShared UntrackedVariables Up UpArrow UpArrowBar UpArrowDownArrow Update UpdateDynamicObjects UpdateDynamicObjectsSynchronous UpdateInterval UpDownArrow UpEquilibrium UpperCaseQ UpperLeftArrow UpperRightArrow UpperTriangularize Upsample UpSet UpSetDelayed UpTee UpTeeArrow UpValues URL URLFetch URLFetchAsynchronous URLSave URLSaveAsynchronous UseGraphicsRange Using UsingFrontEnd ' +
-      'V2Get ValidationLength Value ValueBox ValueBoxOptions ValueForm ValueQ ValuesData Variables Variance VarianceEquivalenceTest VarianceEstimatorFunction VarianceGammaDistribution VarianceTest VectorAngle VectorColorFunction VectorColorFunctionScaling VectorDensityPlot VectorGlyphData VectorPlot VectorPlot3D VectorPoints VectorQ Vectors VectorScale VectorStyle Vee Verbatim Verbose VerboseConvertToPostScriptPacket VerifyConvergence VerifySolutions VerifyTestAssumptions Version VersionNumber VertexAdd VertexCapacity VertexColors VertexComponent VertexConnectivity VertexCoordinateRules VertexCoordinates VertexCorrelationSimilarity VertexCosineSimilarity VertexCount VertexCoverQ VertexDataCoordinates VertexDegree VertexDelete VertexDiceSimilarity VertexEccentricity VertexInComponent VertexInDegree VertexIndex VertexJaccardSimilarity VertexLabeling VertexLabels VertexLabelStyle VertexList VertexNormals VertexOutComponent VertexOutDegree VertexQ VertexRenderingFunction VertexReplace VertexShape VertexShapeFunction VertexSize VertexStyle VertexTextureCoordinates VertexWeight Vertical VerticalBar VerticalForm VerticalGauge VerticalSeparator VerticalSlider VerticalTilde ViewAngle ViewCenter ViewMatrix ViewPoint ViewPointSelectorSettings ViewPort ViewRange ViewVector ViewVertical VirtualGroupData Visible VisibleCell VoigtDistribution VonMisesDistribution ' +
-      'WaitAll WaitAsynchronousTask WaitNext WaitUntil WakebyDistribution WalleniusHypergeometricDistribution WaringYuleDistribution WatershedComponents WatsonUSquareTest WattsStrogatzGraphDistribution WaveletBestBasis WaveletFilterCoefficients WaveletImagePlot WaveletListPlot WaveletMapIndexed WaveletMatrixPlot WaveletPhi WaveletPsi WaveletScale WaveletScalogram WaveletThreshold WeaklyConnectedComponents WeaklyConnectedGraphQ WeakStationarity WeatherData WeberE Wedge Wednesday WeibullDistribution WeierstrassHalfPeriods WeierstrassInvariants WeierstrassP WeierstrassPPrime WeierstrassSigma WeierstrassZeta WeightedAdjacencyGraph WeightedAdjacencyMatrix WeightedData WeightedGraphQ Weights WelchWindow WheelGraph WhenEvent Which While White Whitespace WhitespaceCharacter WhittakerM WhittakerW WienerFilter WienerProcess WignerD WignerSemicircleDistribution WilksW WilksWTest WindowClickSelect WindowElements WindowFloating WindowFrame WindowFrameElements WindowMargins WindowMovable WindowOpacity WindowSelected WindowSize WindowStatusArea WindowTitle WindowToolbars WindowWidth With WolframAlpha WolframAlphaDate WolframAlphaQuantity WolframAlphaResult Word WordBoundary WordCharacter WordData WordSearch WordSeparators WorkingPrecision Write WriteString Wronskian ' +
-      'XMLElement XMLObject Xnor Xor ' +
-      'Yellow YuleDissimilarity ' +
-      'ZernikeR ZeroSymmetric ZeroTest ZeroWidthTimes Zeta ZetaZero ZipfDistribution ZTest ZTransform ' +
-      '$Aborted $ActivationGroupID $ActivationKey $ActivationUserRegistered $AddOnsDirectory $AssertFunction $Assumptions $AsynchronousTask $BaseDirectory $BatchInput $BatchOutput $BoxForms $ByteOrdering $Canceled $CharacterEncoding $CharacterEncodings $CommandLine $CompilationTarget $ConditionHold $ConfiguredKernels $Context $ContextPath $ControlActiveSetting $CreationDate $CurrentLink $DateStringFormat $DefaultFont $DefaultFrontEnd $DefaultImagingDevice $DefaultPath $Display $DisplayFunction $DistributedContexts $DynamicEvaluation $Echo $Epilog $ExportFormats $Failed $FinancialDataSource $FormatType $FrontEnd $FrontEndSession $GeoLocation $HistoryLength $HomeDirectory $HTTPCookies $IgnoreEOF $ImagingDevices $ImportFormats $InitialDirectory $Input $InputFileName $InputStreamMethods $Inspector $InstallationDate $InstallationDirectory $InterfaceEnvironment $IterationLimit $KernelCount $KernelID $Language $LaunchDirectory $LibraryPath $LicenseExpirationDate $LicenseID $LicenseProcesses $LicenseServer $LicenseSubprocesses $LicenseType $Line $Linked $LinkSupported $LoadedFiles $MachineAddresses $MachineDomain $MachineDomains $MachineEpsilon $MachineID $MachineName $MachinePrecision $MachineType $MaxExtraPrecision $MaxLicenseProcesses $MaxLicenseSubprocesses $MaxMachineNumber $MaxNumber $MaxPiecewiseCases $MaxPrecision $MaxRootDegree $MessageGroups $MessageList $MessagePrePrint $Messages $MinMachineNumber $MinNumber $MinorReleaseNumber $MinPrecision $ModuleNumber $NetworkLicense $NewMessage $NewSymbol $Notebooks $NumberMarks $Off $OperatingSystem $Output $OutputForms $OutputSizeLimit $OutputStreamMethods $Packages $ParentLink $ParentProcessID $PasswordFile $PatchLevelID $Path $PathnameSeparator $PerformanceGoal $PipeSupported $Post $Pre $PreferencesDirectory $PrePrint $PreRead $PrintForms $PrintLiteral $ProcessID $ProcessorCount $ProcessorType $ProductInformation $ProgramName $RandomState $RecursionLimit $ReleaseNumber $RootDirectory $ScheduledTask $ScriptCommandLine $SessionID $SetParentLink $SharedFunctions $SharedVariables $SoundDisplay $SoundDisplayFunction $SuppressInputFormHeads $SynchronousEvaluation $SyntaxHandler $System $SystemCharacterEncoding $SystemID $SystemWordLength $TemporaryDirectory $TemporaryPrefix $TextStyle $TimedOut $TimeUnit $TimeZone $TopDirectory $TraceOff $TraceOn $TracePattern $TracePostAction $TracePreAction $Urgent $UserAddOnsDirectory $UserBaseDirectory $UserDocumentsDirectory $UserName $Version $VersionNumber',
+    //
+    // The list of "keywords" (System` symbols) was determined by evaluating the following Wolfram Language code in Mathematica 12.0:
+    //
+    // StringRiffle[
+    //   "'" <> StringRiffle[#, " "] <> "'" & /@
+    //     Values[GroupBy[
+    //       Select[Names["System`*"],
+    //       StringStartsQ[#, CharacterRange["A", "Z"] | "$"] &],
+    //       First[Characters[#]] &]], " +\n"]
+    //
+    keywords: 'AASTriangle AbelianGroup Abort AbortKernels AbortProtect AbortScheduledTask Above Abs AbsArg AbsArgPlot Absolute AbsoluteCorrelation AbsoluteCorrelationFunction AbsoluteCurrentValue AbsoluteDashing AbsoluteFileName AbsoluteOptions AbsolutePointSize AbsoluteThickness AbsoluteTime AbsoluteTiming AcceptanceThreshold AccountingForm Accumulate Accuracy AccuracyGoal ActionDelay ActionMenu ActionMenuBox ActionMenuBoxOptions Activate Active ActiveClassification ActiveClassificationObject ActiveItem ActivePrediction ActivePredictionObject ActiveStyle AcyclicGraphQ AddOnHelpPath AddSides AddTo AddToSearchIndex AddUsers AdjacencyGraph AdjacencyList AdjacencyMatrix AdjustmentBox AdjustmentBoxOptions AdjustTimeSeriesForecast AdministrativeDivisionData AffineHalfSpace AffineSpace AffineStateSpaceModel AffineTransform After AggregatedEntityClass AggregationLayer AircraftData AirportData AirPressureData AirTemperatureData AiryAi AiryAiPrime AiryAiZero AiryBi AiryBiPrime AiryBiZero AlgebraicIntegerQ AlgebraicNumber AlgebraicNumberDenominator AlgebraicNumberNorm AlgebraicNumberPolynomial AlgebraicNumberTrace AlgebraicRules AlgebraicRulesData Algebraics AlgebraicUnitQ Alignment AlignmentMarker AlignmentPoint All AllowAdultContent AllowedCloudExtraParameters AllowedCloudParameterExtensions AllowedDimensions AllowedFrequencyRange AllowedHeads AllowGroupClose AllowIncomplete AllowInlineCells AllowKernelInitialization AllowLooseGrammar AllowReverseGroupClose AllowScriptLevelChange AllTrue Alphabet AlphabeticOrder AlphabeticSort AlphaChannel AlternateImage AlternatingFactorial AlternatingGroup AlternativeHypothesis Alternatives AltitudeMethod AmbientLight AmbiguityFunction AmbiguityList Analytic AnatomyData AnatomyForm AnatomyPlot3D AnatomySkinStyle AnatomyStyling AnchoredSearch And AndersonDarlingTest AngerJ AngleBisector AngleBracket AnglePath AnglePath3D AngleVector AngularGauge Animate AnimationCycleOffset AnimationCycleRepetitions AnimationDirection AnimationDisplayTime AnimationRate AnimationRepetitions AnimationRunning AnimationRunTime AnimationTimeIndex Animator AnimatorBox AnimatorBoxOptions AnimatorElements Annotate Annotation AnnotationDelete AnnotationNames AnnotationRules AnnotationValue Annuity AnnuityDue Annulus AnomalyDetection AnomalyDetectorFunction Anonymous Antialiasing AntihermitianMatrixQ Antisymmetric AntisymmetricMatrixQ Antonyms AnyOrder AnySubset AnyTrue Apart ApartSquareFree APIFunction Appearance AppearanceElements AppearanceRules AppellF1 Append AppendCheck AppendLayer AppendTo ApplicationIdentificationKey Apply ApplySides ArcCos ArcCosh ArcCot ArcCoth ArcCsc ArcCsch ArcCurvature ARCHProcess ArcLength ArcSec ArcSech ArcSin ArcSinDistribution ArcSinh ArcTan ArcTanh Area Arg ArgMax ArgMin ArgumentCountQ ARIMAProcess ArithmeticGeometricMean ARMAProcess Around AroundReplace ARProcess Array ArrayComponents ArrayDepth ArrayFilter ArrayFlatten ArrayMesh ArrayPad ArrayPlot ArrayQ ArrayResample ArrayReshape ArrayRules Arrays Arrow Arrow3DBox ArrowBox Arrowheads ASATriangle Ask AskAppend AskConfirm AskDisplay AskedQ AskedValue AskFunction AskState AskTemplateDisplay AspectRatio AspectRatioFixed Assert AssociateTo Association AssociationFormat AssociationMap AssociationQ AssociationThread AssumeDeterministic Assuming Assumptions AstronomicalData AsymptoticDSolveValue AsymptoticEqual AsymptoticEquivalent AsymptoticGreater AsymptoticGreaterEqual AsymptoticIntegrate AsymptoticLess AsymptoticLessEqual AsymptoticOutputTracker AsymptoticRSolveValue AsymptoticSolve AsymptoticSum Asynchronous AsynchronousTaskObject AsynchronousTasks Atom AtomCoordinates AtomCount AtomDiagramCoordinates AtomList AtomQ AttentionLayer Attributes Audio AudioAmplify AudioAnnotate AudioAnnotationLookup AudioBlockMap AudioCapture AudioChannelAssignment AudioChannelCombine AudioChannelMix AudioChannels AudioChannelSeparate AudioData AudioDelay AudioDelete AudioDevice AudioDistance AudioFade AudioFrequencyShift AudioGenerator AudioIdentify AudioInputDevice AudioInsert AudioIntervals AudioJoin AudioLabel AudioLength AudioLocalMeasurements AudioLooping AudioLoudness AudioMeasurements AudioNormalize AudioOutputDevice AudioOverlay AudioPad AudioPan AudioPartition AudioPause AudioPitchShift AudioPlay AudioPlot AudioQ AudioRecord AudioReplace AudioResample AudioReverb AudioSampleRate AudioSpectralMap AudioSpectralTransformation AudioSplit AudioStop AudioStream AudioStreams AudioTimeStretch AudioTrim AudioType AugmentedPolyhedron AugmentedSymmetricPolynomial Authenticate Authentication AuthenticationDialog AutoAction Autocomplete AutocompletionFunction AutoCopy AutocorrelationTest AutoDelete AutoEvaluateEvents AutoGeneratedPackage AutoIndent AutoIndentSpacings AutoItalicWords AutoloadPath AutoMatch Automatic AutomaticImageSize AutoMultiplicationSymbol AutoNumberFormatting AutoOpenNotebooks AutoOpenPalettes AutoQuoteCharacters AutoRefreshed AutoRemove AutorunSequencing AutoScaling AutoScroll AutoSpacing AutoStyleOptions AutoStyleWords AutoSubmitting Axes AxesEdge AxesLabel AxesOrigin AxesStyle AxiomaticTheory Axis' +
+      'BabyMonsterGroupB Back Background BackgroundAppearance BackgroundTasksSettings Backslash Backsubstitution Backward Ball Band BandpassFilter BandstopFilter BarabasiAlbertGraphDistribution BarChart BarChart3D BarcodeImage BarcodeRecognize BaringhausHenzeTest BarLegend BarlowProschanImportance BarnesG BarOrigin BarSpacing BartlettHannWindow BartlettWindow BaseDecode BaseEncode BaseForm Baseline BaselinePosition BaseStyle BasicRecurrentLayer BatchNormalizationLayer BatchSize BatesDistribution BattleLemarieWavelet BayesianMaximization BayesianMaximizationObject BayesianMinimization BayesianMinimizationObject Because BeckmannDistribution Beep Before Begin BeginDialogPacket BeginFrontEndInteractionPacket BeginPackage BellB BellY Below BenfordDistribution BeniniDistribution BenktanderGibratDistribution BenktanderWeibullDistribution BernoulliB BernoulliDistribution BernoulliGraphDistribution BernoulliProcess BernsteinBasis BesselFilterModel BesselI BesselJ BesselJZero BesselK BesselY BesselYZero Beta BetaBinomialDistribution BetaDistribution BetaNegativeBinomialDistribution BetaPrimeDistribution BetaRegularized Between BetweennessCentrality BeveledPolyhedron BezierCurve BezierCurve3DBox BezierCurve3DBoxOptions BezierCurveBox BezierCurveBoxOptions BezierFunction BilateralFilter Binarize BinaryDeserialize BinaryDistance BinaryFormat BinaryImageQ BinaryRead BinaryReadList BinarySerialize BinaryWrite BinCounts BinLists Binomial BinomialDistribution BinomialProcess BinormalDistribution BiorthogonalSplineWavelet BipartiteGraphQ BiquadraticFilterModel BirnbaumImportance BirnbaumSaundersDistribution BitAnd BitClear BitGet BitLength BitNot BitOr BitSet BitShiftLeft BitShiftRight BitXor BiweightLocation BiweightMidvariance Black BlackmanHarrisWindow BlackmanNuttallWindow BlackmanWindow Blank BlankForm BlankNullSequence BlankSequence Blend Block BlockchainAddressData BlockchainBase BlockchainBlockData BlockchainContractValue BlockchainData BlockchainGet BlockchainKeyEncode BlockchainPut BlockchainTokenData BlockchainTransaction BlockchainTransactionData BlockchainTransactionSign BlockchainTransactionSubmit BlockMap BlockRandom BlomqvistBeta BlomqvistBetaTest Blue Blur BodePlot BohmanWindow Bold Bond BondCount BondList BondQ Bookmarks Boole BooleanConsecutiveFunction BooleanConvert BooleanCountingFunction BooleanFunction BooleanGraph BooleanMaxterms BooleanMinimize BooleanMinterms BooleanQ BooleanRegion Booleans BooleanStrings BooleanTable BooleanVariables BorderDimensions BorelTannerDistribution Bottom BottomHatTransform BoundaryDiscretizeGraphics BoundaryDiscretizeRegion BoundaryMesh BoundaryMeshRegion BoundaryMeshRegionQ BoundaryStyle BoundedRegionQ BoundingRegion Bounds Box BoxBaselineShift BoxData BoxDimensions Boxed Boxes BoxForm BoxFormFormatTypes BoxFrame BoxID BoxMargins BoxMatrix BoxObject BoxRatios BoxRotation BoxRotationPoint BoxStyle BoxWhiskerChart Bra BracketingBar BraKet BrayCurtisDistance BreadthFirstScan Break BridgeData BrightnessEqualize BroadcastStationData Brown BrownForsytheTest BrownianBridgeProcess BrowserCategory BSplineBasis BSplineCurve BSplineCurve3DBox BSplineCurve3DBoxOptions BSplineCurveBox BSplineCurveBoxOptions BSplineFunction BSplineSurface BSplineSurface3DBox BSplineSurface3DBoxOptions BubbleChart BubbleChart3D BubbleScale BubbleSizes BuildingData BulletGauge BusinessDayQ ButterflyGraph ButterworthFilterModel Button ButtonBar ButtonBox ButtonBoxOptions ButtonCell ButtonContents ButtonData ButtonEvaluator ButtonExpandable ButtonFrame ButtonFunction ButtonMargins ButtonMinHeight ButtonNote ButtonNotebook ButtonSource ButtonStyle ButtonStyleMenuListing Byte ByteArray ByteArrayFormat ByteArrayQ ByteArrayToString ByteCount ByteOrdering' +
+      'C CachedValue CacheGraphics CachePersistence CalendarConvert CalendarData CalendarType Callout CalloutMarker CalloutStyle CallPacket CanberraDistance Cancel CancelButton CandlestickChart CanonicalGraph CanonicalizePolygon CanonicalizePolyhedron CanonicalName CanonicalWarpingCorrespondence CanonicalWarpingDistance CantorMesh CantorStaircase Cap CapForm CapitalDifferentialD Capitalize CapsuleShape CaptureRunning CardinalBSplineBasis CarlemanLinearize CarmichaelLambda CaseOrdering Cases CaseSensitive Cashflow Casoratian Catalan CatalanNumber Catch Catenate CatenateLayer CauchyDistribution CauchyWindow CayleyGraph CDF CDFDeploy CDFInformation CDFWavelet Ceiling CelestialSystem Cell CellAutoOverwrite CellBaseline CellBoundingBox CellBracketOptions CellChangeTimes CellContents CellContext CellDingbat CellDynamicExpression CellEditDuplicate CellElementsBoundingBox CellElementSpacings CellEpilog CellEvaluationDuplicate CellEvaluationFunction CellEvaluationLanguage CellEventActions CellFrame CellFrameColor CellFrameLabelMargins CellFrameLabels CellFrameMargins CellGroup CellGroupData CellGrouping CellGroupingRules CellHorizontalScrolling CellID CellLabel CellLabelAutoDelete CellLabelMargins CellLabelPositioning CellLabelStyle CellLabelTemplate CellMargins CellObject CellOpen CellPrint CellProlog Cells CellSize CellStyle CellTags CellularAutomaton CensoredDistribution Censoring Center CenterArray CenterDot CentralFeature CentralMoment CentralMomentGeneratingFunction Cepstrogram CepstrogramArray CepstrumArray CForm ChampernowneNumber ChangeOptions ChannelBase ChannelBrokerAction ChannelDatabin ChannelHistoryLength ChannelListen ChannelListener ChannelListeners ChannelListenerWait ChannelObject ChannelPreSendFunction ChannelReceiverFunction ChannelSend ChannelSubscribers ChanVeseBinarize Character CharacterCounts CharacterEncoding CharacterEncodingsPath CharacteristicFunction CharacteristicPolynomial CharacterName CharacterRange Characters ChartBaseStyle ChartElementData ChartElementDataFunction ChartElementFunction ChartElements ChartLabels ChartLayout ChartLegends ChartStyle Chebyshev1FilterModel Chebyshev2FilterModel ChebyshevDistance ChebyshevT ChebyshevU Check CheckAbort CheckAll Checkbox CheckboxBar CheckboxBox CheckboxBoxOptions ChemicalData ChessboardDistance ChiDistribution ChineseRemainder ChiSquareDistribution ChoiceButtons ChoiceDialog CholeskyDecomposition Chop ChromaticityPlot ChromaticityPlot3D ChromaticPolynomial Circle CircleBox CircleDot CircleMinus CirclePlus CirclePoints CircleThrough CircleTimes CirculantGraph CircularOrthogonalMatrixDistribution CircularQuaternionMatrixDistribution CircularRealMatrixDistribution CircularSymplecticMatrixDistribution CircularUnitaryMatrixDistribution Circumsphere CityData ClassifierFunction ClassifierInformation ClassifierMeasurements ClassifierMeasurementsObject Classify ClassPriors Clear ClearAll ClearAttributes ClearCookies ClearPermissions ClearSystemCache ClebschGordan ClickPane Clip ClipboardNotebook ClipFill ClippingStyle ClipPlanes ClipPlanesStyle ClipRange Clock ClockGauge ClockwiseContourIntegral Close Closed CloseKernels ClosenessCentrality Closing ClosingAutoSave ClosingEvent CloudAccountData CloudBase CloudConnect CloudDeploy CloudDirectory CloudDisconnect CloudEvaluate CloudExport CloudExpression CloudExpressions CloudFunction CloudGet CloudImport CloudLoggingData CloudObject CloudObjectInformation CloudObjectInformationData CloudObjectNameFormat CloudObjects CloudObjectURLType CloudPublish CloudPut CloudRenderingMethod CloudSave CloudShare CloudSubmit CloudSymbol CloudUnshare ClusterClassify ClusterDissimilarityFunction ClusteringComponents ClusteringTree CMYKColor Coarse CodeAssistOptions Coefficient CoefficientArrays CoefficientDomain CoefficientList CoefficientRules CoifletWavelet Collect Colon ColonForm ColorBalance ColorCombine ColorConvert ColorCoverage ColorData ColorDataFunction ColorDetect ColorDistance ColorFunction ColorFunctionScaling Colorize ColorNegate ColorOutput ColorProfileData ColorQ ColorQuantize ColorReplace ColorRules ColorSelectorSettings ColorSeparate ColorSetter ColorSetterBox ColorSetterBoxOptions ColorSlider ColorsNear ColorSpace ColorToneMapping Column ColumnAlignments ColumnBackgrounds ColumnForm ColumnLines ColumnsEqual ColumnSpacings ColumnWidths CombinedEntityClass CombinerFunction CometData CommonDefaultFormatTypes Commonest CommonestFilter CommonName CommonUnits CommunityBoundaryStyle CommunityGraphPlot CommunityLabels CommunityRegionStyle CompanyData CompatibleUnitQ CompilationOptions CompilationTarget Compile Compiled CompiledCodeFunction CompiledFunction CompilerOptions Complement CompleteGraph CompleteGraphQ CompleteKaryTree CompletionsListPacket Complex Complexes ComplexExpand ComplexInfinity ComplexityFunction ComplexListPlot ComplexPlot ComplexPlot3D ComponentMeasurements ComponentwiseContextMenu Compose ComposeList ComposeSeries CompositeQ Composition CompoundElement CompoundExpression CompoundPoissonDistribution CompoundPoissonProcess CompoundRenewalProcess Compress CompressedData ComputeUncertainty Condition ConditionalExpression Conditioned Cone ConeBox ConfidenceLevel ConfidenceRange ConfidenceTransform ConfigurationPath ConformAudio ConformImages Congruent ConicHullRegion ConicHullRegion3DBox ConicHullRegionBox ConicOptimization Conjugate ConjugateTranspose Conjunction Connect ConnectedComponents ConnectedGraphComponents ConnectedGraphQ ConnectedMeshComponents ConnectedMoleculeComponents ConnectedMoleculeQ ConnectionSettings ConnectLibraryCallbackFunction ConnectSystemModelComponents ConnesWindow ConoverTest ConsoleMessage ConsoleMessagePacket ConsolePrint Constant ConstantArray ConstantArrayLayer ConstantImage ConstantPlusLayer ConstantRegionQ Constants ConstantTimesLayer ConstellationData ConstrainedMax ConstrainedMin Construct Containing ContainsAll ContainsAny ContainsExactly ContainsNone ContainsOnly ContentFieldOptions ContentLocationFunction ContentObject ContentPadding ContentsBoundingBox ContentSelectable ContentSize Context ContextMenu Contexts ContextToFileName Continuation Continue ContinuedFraction ContinuedFractionK ContinuousAction ContinuousMarkovProcess ContinuousTask ContinuousTimeModelQ ContinuousWaveletData ContinuousWaveletTransform ContourDetect ContourGraphics ContourIntegral ContourLabels ContourLines ContourPlot ContourPlot3D Contours ContourShading ContourSmoothing ContourStyle ContraharmonicMean ContrastiveLossLayer Control ControlActive ControlAlignment ControlGroupContentsBox ControllabilityGramian ControllabilityMatrix ControllableDecomposition ControllableModelQ ControllerDuration ControllerInformation ControllerInformationData ControllerLinking ControllerManipulate ControllerMethod ControllerPath ControllerState ControlPlacement ControlsRendering ControlType Convergents ConversionOptions ConversionRules ConvertToBitmapPacket ConvertToPostScript ConvertToPostScriptPacket ConvexHullMesh ConvexPolygonQ ConvexPolyhedronQ ConvolutionLayer Convolve ConwayGroupCo1 ConwayGroupCo2 ConwayGroupCo3 CookieFunction Cookies CoordinateBoundingBox CoordinateBoundingBoxArray CoordinateBounds CoordinateBoundsArray CoordinateChartData CoordinatesToolOptions CoordinateTransform CoordinateTransformData CoprimeQ Coproduct CopulaDistribution Copyable CopyDatabin CopyDirectory CopyFile CopyTag CopyToClipboard CornerFilter CornerNeighbors Correlation CorrelationDistance CorrelationFunction CorrelationTest Cos Cosh CoshIntegral CosineDistance CosineWindow CosIntegral Cot Coth Count CountDistinct CountDistinctBy CounterAssignments CounterBox CounterBoxOptions CounterClockwiseContourIntegral CounterEvaluator CounterFunction CounterIncrements CounterStyle CounterStyleMenuListing CountRoots CountryData Counts CountsBy Covariance CovarianceEstimatorFunction CovarianceFunction CoxianDistribution CoxIngersollRossProcess CoxModel CoxModelFit CramerVonMisesTest CreateArchive CreateCellID CreateChannel CreateCloudExpression CreateDatabin CreateDataSystemModel CreateDialog CreateDirectory CreateDocument CreateFile CreateIntermediateDirectories CreateManagedLibraryExpression CreateNotebook CreatePalette CreatePalettePacket CreatePermissionsGroup CreateScheduledTask CreateSearchIndex CreateSystemModel CreateTemporary CreateUUID CreateWindow CriterionFunction CriticalityFailureImportance CriticalitySuccessImportance CriticalSection Cross CrossEntropyLossLayer CrossingCount CrossingDetect CrossingPolygon CrossMatrix Csc Csch CTCLossLayer Cube CubeRoot Cubics Cuboid CuboidBox Cumulant CumulantGeneratingFunction Cup CupCap Curl CurlyDoubleQuote CurlyQuote CurrencyConvert CurrentDate CurrentImage CurrentlySpeakingPacket CurrentNotebookImage CurrentScreenImage CurrentValue Curry CurvatureFlowFilter CurveClosed Cyan CycleGraph CycleIndexPolynomial Cycles CyclicGroup Cyclotomic Cylinder CylinderBox CylindricalDecomposition' +
+      'D DagumDistribution DamData DamerauLevenshteinDistance DampingFactor Darker Dashed Dashing DatabaseConnect DatabaseDisconnect DatabaseReference Databin DatabinAdd DatabinRemove Databins DatabinUpload DataCompression DataDistribution DataRange DataReversed Dataset Date DateBounds Dated DateDelimiters DateDifference DatedUnit DateFormat DateFunction DateHistogram DateList DateListLogPlot DateListPlot DateListStepPlot DateObject DateObjectQ DateOverlapsQ DatePattern DatePlus DateRange DateReduction DateString DateTicksFormat DateValue DateWithinQ DaubechiesWavelet DavisDistribution DawsonF DayCount DayCountConvention DayHemisphere DaylightQ DayMatchQ DayName DayNightTerminator DayPlus DayRange DayRound DeBruijnGraph DeBruijnSequence Debug DebugTag Decapitalize Decimal DecimalForm DeclareKnownSymbols DeclarePackage Decompose DeconvolutionLayer Decrement Decrypt DecryptFile DedekindEta DeepSpaceProbeData Default DefaultAxesStyle DefaultBaseStyle DefaultBoxStyle DefaultButton DefaultColor DefaultControlPlacement DefaultDuplicateCellStyle DefaultDuration DefaultElement DefaultFaceGridsStyle DefaultFieldHintStyle DefaultFont DefaultFontProperties DefaultFormatType DefaultFormatTypeForStyle DefaultFrameStyle DefaultFrameTicksStyle DefaultGridLinesStyle DefaultInlineFormatType DefaultInputFormatType DefaultLabelStyle DefaultMenuStyle DefaultNaturalLanguage DefaultNewCellStyle DefaultNewInlineCellStyle DefaultNotebook DefaultOptions DefaultOutputFormatType DefaultPrintPrecision DefaultStyle DefaultStyleDefinitions DefaultTextFormatType DefaultTextInlineFormatType DefaultTicksStyle DefaultTooltipStyle DefaultValue DefaultValues Defer DefineExternal DefineInputStreamMethod DefineOutputStreamMethod DefineResourceFunction Definition Degree DegreeCentrality DegreeGraphDistribution DegreeLexicographic DegreeReverseLexicographic DEigensystem DEigenvalues Deinitialization Del DelaunayMesh Delayed Deletable Delete DeleteAnomalies DeleteBorderComponents DeleteCases DeleteChannel DeleteCloudExpression DeleteContents DeleteDirectory DeleteDuplicates DeleteDuplicatesBy DeleteFile DeleteMissing DeleteObject DeletePermissionsKey DeleteSearchIndex DeleteSmallComponents DeleteStopwords DeleteWithContents DeletionWarning DelimitedArray DelimitedSequence Delimiter DelimiterFlashTime DelimiterMatching Delimiters DeliveryFunction Dendrogram Denominator DensityGraphics DensityHistogram DensityPlot DensityPlot3D DependentVariables Deploy Deployed Depth DepthFirstScan Derivative DerivativeFilter DerivedKey DescriptorStateSpace DesignMatrix DestroyAfterEvaluation Det DeviceClose DeviceConfigure DeviceExecute DeviceExecuteAsynchronous DeviceObject DeviceOpen DeviceOpenQ DeviceRead DeviceReadBuffer DeviceReadLatest DeviceReadList DeviceReadTimeSeries Devices DeviceStreams DeviceWrite DeviceWriteBuffer DGaussianWavelet DiacriticalPositioning Diagonal DiagonalizableMatrixQ DiagonalMatrix DiagonalMatrixQ Dialog DialogIndent DialogInput DialogLevel DialogNotebook DialogProlog DialogReturn DialogSymbols Diamond DiamondMatrix DiceDissimilarity DictionaryLookup DictionaryWordQ DifferenceDelta DifferenceOrder DifferenceQuotient DifferenceRoot DifferenceRootReduce Differences DifferentialD DifferentialRoot DifferentialRootReduce DifferentiatorFilter DigitalSignature DigitBlock DigitBlockMinimum DigitCharacter DigitCount DigitQ DihedralAngle DihedralGroup Dilation DimensionalCombinations DimensionalMeshComponents DimensionReduce DimensionReducerFunction DimensionReduction Dimensions DiracComb DiracDelta DirectedEdge DirectedEdges DirectedGraph DirectedGraphQ DirectedInfinity Direction Directive Directory DirectoryName DirectoryQ DirectoryStack DirichletBeta DirichletCharacter DirichletCondition DirichletConvolve DirichletDistribution DirichletEta DirichletL DirichletLambda DirichletTransform DirichletWindow DisableConsolePrintPacket DisableFormatting DiscreteChirpZTransform DiscreteConvolve DiscreteDelta DiscreteHadamardTransform DiscreteIndicator DiscreteLimit DiscreteLQEstimatorGains DiscreteLQRegulatorGains DiscreteLyapunovSolve DiscreteMarkovProcess DiscreteMaxLimit DiscreteMinLimit DiscretePlot DiscretePlot3D DiscreteRatio DiscreteRiccatiSolve DiscreteShift DiscreteTimeModelQ DiscreteUniformDistribution DiscreteVariables DiscreteWaveletData DiscreteWaveletPacketTransform DiscreteWaveletTransform DiscretizeGraphics DiscretizeRegion Discriminant DisjointQ Disjunction Disk DiskBox DiskMatrix DiskSegment Dispatch DispatchQ DispersionEstimatorFunction Display DisplayAllSteps DisplayEndPacket DisplayFlushImagePacket DisplayForm DisplayFunction DisplayPacket DisplayRules DisplaySetSizePacket DisplayString DisplayTemporary DisplayWith DisplayWithRef DisplayWithVariable DistanceFunction DistanceMatrix DistanceTransform Distribute Distributed DistributedContexts DistributeDefinitions DistributionChart DistributionDomain DistributionFitTest DistributionParameterAssumptions DistributionParameterQ Dithering Div Divergence Divide DivideBy Dividers DivideSides Divisible Divisors DivisorSigma DivisorSum DMSList DMSString Do DockedCells DocumentGenerator DocumentGeneratorInformation DocumentGeneratorInformationData DocumentGenerators DocumentNotebook DocumentWeightingRules Dodecahedron DomainRegistrationInformation DominantColors DOSTextFormat Dot DotDashed DotEqual DotLayer DotPlusLayer Dotted DoubleBracketingBar DoubleContourIntegral DoubleDownArrow DoubleLeftArrow DoubleLeftRightArrow DoubleLeftTee DoubleLongLeftArrow DoubleLongLeftRightArrow DoubleLongRightArrow DoubleRightArrow DoubleRightTee DoubleUpArrow DoubleUpDownArrow DoubleVerticalBar DoublyInfinite Down DownArrow DownArrowBar DownArrowUpArrow DownLeftRightVector DownLeftTeeVector DownLeftVector DownLeftVectorBar DownRightTeeVector DownRightVector DownRightVectorBar Downsample DownTee DownTeeArrow DownValues DragAndDrop DrawEdges DrawFrontFaces DrawHighlighted Drop DropoutLayer DSolve DSolveValue Dt DualLinearProgramming DualPolyhedron DualSystemsModel DumpGet DumpSave DuplicateFreeQ Duration Dynamic DynamicBox DynamicBoxOptions DynamicEvaluationTimeout DynamicGeoGraphics DynamicImage DynamicLocation DynamicModule DynamicModuleBox DynamicModuleBoxOptions DynamicModuleParent DynamicModuleValues DynamicName DynamicNamespace DynamicReference DynamicSetting DynamicUpdating DynamicWrapper DynamicWrapperBox DynamicWrapperBoxOptions' +
+      'E EarthImpactData EarthquakeData EccentricityCentrality Echo EchoFunction EclipseType EdgeAdd EdgeBetweennessCentrality EdgeCapacity EdgeCapForm EdgeColor EdgeConnectivity EdgeContract EdgeCost EdgeCount EdgeCoverQ EdgeCycleMatrix EdgeDashing EdgeDelete EdgeDetect EdgeForm EdgeIndex EdgeJoinForm EdgeLabeling EdgeLabels EdgeLabelStyle EdgeList EdgeOpacity EdgeQ EdgeRenderingFunction EdgeRules EdgeShapeFunction EdgeStyle EdgeThickness EdgeWeight EdgeWeightedGraphQ Editable EditButtonSettings EditCellTagsSettings EditDistance EffectiveInterest Eigensystem Eigenvalues EigenvectorCentrality Eigenvectors Element ElementData ElementwiseLayer ElidedForms Eliminate EliminationOrder Ellipsoid EllipticE EllipticExp EllipticExpPrime EllipticF EllipticFilterModel EllipticK EllipticLog EllipticNomeQ EllipticPi EllipticReducedHalfPeriods EllipticTheta EllipticThetaPrime EmbedCode EmbeddedHTML EmbeddedService EmbeddingLayer EmbeddingObject EmitSound EmphasizeSyntaxErrors EmpiricalDistribution Empty EmptyGraphQ EmptyRegion EnableConsolePrintPacket Enabled Encode Encrypt EncryptedObject EncryptFile End EndAdd EndDialogPacket EndFrontEndInteractionPacket EndOfBuffer EndOfFile EndOfLine EndOfString EndPackage EngineEnvironment EngineeringForm Enter EnterExpressionPacket EnterTextPacket Entity EntityClass EntityClassList EntityCopies EntityFunction EntityGroup EntityInstance EntityList EntityPrefetch EntityProperties EntityProperty EntityPropertyClass EntityRegister EntityStore EntityStores EntityTypeName EntityUnregister EntityValue Entropy EntropyFilter Environment Epilog EpilogFunction Equal EqualColumns EqualRows EqualTilde EqualTo EquatedTo Equilibrium EquirippleFilterKernel Equivalent Erf Erfc Erfi ErlangB ErlangC ErlangDistribution Erosion ErrorBox ErrorBoxOptions ErrorNorm ErrorPacket ErrorsDialogSettings EscapeRadius EstimatedBackground EstimatedDistribution EstimatedProcess EstimatorGains EstimatorRegulator EuclideanDistance EulerAngles EulerCharacteristic EulerE EulerGamma EulerianGraphQ EulerMatrix EulerPhi Evaluatable Evaluate Evaluated EvaluatePacket EvaluateScheduledTask EvaluationBox EvaluationCell EvaluationCompletionAction EvaluationData EvaluationElements EvaluationEnvironment EvaluationMode EvaluationMonitor EvaluationNotebook EvaluationObject EvaluationOrder Evaluator EvaluatorNames EvenQ EventData EventEvaluator EventHandler EventHandlerTag EventLabels EventSeries ExactBlackmanWindow ExactNumberQ ExactRootIsolation ExampleData Except ExcludedForms ExcludedLines ExcludedPhysicalQuantities ExcludePods Exclusions ExclusionsStyle Exists Exit ExitDialog ExoplanetData Exp Expand ExpandAll ExpandDenominator ExpandFileName ExpandNumerator Expectation ExpectationE ExpectedValue ExpGammaDistribution ExpIntegralE ExpIntegralEi ExpirationDate Exponent ExponentFunction ExponentialDistribution ExponentialFamily ExponentialGeneratingFunction ExponentialMovingAverage ExponentialPowerDistribution ExponentPosition ExponentStep Export ExportAutoReplacements ExportByteArray ExportForm ExportPacket ExportString Expression ExpressionCell ExpressionPacket ExpressionUUID ExpToTrig ExtendedEntityClass ExtendedGCD Extension ExtentElementFunction ExtentMarkers ExtentSize ExternalBundle ExternalCall ExternalDataCharacterEncoding ExternalEvaluate ExternalFunction ExternalFunctionName ExternalObject ExternalOptions ExternalSessionObject ExternalSessions ExternalTypeSignature ExternalValue Extract ExtractArchive ExtractLayer ExtremeValueDistribution' +
+      'FaceForm FaceGrids FaceGridsStyle FacialFeatures Factor FactorComplete Factorial Factorial2 FactorialMoment FactorialMomentGeneratingFunction FactorialPower FactorInteger FactorList FactorSquareFree FactorSquareFreeList FactorTerms FactorTermsList Fail Failure FailureAction FailureDistribution FailureQ False FareySequence FARIMAProcess FeatureDistance FeatureExtract FeatureExtraction FeatureExtractor FeatureExtractorFunction FeatureNames FeatureNearest FeatureSpacePlot FeatureSpacePlot3D FeatureTypes FEDisableConsolePrintPacket FeedbackLinearize FeedbackSector FeedbackSectorStyle FeedbackType FEEnableConsolePrintPacket FetalGrowthData Fibonacci Fibonorial FieldCompletionFunction FieldHint FieldHintStyle FieldMasked FieldSize File FileBaseName FileByteCount FileConvert FileDate FileExistsQ FileExtension FileFormat FileHandler FileHash FileInformation FileName FileNameDepth FileNameDialogSettings FileNameDrop FileNameForms FileNameJoin FileNames FileNameSetter FileNameSplit FileNameTake FilePrint FileSize FileSystemMap FileSystemScan FileTemplate FileTemplateApply FileType FilledCurve FilledCurveBox FilledCurveBoxOptions Filling FillingStyle FillingTransform FilteredEntityClass FilterRules FinancialBond FinancialData FinancialDerivative FinancialIndicator Find FindAnomalies FindArgMax FindArgMin FindChannels FindClique FindClusters FindCookies FindCurvePath FindCycle FindDevices FindDistribution FindDistributionParameters FindDivisions FindEdgeCover FindEdgeCut FindEdgeIndependentPaths FindEquationalProof FindEulerianCycle FindExternalEvaluators FindFaces FindFile FindFit FindFormula FindFundamentalCycles FindGeneratingFunction FindGeoLocation FindGeometricConjectures FindGeometricTransform FindGraphCommunities FindGraphIsomorphism FindGraphPartition FindHamiltonianCycle FindHamiltonianPath FindHiddenMarkovStates FindIndependentEdgeSet FindIndependentVertexSet FindInstance FindIntegerNullVector FindKClan FindKClique FindKClub FindKPlex FindLibrary FindLinearRecurrence FindList FindMatchingColor FindMaximum FindMaximumFlow FindMaxValue FindMeshDefects FindMinimum FindMinimumCostFlow FindMinimumCut FindMinValue FindMoleculeSubstructure FindPath FindPeaks FindPermutation FindPostmanTour FindProcessParameters FindRepeat FindRoot FindSequenceFunction FindSettings FindShortestPath FindShortestTour FindSpanningTree FindSystemModelEquilibrium FindTextualAnswer FindThreshold FindTransientRepeat FindVertexCover FindVertexCut FindVertexIndependentPaths Fine FinishDynamic FiniteAbelianGroupCount FiniteGroupCount FiniteGroupData First FirstCase FirstPassageTimeDistribution FirstPosition FischerGroupFi22 FischerGroupFi23 FischerGroupFi24Prime FisherHypergeometricDistribution FisherRatioTest FisherZDistribution Fit FitAll FitRegularization FittedModel FixedOrder FixedPoint FixedPointList FlashSelection Flat Flatten FlattenAt FlattenLayer FlatTopWindow FlipView Floor FlowPolynomial FlushPrintOutputPacket Fold FoldList FoldPair FoldPairList FollowRedirects Font FontColor FontFamily FontForm FontName FontOpacity FontPostScriptName FontProperties FontReencoding FontSize FontSlant FontSubstitutions FontTracking FontVariations FontWeight For ForAll Format FormatRules FormatType FormatTypeAutoConvert FormatValues FormBox FormBoxOptions FormControl FormFunction FormLayoutFunction FormObject FormPage FormTheme FormulaData FormulaLookup FortranForm Forward ForwardBackward Fourier FourierCoefficient FourierCosCoefficient FourierCosSeries FourierCosTransform FourierDCT FourierDCTFilter FourierDCTMatrix FourierDST FourierDSTMatrix FourierMatrix FourierParameters FourierSequenceTransform FourierSeries FourierSinCoefficient FourierSinSeries FourierSinTransform FourierTransform FourierTrigSeries FractionalBrownianMotionProcess FractionalGaussianNoiseProcess FractionalPart FractionBox FractionBoxOptions FractionLine Frame FrameBox FrameBoxOptions Framed FrameInset FrameLabel Frameless FrameMargins FrameRate FrameStyle FrameTicks FrameTicksStyle FRatioDistribution FrechetDistribution FreeQ FrenetSerretSystem FrequencySamplingFilterKernel FresnelC FresnelF FresnelG FresnelS Friday FrobeniusNumber FrobeniusSolve FromAbsoluteTime FromCharacterCode FromCoefficientRules FromContinuedFraction FromDate FromDigits FromDMS FromEntity FromJulianDate FromLetterNumber FromPolarCoordinates FromRomanNumeral FromSphericalCoordinates FromUnixTime Front FrontEndDynamicExpression FrontEndEventActions FrontEndExecute FrontEndObject FrontEndResource FrontEndResourceString FrontEndStackSize FrontEndToken FrontEndTokenExecute FrontEndValueCache FrontEndVersion FrontFaceColor FrontFaceOpacity Full FullAxes FullDefinition FullForm FullGraphics FullInformationOutputRegulator FullOptions FullRegion FullSimplify Function FunctionCompile FunctionCompileExport FunctionCompileExportByteArray FunctionCompileExportLibrary FunctionCompileExportString FunctionDomain FunctionExpand FunctionInterpolation FunctionPeriod FunctionRange FunctionSpace FussellVeselyImportance' +
+      'GaborFilter GaborMatrix GaborWavelet GainMargins GainPhaseMargins GalaxyData GalleryView Gamma GammaDistribution GammaRegularized GapPenalty GARCHProcess GatedRecurrentLayer Gather GatherBy GaugeFaceElementFunction GaugeFaceStyle GaugeFrameElementFunction GaugeFrameSize GaugeFrameStyle GaugeLabels GaugeMarkers GaugeStyle GaussianFilter GaussianIntegers GaussianMatrix GaussianOrthogonalMatrixDistribution GaussianSymplecticMatrixDistribution GaussianUnitaryMatrixDistribution GaussianWindow GCD GegenbauerC General GeneralizedLinearModelFit GenerateAsymmetricKeyPair GenerateConditions GeneratedCell GeneratedDocumentBinding GenerateDerivedKey GenerateDigitalSignature GenerateDocument GeneratedParameters GeneratedQuantityMagnitudes GenerateHTTPResponse GenerateSecuredAuthenticationKey GenerateSymmetricKey GeneratingFunction GeneratorDescription GeneratorHistoryLength GeneratorOutputType Generic GenericCylindricalDecomposition GenomeData GenomeLookup GeoAntipode GeoArea GeoArraySize GeoBackground GeoBoundingBox GeoBounds GeoBoundsRegion GeoBubbleChart GeoCenter GeoCircle GeodesicClosing GeodesicDilation GeodesicErosion GeodesicOpening GeoDestination GeodesyData GeoDirection GeoDisk GeoDisplacement GeoDistance GeoDistanceList GeoElevationData GeoEntities GeoGraphics GeogravityModelData GeoGridDirectionDifference GeoGridLines GeoGridLinesStyle GeoGridPosition GeoGridRange GeoGridRangePadding GeoGridUnitArea GeoGridUnitDistance GeoGridVector GeoGroup GeoHemisphere GeoHemisphereBoundary GeoHistogram GeoIdentify GeoImage GeoLabels GeoLength GeoListPlot GeoLocation GeologicalPeriodData GeomagneticModelData GeoMarker GeometricAssertion GeometricBrownianMotionProcess GeometricDistribution GeometricMean GeometricMeanFilter GeometricScene GeometricTransformation GeometricTransformation3DBox GeometricTransformation3DBoxOptions GeometricTransformationBox GeometricTransformationBoxOptions GeoModel GeoNearest GeoPath GeoPosition GeoPositionENU GeoPositionXYZ GeoProjection GeoProjectionData GeoRange GeoRangePadding GeoRegionValuePlot GeoResolution GeoScaleBar GeoServer GeoSmoothHistogram GeoStreamPlot GeoStyling GeoStylingImageFunction GeoVariant GeoVector GeoVectorENU GeoVectorPlot GeoVectorXYZ GeoVisibleRegion GeoVisibleRegionBoundary GeoWithinQ GeoZoomLevel GestureHandler GestureHandlerTag Get GetBoundingBoxSizePacket GetContext GetEnvironment GetFileName GetFrontEndOptionsDataPacket GetLinebreakInformationPacket GetMenusPacket GetPageBreakInformationPacket Glaisher GlobalClusteringCoefficient GlobalPreferences GlobalSession Glow GoldenAngle GoldenRatio GompertzMakehamDistribution GoodmanKruskalGamma GoodmanKruskalGammaTest Goto Grad Gradient GradientFilter GradientOrientationFilter GrammarApply GrammarRules GrammarToken Graph Graph3D GraphAssortativity GraphAutomorphismGroup GraphCenter GraphComplement GraphData GraphDensity GraphDiameter GraphDifference GraphDisjointUnion GraphDistance GraphDistanceMatrix GraphElementData GraphEmbedding GraphHighlight GraphHighlightStyle GraphHub Graphics Graphics3D Graphics3DBox Graphics3DBoxOptions GraphicsArray GraphicsBaseline GraphicsBox GraphicsBoxOptions GraphicsColor GraphicsColumn GraphicsComplex GraphicsComplex3DBox GraphicsComplex3DBoxOptions GraphicsComplexBox GraphicsComplexBoxOptions GraphicsContents GraphicsData GraphicsGrid GraphicsGridBox GraphicsGroup GraphicsGroup3DBox GraphicsGroup3DBoxOptions GraphicsGroupBox GraphicsGroupBoxOptions GraphicsGrouping GraphicsHighlightColor GraphicsRow GraphicsSpacing GraphicsStyle GraphIntersection GraphLayout GraphLinkEfficiency GraphPeriphery GraphPlot GraphPlot3D GraphPower GraphPropertyDistribution GraphQ GraphRadius GraphReciprocity GraphRoot GraphStyle GraphUnion Gray GrayLevel Greater GreaterEqual GreaterEqualLess GreaterEqualThan GreaterFullEqual GreaterGreater GreaterLess GreaterSlantEqual GreaterThan GreaterTilde Green GreenFunction Grid GridBaseline GridBox GridBoxAlignment GridBoxBackground GridBoxDividers GridBoxFrame GridBoxItemSize GridBoxItemStyle GridBoxOptions GridBoxSpacings GridCreationSettings GridDefaultElement GridElementStyleOptions GridFrame GridFrameMargins GridGraph GridLines GridLinesStyle GroebnerBasis GroupActionBase GroupBy GroupCentralizer GroupElementFromWord GroupElementPosition GroupElementQ GroupElements GroupElementToWord GroupGenerators Groupings GroupMultiplicationTable GroupOrbits GroupOrder GroupPageBreakWithin GroupSetwiseStabilizer GroupStabilizer GroupStabilizerChain GroupTogetherGrouping GroupTogetherNestedGrouping GrowCutComponents Gudermannian GuidedFilter GumbelDistribution' +
+      'HaarWavelet HadamardMatrix HalfLine HalfNormalDistribution HalfPlane HalfSpace HamiltonianGraphQ HammingDistance HammingWindow HandlerFunctions HandlerFunctionsKeys HankelH1 HankelH2 HankelMatrix HankelTransform HannPoissonWindow HannWindow HaradaNortonGroupHN HararyGraph HarmonicMean HarmonicMeanFilter HarmonicNumber Hash Haversine HazardFunction Head HeadCompose HeaderLines Heads HeavisideLambda HeavisidePi HeavisideTheta HeldGroupHe HeldPart HelpBrowserLookup HelpBrowserNotebook HelpBrowserSettings Here HermiteDecomposition HermiteH HermitianMatrixQ HessenbergDecomposition Hessian HexadecimalCharacter Hexahedron HexahedronBox HexahedronBoxOptions HiddenMarkovProcess HiddenSurface Highlighted HighlightGraph HighlightImage HighlightMesh HighpassFilter HigmanSimsGroupHS HilbertCurve HilbertFilter HilbertMatrix Histogram Histogram3D HistogramDistribution HistogramList HistogramTransform HistogramTransformInterpolation HistoricalPeriodData HitMissTransform HITSCentrality HjorthDistribution HodgeDual HoeffdingD HoeffdingDTest Hold HoldAll HoldAllComplete HoldComplete HoldFirst HoldForm HoldPattern HoldRest HolidayCalendar HomeDirectory HomePage Horizontal HorizontalForm HorizontalGauge HorizontalScrollPosition HornerForm HostLookup HotellingTSquareDistribution HoytDistribution HTMLSave HTTPErrorResponse HTTPRedirect HTTPRequest HTTPRequestData HTTPResponse Hue HumanGrowthData HumpDownHump HumpEqual HurwitzLerchPhi HurwitzZeta HyperbolicDistribution HypercubeGraph HyperexponentialDistribution Hyperfactorial Hypergeometric0F1 Hypergeometric0F1Regularized Hypergeometric1F1 Hypergeometric1F1Regularized Hypergeometric2F1 Hypergeometric2F1Regularized HypergeometricDistribution HypergeometricPFQ HypergeometricPFQRegularized HypergeometricU Hyperlink HyperlinkCreationSettings Hyperplane Hyphenation HyphenationOptions HypoexponentialDistribution HypothesisTestData' +
+      'I IconData Iconize IconizedObject IconRules Icosahedron Identity IdentityMatrix If IgnoreCase IgnoreDiacritics IgnorePunctuation IgnoreSpellCheck IgnoringInactive Im Image Image3D Image3DProjection Image3DSlices ImageAccumulate ImageAdd ImageAdjust ImageAlign ImageApply ImageApplyIndexed ImageAspectRatio ImageAssemble ImageAugmentationLayer ImageBoundingBoxes ImageCache ImageCacheValid ImageCapture ImageCaptureFunction ImageCases ImageChannels ImageClip ImageCollage ImageColorSpace ImageCompose ImageContainsQ ImageContents ImageConvolve ImageCooccurrence ImageCorners ImageCorrelate ImageCorrespondingPoints ImageCrop ImageData ImageDeconvolve ImageDemosaic ImageDifference ImageDimensions ImageDisplacements ImageDistance ImageEffect ImageExposureCombine ImageFeatureTrack ImageFileApply ImageFileFilter ImageFileScan ImageFilter ImageFocusCombine ImageForestingComponents ImageFormattingWidth ImageForwardTransformation ImageGraphics ImageHistogram ImageIdentify ImageInstanceQ ImageKeypoints ImageLevels ImageLines ImageMargins ImageMarker ImageMarkers ImageMeasurements ImageMesh ImageMultiply ImageOffset ImagePad ImagePadding ImagePartition ImagePeriodogram ImagePerspectiveTransformation ImagePosition ImagePreviewFunction ImagePyramid ImagePyramidApply ImageQ ImageRangeCache ImageRecolor ImageReflect ImageRegion ImageResize ImageResolution ImageRestyle ImageRotate ImageRotated ImageSaliencyFilter ImageScaled ImageScan ImageSize ImageSizeAction ImageSizeCache ImageSizeMultipliers ImageSizeRaw ImageSubtract ImageTake ImageTransformation ImageTrim ImageType ImageValue ImageValuePositions ImagingDevice ImplicitRegion Implies Import ImportAutoReplacements ImportByteArray ImportOptions ImportString ImprovementImportance In Inactivate Inactive IncidenceGraph IncidenceList IncidenceMatrix IncludeAromaticBonds IncludeConstantBasis IncludeDefinitions IncludeDirectories IncludeFileExtension IncludeGeneratorTasks IncludeHydrogens IncludeInflections IncludeMetaInformation IncludePods IncludeQuantities IncludeRelatedTables IncludeSingularTerm IncludeWindowTimes Increment IndefiniteMatrixQ Indent IndentingNewlineSpacings IndentMaxFraction IndependenceTest IndependentEdgeSetQ IndependentPhysicalQuantity IndependentUnit IndependentUnitDimension IndependentVertexSetQ Indeterminate IndeterminateThreshold IndexCreationOptions Indexed IndexGraph IndexTag Inequality InexactNumberQ InexactNumbers InfiniteLine InfinitePlane Infinity Infix InflationAdjust InflationMethod Information InformationData InformationDataGrid Inherited InheritScope InhomogeneousPoissonProcess InitialEvaluationHistory Initialization InitializationCell InitializationCellEvaluation InitializationCellWarning InitializationObjects InitializationValue Initialize InitialSeeding InlineCounterAssignments InlineCounterIncrements InlineRules Inner InnerPolygon InnerPolyhedron Inpaint Input InputAliases InputAssumptions InputAutoReplacements InputField InputFieldBox InputFieldBoxOptions InputForm InputGrouping InputNamePacket InputNotebook InputPacket InputSettings InputStream InputString InputStringPacket InputToBoxFormPacket Insert InsertionFunction InsertionPointObject InsertLinebreaks InsertResults Inset Inset3DBox Inset3DBoxOptions InsetBox InsetBoxOptions Insphere Install InstallService InstanceNormalizationLayer InString Integer IntegerDigits IntegerExponent IntegerLength IntegerName IntegerPart IntegerPartitions IntegerQ IntegerReverse Integers IntegerString Integral Integrate Interactive InteractiveTradingChart Interlaced Interleaving InternallyBalancedDecomposition InterpolatingFunction InterpolatingPolynomial Interpolation InterpolationOrder InterpolationPoints InterpolationPrecision Interpretation InterpretationBox InterpretationBoxOptions InterpretationFunction Interpreter InterpretTemplate InterquartileRange Interrupt InterruptSettings IntersectingQ Intersection Interval IntervalIntersection IntervalMarkers IntervalMarkersStyle IntervalMemberQ IntervalSlider IntervalUnion Into Inverse InverseBetaRegularized InverseCDF InverseChiSquareDistribution InverseContinuousWaveletTransform InverseDistanceTransform InverseEllipticNomeQ InverseErf InverseErfc InverseFourier InverseFourierCosTransform InverseFourierSequenceTransform InverseFourierSinTransform InverseFourierTransform InverseFunction InverseFunctions InverseGammaDistribution InverseGammaRegularized InverseGaussianDistribution InverseGudermannian InverseHankelTransform InverseHaversine InverseImagePyramid InverseJacobiCD InverseJacobiCN InverseJacobiCS InverseJacobiDC InverseJacobiDN InverseJacobiDS InverseJacobiNC InverseJacobiND InverseJacobiNS InverseJacobiSC InverseJacobiSD InverseJacobiSN InverseLaplaceTransform InverseMellinTransform InversePermutation InverseRadon InverseRadonTransform InverseSeries InverseShortTimeFourier InverseSpectrogram InverseSurvivalFunction InverseTransformedRegion InverseWaveletTransform InverseWeierstrassP InverseWishartMatrixDistribution InverseZTransform Invisible InvisibleApplication InvisibleTimes IPAddress IrreduciblePolynomialQ IslandData IsolatingInterval IsomorphicGraphQ IsotopeData Italic Item ItemAspectRatio ItemBox ItemBoxOptions ItemSize ItemStyle ItoProcess' +
+      'JaccardDissimilarity JacobiAmplitude Jacobian JacobiCD JacobiCN JacobiCS JacobiDC JacobiDN JacobiDS JacobiNC JacobiND JacobiNS JacobiP JacobiSC JacobiSD JacobiSN JacobiSymbol JacobiZeta JankoGroupJ1 JankoGroupJ2 JankoGroupJ3 JankoGroupJ4 JarqueBeraALMTest JohnsonDistribution Join JoinAcross Joined JoinedCurve JoinedCurveBox JoinedCurveBoxOptions JoinForm JordanDecomposition JordanModelDecomposition JulianDate JuliaSetBoettcher JuliaSetIterationCount JuliaSetPlot JuliaSetPoints' +
+      'K KagiChart KaiserBesselWindow KaiserWindow KalmanEstimator KalmanFilter KarhunenLoeveDecomposition KaryTree KatzCentrality KCoreComponents KDistribution KEdgeConnectedComponents KEdgeConnectedGraphQ KelvinBei KelvinBer KelvinKei KelvinKer KendallTau KendallTauTest KernelExecute KernelFunction KernelMixtureDistribution Kernels Ket Key KeyCollisionFunction KeyComplement KeyDrop KeyDropFrom KeyExistsQ KeyFreeQ KeyIntersection KeyMap KeyMemberQ KeypointStrength Keys KeySelect KeySort KeySortBy KeyTake KeyUnion KeyValueMap KeyValuePattern Khinchin KillProcess KirchhoffGraph KirchhoffMatrix KleinInvariantJ KnapsackSolve KnightTourGraph KnotData KnownUnitQ KochCurve KolmogorovSmirnovTest KroneckerDelta KroneckerModelDecomposition KroneckerProduct KroneckerSymbol KuiperTest KumaraswamyDistribution Kurtosis KuwaharaFilter KVertexConnectedComponents KVertexConnectedGraphQ' +
+      'LABColor Label Labeled LabeledSlider LabelingFunction LabelingSize LabelStyle LabelVisibility LaguerreL LakeData LambdaComponents LambertW LaminaData LanczosWindow LandauDistribution Language LanguageCategory LanguageData LanguageIdentify LanguageOptions LaplaceDistribution LaplaceTransform Laplacian LaplacianFilter LaplacianGaussianFilter Large Larger Last Latitude LatitudeLongitude LatticeData LatticeReduce Launch LaunchKernels LayeredGraphPlot LayerSizeFunction LayoutInformation LCHColor LCM LeaderSize LeafCount LeapYearQ LearnDistribution LearnedDistribution LearningRate LearningRateMultipliers LeastSquares LeastSquaresFilterKernel Left LeftArrow LeftArrowBar LeftArrowRightArrow LeftDownTeeVector LeftDownVector LeftDownVectorBar LeftRightArrow LeftRightVector LeftTee LeftTeeArrow LeftTeeVector LeftTriangle LeftTriangleBar LeftTriangleEqual LeftUpDownVector LeftUpTeeVector LeftUpVector LeftUpVectorBar LeftVector LeftVectorBar LegendAppearance Legended LegendFunction LegendLabel LegendLayout LegendMargins LegendMarkers LegendMarkerSize LegendreP LegendreQ LegendreType Length LengthWhile LerchPhi Less LessEqual LessEqualGreater LessEqualThan LessFullEqual LessGreater LessLess LessSlantEqual LessThan LessTilde LetterCharacter LetterCounts LetterNumber LetterQ Level LeveneTest LeviCivitaTensor LevyDistribution Lexicographic LibraryDataType LibraryFunction LibraryFunctionError LibraryFunctionInformation LibraryFunctionLoad LibraryFunctionUnload LibraryLoad LibraryUnload LicenseID LiftingFilterData LiftingWaveletTransform LightBlue LightBrown LightCyan Lighter LightGray LightGreen Lighting LightingAngle LightMagenta LightOrange LightPink LightPurple LightRed LightSources LightYellow Likelihood Limit LimitsPositioning LimitsPositioningTokens LindleyDistribution Line Line3DBox Line3DBoxOptions LinearFilter LinearFractionalOptimization LinearFractionalTransform LinearGradientImage LinearizingTransformationData LinearLayer LinearModelFit LinearOffsetFunction LinearOptimization LinearProgramming LinearRecurrence LinearSolve LinearSolveFunction LineBox LineBoxOptions LineBreak LinebreakAdjustments LineBreakChart LinebreakSemicolonWeighting LineBreakWithin LineColor LineGraph LineIndent LineIndentMaxFraction LineIntegralConvolutionPlot LineIntegralConvolutionScale LineLegend LineOpacity LineSpacing LineWrapParts LinkActivate LinkClose LinkConnect LinkConnectedQ LinkCreate LinkError LinkFlush LinkFunction LinkHost LinkInterrupt LinkLaunch LinkMode LinkObject LinkOpen LinkOptions LinkPatterns LinkProtocol LinkRankCentrality LinkRead LinkReadHeld LinkReadyQ Links LinkService LinkWrite LinkWriteHeld LiouvilleLambda List Listable ListAnimate ListContourPlot ListContourPlot3D ListConvolve ListCorrelate ListCurvePathPlot ListDeconvolve ListDensityPlot ListDensityPlot3D Listen ListFormat ListFourierSequenceTransform ListInterpolation ListLineIntegralConvolutionPlot ListLinePlot ListLogLinearPlot ListLogLogPlot ListLogPlot ListPicker ListPickerBox ListPickerBoxBackground ListPickerBoxOptions ListPlay ListPlot ListPlot3D ListPointPlot3D ListPolarPlot ListQ ListSliceContourPlot3D ListSliceDensityPlot3D ListSliceVectorPlot3D ListStepPlot ListStreamDensityPlot ListStreamPlot ListSurfacePlot3D ListVectorDensityPlot ListVectorPlot ListVectorPlot3D ListZTransform Literal LiteralSearch LocalAdaptiveBinarize LocalCache LocalClusteringCoefficient LocalizeDefinitions LocalizeVariables LocalObject LocalObjects LocalResponseNormalizationLayer LocalSubmit LocalSymbol LocalTime LocalTimeZone LocationEquivalenceTest LocationTest Locator LocatorAutoCreate LocatorBox LocatorBoxOptions LocatorCentering LocatorPane LocatorPaneBox LocatorPaneBoxOptions LocatorRegion Locked Log Log10 Log2 LogBarnesG LogGamma LogGammaDistribution LogicalExpand LogIntegral LogisticDistribution LogisticSigmoid LogitModelFit LogLikelihood LogLinearPlot LogLogisticDistribution LogLogPlot LogMultinormalDistribution LogNormalDistribution LogPlot LogRankTest LogSeriesDistribution LongEqual Longest LongestCommonSequence LongestCommonSequencePositions LongestCommonSubsequence LongestCommonSubsequencePositions LongestMatch LongestOrderedSequence LongForm Longitude LongLeftArrow LongLeftRightArrow LongRightArrow LongShortTermMemoryLayer Lookup Loopback LoopFreeGraphQ LossFunction LowerCaseQ LowerLeftArrow LowerRightArrow LowerTriangularize LowerTriangularMatrixQ LowpassFilter LQEstimatorGains LQGRegulator LQOutputRegulatorGains LQRegulatorGains LUBackSubstitution LucasL LuccioSamiComponents LUDecomposition LunarEclipse LUVColor LyapunovSolve LyonsGroupLy' +
+      'MachineID MachineName MachineNumberQ MachinePrecision MacintoshSystemPageSetup Magenta Magnification Magnify MailAddressValidation MailExecute MailFolder MailItem MailReceiverFunction MailResponseFunction MailSearch MailServerConnect MailServerConnection MailSettings MainSolve MaintainDynamicCaches Majority MakeBoxes MakeExpression MakeRules ManagedLibraryExpressionID ManagedLibraryExpressionQ MandelbrotSetBoettcher MandelbrotSetDistance MandelbrotSetIterationCount MandelbrotSetMemberQ MandelbrotSetPlot MangoldtLambda ManhattanDistance Manipulate Manipulator MannedSpaceMissionData MannWhitneyTest MantissaExponent Manual Map MapAll MapAt MapIndexed MAProcess MapThread MarchenkoPasturDistribution MarcumQ MardiaCombinedTest MardiaKurtosisTest MardiaSkewnessTest MarginalDistribution MarkovProcessProperties Masking MatchingDissimilarity MatchLocalNameQ MatchLocalNames MatchQ Material MathematicalFunctionData MathematicaNotation MathieuC MathieuCharacteristicA MathieuCharacteristicB MathieuCharacteristicExponent MathieuCPrime MathieuGroupM11 MathieuGroupM12 MathieuGroupM22 MathieuGroupM23 MathieuGroupM24 MathieuS MathieuSPrime MathMLForm MathMLText Matrices MatrixExp MatrixForm MatrixFunction MatrixLog MatrixNormalDistribution MatrixPlot MatrixPower MatrixPropertyDistribution MatrixQ MatrixRank MatrixTDistribution Max MaxBend MaxCellMeasure MaxColorDistance MaxDetect MaxDuration MaxExtraBandwidths MaxExtraConditions MaxFeatureDisplacement MaxFeatures MaxFilter MaximalBy Maximize MaxItems MaxIterations MaxLimit MaxMemoryUsed MaxMixtureKernels MaxOverlapFraction MaxPlotPoints MaxPoints MaxRecursion MaxStableDistribution MaxStepFraction MaxSteps MaxStepSize MaxTrainingRounds MaxValue MaxwellDistribution MaxWordGap McLaughlinGroupMcL Mean MeanAbsoluteLossLayer MeanAround MeanClusteringCoefficient MeanDegreeConnectivity MeanDeviation MeanFilter MeanGraphDistance MeanNeighborDegree MeanShift MeanShiftFilter MeanSquaredLossLayer Median MedianDeviation MedianFilter MedicalTestData Medium MeijerG MeijerGReduce MeixnerDistribution MellinConvolve MellinTransform MemberQ MemoryAvailable MemoryConstrained MemoryConstraint MemoryInUse MengerMesh Menu MenuAppearance MenuCommandKey MenuEvaluator MenuItem MenuList MenuPacket MenuSortingValue MenuStyle MenuView Merge MergeDifferences MergingFunction MersennePrimeExponent MersennePrimeExponentQ Mesh MeshCellCentroid MeshCellCount MeshCellHighlight MeshCellIndex MeshCellLabel MeshCellMarker MeshCellMeasure MeshCellQuality MeshCells MeshCellShapeFunction MeshCellStyle MeshCoordinates MeshFunctions MeshPrimitives MeshQualityGoal MeshRange MeshRefinementFunction MeshRegion MeshRegionQ MeshShading MeshStyle Message MessageDialog MessageList MessageName MessageObject MessageOptions MessagePacket Messages MessagesNotebook MetaCharacters MetaInformation MeteorShowerData Method MethodOptions MexicanHatWavelet MeyerWavelet Midpoint Min MinColorDistance MinDetect MineralData MinFilter MinimalBy MinimalPolynomial MinimalStateSpaceModel Minimize MinimumTimeIncrement MinIntervalSize MinkowskiQuestionMark MinLimit MinMax MinorPlanetData Minors MinRecursion MinSize MinStableDistribution Minus MinusPlus MinValue Missing MissingBehavior MissingDataMethod MissingDataRules MissingQ MissingString MissingStyle MissingValuePattern MittagLefflerE MixedFractionParts MixedGraphQ MixedMagnitude MixedRadix MixedRadixQuantity MixedUnit MixtureDistribution Mod Modal Mode Modular ModularInverse ModularLambda Module Modulus MoebiusMu Molecule MoleculeContainsQ MoleculeEquivalentQ MoleculeGraph MoleculeModify MoleculePattern MoleculePlot MoleculePlot3D MoleculeProperty MoleculeQ MoleculeValue Moment Momentary MomentConvert MomentEvaluate MomentGeneratingFunction MomentOfInertia Monday Monitor MonomialList MonomialOrder MonsterGroupM MoonPhase MoonPosition MorletWavelet MorphologicalBinarize MorphologicalBranchPoints MorphologicalComponents MorphologicalEulerNumber MorphologicalGraph MorphologicalPerimeter MorphologicalTransform MortalityData Most MountainData MouseAnnotation MouseAppearance MouseAppearanceTag MouseButtons Mouseover MousePointerNote MousePosition MovieData MovingAverage MovingMap MovingMedian MoyalDistribution Multicolumn MultiedgeStyle MultigraphQ MultilaunchWarning MultiLetterItalics MultiLetterStyle MultilineFunction Multinomial MultinomialDistribution MultinormalDistribution MultiplicativeOrder Multiplicity MultiplySides Multiselection MultivariateHypergeometricDistribution MultivariatePoissonDistribution MultivariateTDistribution' +
+      'N NakagamiDistribution NameQ Names NamespaceBox NamespaceBoxOptions Nand NArgMax NArgMin NBernoulliB NBodySimulation NBodySimulationData NCache NDEigensystem NDEigenvalues NDSolve NDSolveValue Nearest NearestFunction NearestNeighborGraph NearestTo NebulaData NeedCurrentFrontEndPackagePacket NeedCurrentFrontEndSymbolsPacket NeedlemanWunschSimilarity Needs Negative NegativeBinomialDistribution NegativeDefiniteMatrixQ NegativeIntegers NegativeMultinomialDistribution NegativeRationals NegativeReals NegativeSemidefiniteMatrixQ NeighborhoodData NeighborhoodGraph Nest NestedGreaterGreater NestedLessLess NestedScriptRules NestGraph NestList NestWhile NestWhileList NetAppend NetBidirectionalOperator NetChain NetDecoder NetDelete NetDrop NetEncoder NetEvaluationMode NetExtract NetFlatten NetFoldOperator NetGraph NetInformation NetInitialize NetInsert NetInsertSharedArrays NetJoin NetMapOperator NetMapThreadOperator NetMeasurements NetModel NetNestOperator NetPairEmbeddingOperator NetPort NetPortGradient NetPrepend NetRename NetReplace NetReplacePart NetSharedArray NetStateObject NetTake NetTrain NetTrainResultsObject NetworkPacketCapture NetworkPacketRecording NetworkPacketRecordingDuring NetworkPacketTrace NeumannValue NevilleThetaC NevilleThetaD NevilleThetaN NevilleThetaS NewPrimitiveStyle NExpectation Next NextCell NextDate NextPrime NextScheduledTaskTime NHoldAll NHoldFirst NHoldRest NicholsGridLines NicholsPlot NightHemisphere NIntegrate NMaximize NMaxValue NMinimize NMinValue NominalVariables NonAssociative NoncentralBetaDistribution NoncentralChiSquareDistribution NoncentralFRatioDistribution NoncentralStudentTDistribution NonCommutativeMultiply NonConstants NondimensionalizationTransform None NoneTrue NonlinearModelFit NonlinearStateSpaceModel NonlocalMeansFilter NonNegative NonNegativeIntegers NonNegativeRationals NonNegativeReals NonPositive NonPositiveIntegers NonPositiveRationals NonPositiveReals Nor NorlundB Norm Normal NormalDistribution NormalGrouping NormalizationLayer Normalize Normalized NormalizedSquaredEuclideanDistance NormalMatrixQ NormalsFunction NormFunction Not NotCongruent NotCupCap NotDoubleVerticalBar Notebook NotebookApply NotebookAutoSave NotebookClose NotebookConvertSettings NotebookCreate NotebookCreateReturnObject NotebookDefault NotebookDelete NotebookDirectory NotebookDynamicExpression NotebookEvaluate NotebookEventActions NotebookFileName NotebookFind NotebookFindReturnObject NotebookGet NotebookGetLayoutInformationPacket NotebookGetMisspellingsPacket NotebookImport NotebookInformation NotebookInterfaceObject NotebookLocate NotebookObject NotebookOpen NotebookOpenReturnObject NotebookPath NotebookPrint NotebookPut NotebookPutReturnObject NotebookRead NotebookResetGeneratedCells Notebooks NotebookSave NotebookSaveAs NotebookSelection NotebookSetupLayoutInformationPacket NotebooksMenu NotebookTemplate NotebookWrite NotElement NotEqualTilde NotExists NotGreater NotGreaterEqual NotGreaterFullEqual NotGreaterGreater NotGreaterLess NotGreaterSlantEqual NotGreaterTilde Nothing NotHumpDownHump NotHumpEqual NotificationFunction NotLeftTriangle NotLeftTriangleBar NotLeftTriangleEqual NotLess NotLessEqual NotLessFullEqual NotLessGreater NotLessLess NotLessSlantEqual NotLessTilde NotNestedGreaterGreater NotNestedLessLess NotPrecedes NotPrecedesEqual NotPrecedesSlantEqual NotPrecedesTilde NotReverseElement NotRightTriangle NotRightTriangleBar NotRightTriangleEqual NotSquareSubset NotSquareSubsetEqual NotSquareSuperset NotSquareSupersetEqual NotSubset NotSubsetEqual NotSucceeds NotSucceedsEqual NotSucceedsSlantEqual NotSucceedsTilde NotSuperset NotSupersetEqual NotTilde NotTildeEqual NotTildeFullEqual NotTildeTilde NotVerticalBar Now NoWhitespace NProbability NProduct NProductFactors NRoots NSolve NSum NSumTerms NuclearExplosionData NuclearReactorData Null NullRecords NullSpace NullWords Number NumberCompose NumberDecompose NumberExpand NumberFieldClassNumber NumberFieldDiscriminant NumberFieldFundamentalUnits NumberFieldIntegralBasis NumberFieldNormRepresentatives NumberFieldRegulator NumberFieldRootsOfUnity NumberFieldSignature NumberForm NumberFormat NumberLinePlot NumberMarks NumberMultiplier NumberPadding NumberPoint NumberQ NumberSeparator NumberSigns NumberString Numerator NumeratorDenominator NumericalOrder NumericalSort NumericArray NumericArrayQ NumericArrayType NumericFunction NumericQ NuttallWindow NValues NyquistGridLines NyquistPlot' +
+      'O ObservabilityGramian ObservabilityMatrix ObservableDecomposition ObservableModelQ OceanData Octahedron OddQ Off Offset OLEData On ONanGroupON Once OneIdentity Opacity OpacityFunction OpacityFunctionScaling Open OpenAppend Opener OpenerBox OpenerBoxOptions OpenerView OpenFunctionInspectorPacket Opening OpenRead OpenSpecialOptions OpenTemporary OpenWrite Operate OperatingSystem OptimumFlowData Optional OptionalElement OptionInspectorSettings OptionQ Options OptionsPacket OptionsPattern OptionValue OptionValueBox OptionValueBoxOptions Or Orange Order OrderDistribution OrderedQ Ordering OrderingBy OrderingLayer Orderless OrderlessPatternSequence OrnsteinUhlenbeckProcess Orthogonalize OrthogonalMatrixQ Out Outer OuterPolygon OuterPolyhedron OutputAutoOverwrite OutputControllabilityMatrix OutputControllableModelQ OutputForm OutputFormData OutputGrouping OutputMathEditExpression OutputNamePacket OutputResponse OutputSizeLimit OutputStream Over OverBar OverDot Overflow OverHat Overlaps Overlay OverlayBox OverlayBoxOptions Overscript OverscriptBox OverscriptBoxOptions OverTilde OverVector OverwriteTarget OwenT OwnValues' +
+      'Package PackingMethod PaddedForm Padding PaddingLayer PaddingSize PadeApproximant PadLeft PadRight PageBreakAbove PageBreakBelow PageBreakWithin PageFooterLines PageFooters PageHeaderLines PageHeaders PageHeight PageRankCentrality PageTheme PageWidth Pagination PairedBarChart PairedHistogram PairedSmoothHistogram PairedTTest PairedZTest PaletteNotebook PalettePath PalindromeQ Pane PaneBox PaneBoxOptions Panel PanelBox PanelBoxOptions Paneled PaneSelector PaneSelectorBox PaneSelectorBoxOptions PaperWidth ParabolicCylinderD ParagraphIndent ParagraphSpacing ParallelArray ParallelCombine ParallelDo Parallelepiped ParallelEvaluate Parallelization Parallelize ParallelMap ParallelNeeds Parallelogram ParallelProduct ParallelSubmit ParallelSum ParallelTable ParallelTry Parameter ParameterEstimator ParameterMixtureDistribution ParameterVariables ParametricFunction ParametricNDSolve ParametricNDSolveValue ParametricPlot ParametricPlot3D ParametricRegion ParentBox ParentCell ParentConnect ParentDirectory ParentForm Parenthesize ParentList ParentNotebook ParetoDistribution ParetoPickandsDistribution ParkData Part PartBehavior PartialCorrelationFunction PartialD ParticleAcceleratorData ParticleData Partition PartitionGranularity PartitionsP PartitionsQ PartLayer PartOfSpeech PartProtection ParzenWindow PascalDistribution PassEventsDown PassEventsUp Paste PasteAutoQuoteCharacters PasteBoxFormInlineCells PasteButton Path PathGraph PathGraphQ Pattern PatternSequence PatternTest PauliMatrix PaulWavelet Pause PausedTime PDF PeakDetect PeanoCurve PearsonChiSquareTest PearsonCorrelationTest PearsonDistribution PercentForm PerfectNumber PerfectNumberQ PerformanceGoal Perimeter PeriodicBoundaryCondition PeriodicInterpolation Periodogram PeriodogramArray Permanent Permissions PermissionsGroup PermissionsGroupMemberQ PermissionsGroups PermissionsKey PermissionsKeys PermutationCycles PermutationCyclesQ PermutationGroup PermutationLength PermutationList PermutationListQ PermutationMax PermutationMin PermutationOrder PermutationPower PermutationProduct PermutationReplace Permutations PermutationSupport Permute PeronaMalikFilter Perpendicular PerpendicularBisector PersistenceLocation PersistenceTime PersistentObject PersistentObjects PersistentValue PersonData PERTDistribution PetersenGraph PhaseMargins PhaseRange PhysicalSystemData Pi Pick PIDData PIDDerivativeFilter PIDFeedforward PIDTune Piecewise PiecewiseExpand PieChart PieChart3D PillaiTrace PillaiTraceTest PingTime Pink PitchRecognize Pivoting PixelConstrained PixelValue PixelValuePositions Placed Placeholder PlaceholderReplace Plain PlanarAngle PlanarGraph PlanarGraphQ PlanckRadiationLaw PlaneCurveData PlanetaryMoonData PlanetData PlantData Play PlayRange Plot Plot3D Plot3Matrix PlotDivision PlotJoined PlotLabel PlotLabels PlotLayout PlotLegends PlotMarkers PlotPoints PlotRange PlotRangeClipping PlotRangeClipPlanesStyle PlotRangePadding PlotRegion PlotStyle PlotTheme Pluralize Plus PlusMinus Pochhammer PodStates PodWidth Point Point3DBox Point3DBoxOptions PointBox PointBoxOptions PointFigureChart PointLegend PointSize PoissonConsulDistribution PoissonDistribution PoissonProcess PoissonWindow PolarAxes PolarAxesOrigin PolarGridLines PolarPlot PolarTicks PoleZeroMarkers PolyaAeppliDistribution PolyGamma Polygon Polygon3DBox Polygon3DBoxOptions PolygonalNumber PolygonAngle PolygonBox PolygonBoxOptions PolygonCoordinates PolygonDecomposition PolygonHoleScale PolygonIntersections PolygonScale Polyhedron PolyhedronAngle PolyhedronCoordinates PolyhedronData PolyhedronDecomposition PolyhedronGenus PolyLog PolynomialExtendedGCD PolynomialForm PolynomialGCD PolynomialLCM PolynomialMod PolynomialQ PolynomialQuotient PolynomialQuotientRemainder PolynomialReduce PolynomialRemainder Polynomials PoolingLayer PopupMenu PopupMenuBox PopupMenuBoxOptions PopupView PopupWindow Position PositionIndex Positive PositiveDefiniteMatrixQ PositiveIntegers PositiveRationals PositiveReals PositiveSemidefiniteMatrixQ PossibleZeroQ Postfix PostScript Power PowerDistribution PowerExpand PowerMod PowerModList PowerRange PowerSpectralDensity PowersRepresentations PowerSymmetricPolynomial Precedence PrecedenceForm Precedes PrecedesEqual PrecedesSlantEqual PrecedesTilde Precision PrecisionGoal PreDecrement Predict PredictionRoot PredictorFunction PredictorInformation PredictorMeasurements PredictorMeasurementsObject PreemptProtect PreferencesPath Prefix PreIncrement Prepend PrependLayer PrependTo PreprocessingRules PreserveColor PreserveImageOptions Previous PreviousCell PreviousDate PriceGraphDistribution PrimaryPlaceholder Prime PrimeNu PrimeOmega PrimePi PrimePowerQ PrimeQ Primes PrimeZetaP PrimitivePolynomialQ PrimitiveRoot PrimitiveRootList PrincipalComponents PrincipalValue Print PrintableASCIIQ PrintAction PrintForm PrintingCopies PrintingOptions PrintingPageRange PrintingStartingPageNumber PrintingStyleEnvironment Printout3D Printout3DPreviewer PrintPrecision PrintTemporary Prism PrismBox PrismBoxOptions PrivateCellOptions PrivateEvaluationOptions PrivateFontOptions PrivateFrontEndOptions PrivateKey PrivateNotebookOptions PrivatePaths Probability ProbabilityDistribution ProbabilityPlot ProbabilityPr ProbabilityScalePlot ProbitModelFit ProcessConnection ProcessDirectory ProcessEnvironment Processes ProcessEstimator ProcessInformation ProcessObject ProcessParameterAssumptions ProcessParameterQ ProcessStateDomain ProcessStatus ProcessTimeDomain Product ProductDistribution ProductLog ProgressIndicator ProgressIndicatorBox ProgressIndicatorBoxOptions Projection Prolog PromptForm ProofObject Properties Property PropertyList PropertyValue Proportion Proportional Protect Protected ProteinData Pruning PseudoInverse PsychrometricPropertyData PublicKey PublisherID PulsarData PunctuationCharacter Purple Put PutAppend Pyramid PyramidBox PyramidBoxOptions' +
+      'QBinomial QFactorial QGamma QHypergeometricPFQ QnDispersion QPochhammer QPolyGamma QRDecomposition QuadraticIrrationalQ QuadraticOptimization Quantile QuantilePlot Quantity QuantityArray QuantityDistribution QuantityForm QuantityMagnitude QuantityQ QuantityUnit QuantityVariable QuantityVariableCanonicalUnit QuantityVariableDimensions QuantityVariableIdentifier QuantityVariablePhysicalQuantity Quartics QuartileDeviation Quartiles QuartileSkewness Query QueueingNetworkProcess QueueingProcess QueueProperties Quiet Quit Quotient QuotientRemainder' +
+      'RadialGradientImage RadialityCentrality RadicalBox RadicalBoxOptions RadioButton RadioButtonBar RadioButtonBox RadioButtonBoxOptions Radon RadonTransform RamanujanTau RamanujanTauL RamanujanTauTheta RamanujanTauZ Ramp Random RandomChoice RandomColor RandomComplex RandomEntity RandomFunction RandomGeoPosition RandomGraph RandomImage RandomInstance RandomInteger RandomPermutation RandomPoint RandomPolygon RandomPolyhedron RandomPrime RandomReal RandomSample RandomSeed RandomSeeding RandomVariate RandomWalkProcess RandomWord Range RangeFilter RangeSpecification RankedMax RankedMin RarerProbability Raster Raster3D Raster3DBox Raster3DBoxOptions RasterArray RasterBox RasterBoxOptions Rasterize RasterSize Rational RationalFunctions Rationalize Rationals Ratios RawArray RawBoxes RawData RawMedium RayleighDistribution Re Read ReadByteArray ReadLine ReadList ReadProtected ReadString Real RealAbs RealBlockDiagonalForm RealDigits RealExponent Reals RealSign Reap RecognitionPrior RecognitionThreshold Record RecordLists RecordSeparators Rectangle RectangleBox RectangleBoxOptions RectangleChart RectangleChart3D RectangularRepeatingElement RecurrenceFilter RecurrenceTable RecurringDigitsForm Red Reduce RefBox ReferenceLineStyle ReferenceMarkers ReferenceMarkerStyle Refine ReflectionMatrix ReflectionTransform Refresh RefreshRate Region RegionBinarize RegionBoundary RegionBounds RegionCentroid RegionDifference RegionDimension RegionDisjoint RegionDistance RegionDistanceFunction RegionEmbeddingDimension RegionEqual RegionFunction RegionImage RegionIntersection RegionMeasure RegionMember RegionMemberFunction RegionMoment RegionNearest RegionNearestFunction RegionPlot RegionPlot3D RegionProduct RegionQ RegionResize RegionSize RegionSymmetricDifference RegionUnion RegionWithin RegisterExternalEvaluator RegularExpression Regularization RegularlySampledQ RegularPolygon ReIm ReImLabels ReImPlot ReImStyle Reinstall RelationalDatabase RelationGraph Release ReleaseHold ReliabilityDistribution ReliefImage ReliefPlot RemoteAuthorizationCaching RemoteConnect RemoteConnectionObject RemoteFile RemoteRun RemoteRunProcess Remove RemoveAlphaChannel RemoveAsynchronousTask RemoveAudioStream RemoveBackground RemoveChannelListener RemoveChannelSubscribers Removed RemoveDiacritics RemoveInputStreamMethod RemoveOutputStreamMethod RemoveProperty RemoveScheduledTask RemoveUsers RenameDirectory RenameFile RenderAll RenderingOptions RenewalProcess RenkoChart RepairMesh Repeated RepeatedNull RepeatedString RepeatedTiming RepeatingElement Replace ReplaceAll ReplaceHeldPart ReplaceImageValue ReplaceList ReplacePart ReplacePixelValue ReplaceRepeated ReplicateLayer RequiredPhysicalQuantities Resampling ResamplingAlgorithmData ResamplingMethod Rescale RescalingTransform ResetDirectory ResetMenusPacket ResetScheduledTask ReshapeLayer Residue ResizeLayer Resolve ResourceAcquire ResourceData ResourceFunction ResourceObject ResourceRegister ResourceRemove ResourceSearch ResourceSubmissionObject ResourceSubmit ResourceSystemBase ResourceUpdate ResponseForm Rest RestartInterval Restricted Resultant ResumePacket Return ReturnEntersInput ReturnExpressionPacket ReturnInputFormPacket ReturnPacket ReturnReceiptFunction ReturnTextPacket Reverse ReverseBiorthogonalSplineWavelet ReverseElement ReverseEquilibrium ReverseGraph ReverseSort ReverseSortBy ReverseUpEquilibrium RevolutionAxis RevolutionPlot3D RGBColor RiccatiSolve RiceDistribution RidgeFilter RiemannR RiemannSiegelTheta RiemannSiegelZ RiemannXi Riffle Right RightArrow RightArrowBar RightArrowLeftArrow RightComposition RightCosetRepresentative RightDownTeeVector RightDownVector RightDownVectorBar RightTee RightTeeArrow RightTeeVector RightTriangle RightTriangleBar RightTriangleEqual RightUpDownVector RightUpTeeVector RightUpVector RightUpVectorBar RightVector RightVectorBar RiskAchievementImportance RiskReductionImportance RogersTanimotoDissimilarity RollPitchYawAngles RollPitchYawMatrix RomanNumeral Root RootApproximant RootIntervals RootLocusPlot RootMeanSquare RootOfUnityQ RootReduce Roots RootSum Rotate RotateLabel RotateLeft RotateRight RotationAction RotationBox RotationBoxOptions RotationMatrix RotationTransform Round RoundImplies RoundingRadius Row RowAlignments RowBackgrounds RowBox RowHeights RowLines RowMinHeight RowReduce RowsEqual RowSpacings RSolve RSolveValue RudinShapiro RudvalisGroupRu Rule RuleCondition RuleDelayed RuleForm RulePlot RulerUnits Run RunProcess RunScheduledTask RunThrough RuntimeAttributes RuntimeOptions RussellRaoDissimilarity' +
+      'SameQ SameTest SampledEntityClass SampleDepth SampledSoundFunction SampledSoundList SampleRate SamplingPeriod SARIMAProcess SARMAProcess SASTriangle SatelliteData SatisfiabilityCount SatisfiabilityInstances SatisfiableQ Saturday Save Saveable SaveAutoDelete SaveConnection SaveDefinitions SavitzkyGolayMatrix SawtoothWave Scale Scaled ScaleDivisions ScaledMousePosition ScaleOrigin ScalePadding ScaleRanges ScaleRangeStyle ScalingFunctions ScalingMatrix ScalingTransform Scan ScheduledTask ScheduledTaskActiveQ ScheduledTaskInformation ScheduledTaskInformationData ScheduledTaskObject ScheduledTasks SchurDecomposition ScientificForm ScientificNotationThreshold ScorerGi ScorerGiPrime ScorerHi ScorerHiPrime ScreenRectangle ScreenStyleEnvironment ScriptBaselineShifts ScriptForm ScriptLevel ScriptMinSize ScriptRules ScriptSizeMultipliers Scrollbars ScrollingOptions ScrollPosition SearchAdjustment SearchIndexObject SearchIndices SearchQueryString SearchResultObject Sec Sech SechDistribution SecondOrderConeOptimization SectionGrouping SectorChart SectorChart3D SectorOrigin SectorSpacing SecuredAuthenticationKey SecuredAuthenticationKeys SeedRandom Select Selectable SelectComponents SelectedCells SelectedNotebook SelectFirst Selection SelectionAnimate SelectionCell SelectionCellCreateCell SelectionCellDefaultStyle SelectionCellParentStyle SelectionCreateCell SelectionDebuggerTag SelectionDuplicateCell SelectionEvaluate SelectionEvaluateCreateCell SelectionMove SelectionPlaceholder SelectionSetStyle SelectWithContents SelfLoops SelfLoopStyle SemanticImport SemanticImportString SemanticInterpretation SemialgebraicComponentInstances SemidefiniteOptimization SendMail SendMessage Sequence SequenceAlignment SequenceAttentionLayer SequenceCases SequenceCount SequenceFold SequenceFoldList SequenceForm SequenceHold SequenceLastLayer SequenceMostLayer SequencePosition SequencePredict SequencePredictorFunction SequenceReplace SequenceRestLayer SequenceReverseLayer SequenceSplit Series SeriesCoefficient SeriesData ServiceConnect ServiceDisconnect ServiceExecute ServiceObject ServiceRequest ServiceResponse ServiceSubmit SessionSubmit SessionTime Set SetAccuracy SetAlphaChannel SetAttributes Setbacks SetBoxFormNamesPacket SetCloudDirectory SetCookies SetDelayed SetDirectory SetEnvironment SetEvaluationNotebook SetFileDate SetFileLoadingContext SetNotebookStatusLine SetOptions SetOptionsPacket SetPermissions SetPrecision SetProperty SetSecuredAuthenticationKey SetSelectedNotebook SetSharedFunction SetSharedVariable SetSpeechParametersPacket SetStreamPosition SetSystemModel SetSystemOptions Setter SetterBar SetterBox SetterBoxOptions Setting SetUsers SetValue Shading Shallow ShannonWavelet ShapiroWilkTest Share SharingList Sharpen ShearingMatrix ShearingTransform ShellRegion ShenCastanMatrix ShiftedGompertzDistribution ShiftRegisterSequence Short ShortDownArrow Shortest ShortestMatch ShortestPathFunction ShortLeftArrow ShortRightArrow ShortTimeFourier ShortTimeFourierData ShortUpArrow Show ShowAutoConvert ShowAutoSpellCheck ShowAutoStyles ShowCellBracket ShowCellLabel ShowCellTags ShowClosedCellArea ShowCodeAssist ShowContents ShowControls ShowCursorTracker ShowGroupOpenCloseIcon ShowGroupOpener ShowInvisibleCharacters ShowPageBreaks ShowPredictiveInterface ShowSelection ShowShortBoxForm ShowSpecialCharacters ShowStringCharacters ShowSyntaxStyles ShrinkingDelay ShrinkWrapBoundingBox SiderealTime SiegelTheta SiegelTukeyTest SierpinskiCurve SierpinskiMesh Sign Signature SignedRankTest SignedRegionDistance SignificanceLevel SignPadding SignTest SimilarityRules SimpleGraph SimpleGraphQ SimplePolygonQ SimplePolyhedronQ Simplex Simplify Sin Sinc SinghMaddalaDistribution SingleEvaluation SingleLetterItalics SingleLetterStyle SingularValueDecomposition SingularValueList SingularValuePlot SingularValues Sinh SinhIntegral SinIntegral SixJSymbol Skeleton SkeletonTransform SkellamDistribution Skewness SkewNormalDistribution SkinStyle Skip SliceContourPlot3D SliceDensityPlot3D SliceDistribution SliceVectorPlot3D Slider Slider2D Slider2DBox Slider2DBoxOptions SliderBox SliderBoxOptions SlideView Slot SlotSequence Small SmallCircle Smaller SmithDecomposition SmithDelayCompensator SmithWatermanSimilarity SmoothDensityHistogram SmoothHistogram SmoothHistogram3D SmoothKernelDistribution SnDispersion Snippet SnubPolyhedron SocialMediaData Socket SocketConnect SocketListen SocketListener SocketObject SocketOpen SocketReadMessage SocketReadyQ Sockets SocketWaitAll SocketWaitNext SoftmaxLayer SokalSneathDissimilarity SolarEclipse SolarSystemFeatureData SolidAngle SolidData SolidRegionQ Solve SolveAlways SolveDelayed Sort SortBy SortedBy SortedEntityClass Sound SoundAndGraphics SoundNote SoundVolume SourceLink Sow Space SpaceCurveData SpaceForm Spacer Spacings Span SpanAdjustments SpanCharacterRounding SpanFromAbove SpanFromBoth SpanFromLeft SpanLineThickness SpanMaxSize SpanMinSize SpanningCharacters SpanSymmetric SparseArray SpatialGraphDistribution SpatialMedian SpatialTransformationLayer Speak SpeakTextPacket SpearmanRankTest SpearmanRho SpeciesData SpecificityGoal SpectralLineData Spectrogram SpectrogramArray Specularity SpeechRecognize SpeechSynthesize SpellingCorrection SpellingCorrectionList SpellingDictionaries SpellingDictionariesPath SpellingOptions SpellingSuggestionsPacket Sphere SphereBox SpherePoints SphericalBesselJ SphericalBesselY SphericalHankelH1 SphericalHankelH2 SphericalHarmonicY SphericalPlot3D SphericalRegion SphericalShell SpheroidalEigenvalue SpheroidalJoiningFactor SpheroidalPS SpheroidalPSPrime SpheroidalQS SpheroidalQSPrime SpheroidalRadialFactor SpheroidalS1 SpheroidalS1Prime SpheroidalS2 SpheroidalS2Prime Splice SplicedDistribution SplineClosed SplineDegree SplineKnots SplineWeights Split SplitBy SpokenString Sqrt SqrtBox SqrtBoxOptions Square SquaredEuclideanDistance SquareFreeQ SquareIntersection SquareMatrixQ SquareRepeatingElement SquaresR SquareSubset SquareSubsetEqual SquareSuperset SquareSupersetEqual SquareUnion SquareWave SSSTriangle StabilityMargins StabilityMarginsStyle StableDistribution Stack StackBegin StackComplete StackedDateListPlot StackedListPlot StackInhibit StadiumShape StandardAtmosphereData StandardDeviation StandardDeviationFilter StandardForm Standardize Standardized StandardOceanData StandbyDistribution Star StarClusterData StarData StarGraph StartAsynchronousTask StartExternalSession StartingStepSize StartOfLine StartOfString StartProcess StartScheduledTask StartupSound StartWebSession StateDimensions StateFeedbackGains StateOutputEstimator StateResponse StateSpaceModel StateSpaceRealization StateSpaceTransform StateTransformationLinearize StationaryDistribution StationaryWaveletPacketTransform StationaryWaveletTransform StatusArea StatusCentrality StepMonitor StereochemistryElements StieltjesGamma StirlingS1 StirlingS2 StopAsynchronousTask StoppingPowerData StopScheduledTask StrataVariables StratonovichProcess StreamColorFunction StreamColorFunctionScaling StreamDensityPlot StreamMarkers StreamPlot StreamPoints StreamPosition Streams StreamScale StreamStyle String StringBreak StringByteCount StringCases StringContainsQ StringCount StringDelete StringDrop StringEndsQ StringExpression StringExtract StringForm StringFormat StringFreeQ StringInsert StringJoin StringLength StringMatchQ StringPadLeft StringPadRight StringPart StringPartition StringPosition StringQ StringRepeat StringReplace StringReplaceList StringReplacePart StringReverse StringRiffle StringRotateLeft StringRotateRight StringSkeleton StringSplit StringStartsQ StringTake StringTemplate StringToByteArray StringToStream StringTrim StripBoxes StripOnInput StripWrapperBoxes StrokeForm StructuralImportance StructuredArray StructuredSelection StruveH StruveL Stub StudentTDistribution Style StyleBox StyleBoxAutoDelete StyleData StyleDefinitions StyleForm StyleHints StyleKeyMapping StyleMenuListing StyleNameDialogSettings StyleNames StylePrint StyleSheetPath Subdivide Subfactorial Subgraph SubMinus SubPlus SubresultantPolynomialRemainders SubresultantPolynomials Subresultants Subscript SubscriptBox SubscriptBoxOptions Subscripted Subsequences Subset SubsetEqual SubsetMap SubsetQ Subsets SubStar SubstitutionSystem Subsuperscript SubsuperscriptBox SubsuperscriptBoxOptions Subtract SubtractFrom SubtractSides SubValues Succeeds SucceedsEqual SucceedsSlantEqual SucceedsTilde Success SuchThat Sum SumConvergence SummationLayer Sunday SunPosition Sunrise Sunset SuperDagger SuperMinus SupernovaData SuperPlus Superscript SuperscriptBox SuperscriptBoxOptions Superset SupersetEqual SuperStar Surd SurdForm SurfaceArea SurfaceColor SurfaceData SurfaceGraphics SurvivalDistribution SurvivalFunction SurvivalModel SurvivalModelFit SuspendPacket SuzukiDistribution SuzukiGroupSuz SwatchLegend Switch Symbol SymbolName SymletWavelet Symmetric SymmetricGroup SymmetricKey SymmetricMatrixQ SymmetricPolynomial SymmetricReduction Symmetrize SymmetrizedArray SymmetrizedArrayRules SymmetrizedDependentComponents SymmetrizedIndependentComponents SymmetrizedReplacePart SynchronousInitialization SynchronousUpdating Synonyms Syntax SyntaxForm SyntaxInformation SyntaxLength SyntaxPacket SyntaxQ SynthesizeMissingValues SystemDialogInput SystemException SystemGet SystemHelpPath SystemInformation SystemInformationData SystemInstall SystemModel SystemModeler SystemModelExamples SystemModelLinearize SystemModelParametricSimulate SystemModelPlot SystemModelProgressReporting SystemModelReliability SystemModels SystemModelSimulate SystemModelSimulateSensitivity SystemModelSimulationData SystemOpen SystemOptions SystemProcessData SystemProcesses SystemsConnectionsModel SystemsModelDelay SystemsModelDelayApproximate SystemsModelDelete SystemsModelDimensions SystemsModelExtract SystemsModelFeedbackConnect SystemsModelLabels SystemsModelLinearity SystemsModelMerge SystemsModelOrder SystemsModelParallelConnect SystemsModelSeriesConnect SystemsModelStateFeedbackConnect SystemsModelVectorRelativeOrders SystemStub SystemTest' +
+      'Tab TabFilling Table TableAlignments TableDepth TableDirections TableForm TableHeadings TableSpacing TableView TableViewBox TableViewBoxBackground TableViewBoxOptions TabSpacings TabView TabViewBox TabViewBoxOptions TagBox TagBoxNote TagBoxOptions TaggingRules TagSet TagSetDelayed TagStyle TagUnset Take TakeDrop TakeLargest TakeLargestBy TakeList TakeSmallest TakeSmallestBy TakeWhile Tally Tan Tanh TargetDevice TargetFunctions TargetSystem TargetUnits TaskAbort TaskExecute TaskObject TaskRemove TaskResume Tasks TaskSuspend TaskWait TautologyQ TelegraphProcess TemplateApply TemplateArgBox TemplateBox TemplateBoxOptions TemplateEvaluate TemplateExpression TemplateIf TemplateObject TemplateSequence TemplateSlot TemplateSlotSequence TemplateUnevaluated TemplateVerbatim TemplateWith TemporalData TemporalRegularity Temporary TemporaryVariable TensorContract TensorDimensions TensorExpand TensorProduct TensorQ TensorRank TensorReduce TensorSymmetry TensorTranspose TensorWedge TestID TestReport TestReportObject TestResultObject Tetrahedron TetrahedronBox TetrahedronBoxOptions TeXForm TeXSave Text Text3DBox Text3DBoxOptions TextAlignment TextBand TextBoundingBox TextBox TextCases TextCell TextClipboardType TextContents TextData TextElement TextForm TextGrid TextJustification TextLine TextPacket TextParagraph TextPosition TextRecognize TextSearch TextSearchReport TextSentences TextString TextStructure TextStyle TextTranslation Texture TextureCoordinateFunction TextureCoordinateScaling TextWords Therefore ThermodynamicData ThermometerGauge Thick Thickness Thin Thinning ThisLink ThompsonGroupTh Thread ThreadingLayer ThreeJSymbol Threshold Through Throw ThueMorse Thumbnail Thursday Ticks TicksStyle TideData Tilde TildeEqual TildeFullEqual TildeTilde TimeConstrained TimeConstraint TimeDirection TimeFormat TimeGoal TimelinePlot TimeObject TimeObjectQ Times TimesBy TimeSeries TimeSeriesAggregate TimeSeriesForecast TimeSeriesInsert TimeSeriesInvertibility TimeSeriesMap TimeSeriesMapThread TimeSeriesModel TimeSeriesModelFit TimeSeriesResample TimeSeriesRescale TimeSeriesShift TimeSeriesThread TimeSeriesWindow TimeUsed TimeValue TimeWarpingCorrespondence TimeWarpingDistance TimeZone TimeZoneConvert TimeZoneOffset Timing Tiny TitleGrouping TitsGroupT ToBoxes ToCharacterCode ToColor ToContinuousTimeModel ToDate Today ToDiscreteTimeModel ToEntity ToeplitzMatrix ToExpression ToFileName Together Toggle ToggleFalse Toggler TogglerBar TogglerBox TogglerBoxOptions ToHeldExpression ToInvertibleTimeSeries TokenWords Tolerance ToLowerCase Tomorrow ToNumberField TooBig Tooltip TooltipBox TooltipBoxOptions TooltipDelay TooltipStyle Top TopHatTransform ToPolarCoordinates TopologicalSort ToRadicals ToRules ToSphericalCoordinates ToString Total TotalHeight TotalLayer TotalVariationFilter TotalWidth TouchPosition TouchscreenAutoZoom TouchscreenControlPlacement ToUpperCase Tr Trace TraceAbove TraceAction TraceBackward TraceDepth TraceDialog TraceForward TraceInternal TraceLevel TraceOff TraceOn TraceOriginal TracePrint TraceScan TrackedSymbols TrackingFunction TracyWidomDistribution TradingChart TraditionalForm TraditionalFunctionNotation TraditionalNotation TraditionalOrder TrainingProgressCheckpointing TrainingProgressFunction TrainingProgressMeasurements TrainingProgressReporting TrainingStoppingCriterion TransferFunctionCancel TransferFunctionExpand TransferFunctionFactor TransferFunctionModel TransferFunctionPoles TransferFunctionTransform TransferFunctionZeros TransformationClass TransformationFunction TransformationFunctions TransformationMatrix TransformedDistribution TransformedField TransformedProcess TransformedRegion TransitionDirection TransitionDuration TransitionEffect TransitiveClosureGraph TransitiveReductionGraph Translate TranslationOptions TranslationTransform Transliterate Transparent TransparentColor Transpose TransposeLayer TrapSelection TravelDirections TravelDirectionsData TravelDistance TravelDistanceList TravelMethod TravelTime TreeForm TreeGraph TreeGraphQ TreePlot TrendStyle Triangle TriangleCenter TriangleConstruct TriangleMeasurement TriangleWave TriangularDistribution TriangulateMesh Trig TrigExpand TrigFactor TrigFactorList Trigger TrigReduce TrigToExp TrimmedMean TrimmedVariance TropicalStormData True TrueQ TruncatedDistribution TruncatedPolyhedron TsallisQExponentialDistribution TsallisQGaussianDistribution TTest Tube TubeBezierCurveBox TubeBezierCurveBoxOptions TubeBox TubeBoxOptions TubeBSplineCurveBox TubeBSplineCurveBoxOptions Tuesday TukeyLambdaDistribution TukeyWindow TunnelData Tuples TuranGraph TuringMachine TuttePolynomial TwoWayRule Typed TypeSpecifier' +
+      'UnateQ Uncompress UnconstrainedParameters Undefined UnderBar Underflow Underlined Underoverscript UnderoverscriptBox UnderoverscriptBoxOptions Underscript UnderscriptBox UnderscriptBoxOptions UnderseaFeatureData UndirectedEdge UndirectedGraph UndirectedGraphQ UndoOptions UndoTrackedVariables Unequal UnequalTo Unevaluated UniformDistribution UniformGraphDistribution UniformPolyhedron UniformSumDistribution Uninstall Union UnionPlus Unique UnitaryMatrixQ UnitBox UnitConvert UnitDimensions Unitize UnitRootTest UnitSimplify UnitStep UnitSystem UnitTriangle UnitVector UnitVectorLayer UnityDimensions UniverseModelData UniversityData UnixTime Unprotect UnregisterExternalEvaluator UnsameQ UnsavedVariables Unset UnsetShared UntrackedVariables Up UpArrow UpArrowBar UpArrowDownArrow Update UpdateDynamicObjects UpdateDynamicObjectsSynchronous UpdateInterval UpdateSearchIndex UpDownArrow UpEquilibrium UpperCaseQ UpperLeftArrow UpperRightArrow UpperTriangularize UpperTriangularMatrixQ Upsample UpSet UpSetDelayed UpTee UpTeeArrow UpTo UpValues URL URLBuild URLDecode URLDispatcher URLDownload URLDownloadSubmit URLEncode URLExecute URLExpand URLFetch URLFetchAsynchronous URLParse URLQueryDecode URLQueryEncode URLRead URLResponseTime URLSave URLSaveAsynchronous URLShorten URLSubmit UseGraphicsRange UserDefinedWavelet Using UsingFrontEnd UtilityFunction' +
+      'V2Get ValenceErrorHandling ValidationLength ValidationSet Value ValueBox ValueBoxOptions ValueDimensions ValueForm ValuePreprocessingFunction ValueQ Values ValuesData Variables Variance VarianceEquivalenceTest VarianceEstimatorFunction VarianceGammaDistribution VarianceTest VectorAngle VectorAround VectorColorFunction VectorColorFunctionScaling VectorDensityPlot VectorGlyphData VectorGreater VectorGreaterEqual VectorLess VectorLessEqual VectorMarkers VectorPlot VectorPlot3D VectorPoints VectorQ Vectors VectorScale VectorStyle Vee Verbatim Verbose VerboseConvertToPostScriptPacket VerificationTest VerifyConvergence VerifyDerivedKey VerifyDigitalSignature VerifyInterpretation VerifySecurityCertificates VerifySolutions VerifyTestAssumptions Version VersionNumber VertexAdd VertexCapacity VertexColors VertexComponent VertexConnectivity VertexContract VertexCoordinateRules VertexCoordinates VertexCorrelationSimilarity VertexCosineSimilarity VertexCount VertexCoverQ VertexDataCoordinates VertexDegree VertexDelete VertexDiceSimilarity VertexEccentricity VertexInComponent VertexInDegree VertexIndex VertexJaccardSimilarity VertexLabeling VertexLabels VertexLabelStyle VertexList VertexNormals VertexOutComponent VertexOutDegree VertexQ VertexRenderingFunction VertexReplace VertexShape VertexShapeFunction VertexSize VertexStyle VertexTextureCoordinates VertexWeight VertexWeightedGraphQ Vertical VerticalBar VerticalForm VerticalGauge VerticalSeparator VerticalSlider VerticalTilde ViewAngle ViewCenter ViewMatrix ViewPoint ViewPointSelectorSettings ViewPort ViewProjection ViewRange ViewVector ViewVertical VirtualGroupData Visible VisibleCell VoiceStyleData VoigtDistribution VolcanoData Volume VonMisesDistribution VoronoiMesh' +
+      'WaitAll WaitAsynchronousTask WaitNext WaitUntil WakebyDistribution WalleniusHypergeometricDistribution WaringYuleDistribution WarpingCorrespondence WarpingDistance WatershedComponents WatsonUSquareTest WattsStrogatzGraphDistribution WaveletBestBasis WaveletFilterCoefficients WaveletImagePlot WaveletListPlot WaveletMapIndexed WaveletMatrixPlot WaveletPhi WaveletPsi WaveletScale WaveletScalogram WaveletThreshold WeaklyConnectedComponents WeaklyConnectedGraphComponents WeaklyConnectedGraphQ WeakStationarity WeatherData WeatherForecastData WebAudioSearch WebElementObject WeberE WebExecute WebImage WebImageSearch WebSearch WebSessionObject WebSessions WebWindowObject Wedge Wednesday WeibullDistribution WeierstrassE1 WeierstrassE2 WeierstrassE3 WeierstrassEta1 WeierstrassEta2 WeierstrassEta3 WeierstrassHalfPeriods WeierstrassHalfPeriodW1 WeierstrassHalfPeriodW2 WeierstrassHalfPeriodW3 WeierstrassInvariantG2 WeierstrassInvariantG3 WeierstrassInvariants WeierstrassP WeierstrassPPrime WeierstrassSigma WeierstrassZeta WeightedAdjacencyGraph WeightedAdjacencyMatrix WeightedData WeightedGraphQ Weights WelchWindow WheelGraph WhenEvent Which While White WhiteNoiseProcess WhitePoint Whitespace WhitespaceCharacter WhittakerM WhittakerW WienerFilter WienerProcess WignerD WignerSemicircleDistribution WikipediaData WikipediaSearch WilksW WilksWTest WindDirectionData WindingCount WindingPolygon WindowClickSelect WindowElements WindowFloating WindowFrame WindowFrameElements WindowMargins WindowMovable WindowOpacity WindowPersistentStyles WindowSelected WindowSize WindowStatusArea WindowTitle WindowToolbars WindowWidth WindSpeedData WindVectorData WinsorizedMean WinsorizedVariance WishartMatrixDistribution With WolframAlpha WolframAlphaDate WolframAlphaQuantity WolframAlphaResult WolframLanguageData Word WordBoundary WordCharacter WordCloud WordCount WordCounts WordData WordDefinition WordFrequency WordFrequencyData WordList WordOrientation WordSearch WordSelectionFunction WordSeparators WordSpacings WordStem WordTranslation WorkingPrecision WrapAround Write WriteLine WriteString Wronskian' +
+      'XMLElement XMLObject XMLTemplate Xnor Xor XYZColor' +
+      'Yellow Yesterday YuleDissimilarity' +
+      'ZernikeR ZeroSymmetric ZeroTest ZeroWidthTimes Zeta ZetaZero ZIPCodeData ZipfDistribution ZoomCenter ZoomFactor ZTest ZTransform' +
+      '$Aborted $ActivationGroupID $ActivationKey $ActivationUserRegistered $AddOnsDirectory $AllowExternalChannelFunctions $AssertFunction $Assumptions $AsynchronousTask $AudioInputDevices $AudioOutputDevices $BaseDirectory $BatchInput $BatchOutput $BlockchainBase $BoxForms $ByteOrdering $CacheBaseDirectory $Canceled $ChannelBase $CharacterEncoding $CharacterEncodings $CloudBase $CloudConnected $CloudCreditsAvailable $CloudEvaluation $CloudExpressionBase $CloudObjectNameFormat $CloudObjectURLType $CloudRootDirectory $CloudSymbolBase $CloudUserID $CloudUserUUID $CloudVersion $CloudVersionNumber $CloudWolframEngineVersionNumber $CommandLine $CompilationTarget $ConditionHold $ConfiguredKernels $Context $ContextPath $ControlActiveSetting $Cookies $CookieStore $CreationDate $CurrentLink $CurrentTask $CurrentWebSession $DateStringFormat $DefaultAudioInputDevice $DefaultAudioOutputDevice $DefaultFont $DefaultFrontEnd $DefaultImagingDevice $DefaultLocalBase $DefaultMailbox $DefaultNetworkInterface $DefaultPath $Display $DisplayFunction $DistributedContexts $DynamicEvaluation $Echo $EmbedCodeEnvironments $EmbeddableServices $EntityStores $Epilog $EvaluationCloudBase $EvaluationCloudObject $EvaluationEnvironment $ExportFormats $Failed $FinancialDataSource $FontFamilies $FormatType $FrontEnd $FrontEndSession $GeoEntityTypes $GeoLocation $GeoLocationCity $GeoLocationCountry $GeoLocationPrecision $GeoLocationSource $HistoryLength $HomeDirectory $HTMLExportRules $HTTPCookies $HTTPRequest $IgnoreEOF $ImageFormattingWidth $ImagingDevice $ImagingDevices $ImportFormats $IncomingMailSettings $InitialDirectory $Initialization $InitializationContexts $Input $InputFileName $InputStreamMethods $Inspector $InstallationDate $InstallationDirectory $InterfaceEnvironment $InterpreterTypes $IterationLimit $KernelCount $KernelID $Language $LaunchDirectory $LibraryPath $LicenseExpirationDate $LicenseID $LicenseProcesses $LicenseServer $LicenseSubprocesses $LicenseType $Line $Linked $LinkSupported $LoadedFiles $LocalBase $LocalSymbolBase $MachineAddresses $MachineDomain $MachineDomains $MachineEpsilon $MachineID $MachineName $MachinePrecision $MachineType $MaxExtraPrecision $MaxLicenseProcesses $MaxLicenseSubprocesses $MaxMachineNumber $MaxNumber $MaxPiecewiseCases $MaxPrecision $MaxRootDegree $MessageGroups $MessageList $MessagePrePrint $Messages $MinMachineNumber $MinNumber $MinorReleaseNumber $MinPrecision $MobilePhone $ModuleNumber $NetworkConnected $NetworkInterfaces $NetworkLicense $NewMessage $NewSymbol $Notebooks $NoValue $NumberMarks $Off $OperatingSystem $Output $OutputForms $OutputSizeLimit $OutputStreamMethods $Packages $ParentLink $ParentProcessID $PasswordFile $PatchLevelID $Path $PathnameSeparator $PerformanceGoal $Permissions $PermissionsGroupBase $PersistenceBase $PersistencePath $PipeSupported $PlotTheme $Post $Pre $PreferencesDirectory $PreInitialization $PrePrint $PreRead $PrintForms $PrintLiteral $Printout3DPreviewer $ProcessID $ProcessorCount $ProcessorType $ProductInformation $ProgramName $PublisherID $RandomState $RecursionLimit $RegisteredDeviceClasses $RegisteredUserName $ReleaseNumber $RequesterAddress $RequesterWolframID $RequesterWolframUUID $ResourceSystemBase $RootDirectory $ScheduledTask $ScriptCommandLine $ScriptInputString $SecuredAuthenticationKeyTokens $ServiceCreditsAvailable $Services $SessionID $SetParentLink $SharedFunctions $SharedVariables $SoundDisplay $SoundDisplayFunction $SourceLink $SSHAuthentication $SummaryBoxDataSizeLimit $SuppressInputFormHeads $SynchronousEvaluation $SyntaxHandler $System $SystemCharacterEncoding $SystemID $SystemMemory $SystemShell $SystemTimeZone $SystemWordLength $TemplatePath $TemporaryDirectory $TemporaryPrefix $TestFileName $TextStyle $TimedOut $TimeUnit $TimeZone $TimeZoneEntity $TopDirectory $TraceOff $TraceOn $TracePattern $TracePostAction $TracePreAction $UnitSystem $Urgent $UserAddOnsDirectory $UserAgentLanguages $UserAgentMachine $UserAgentName $UserAgentOperatingSystem $UserAgentString $UserAgentVersion $UserBaseDirectory $UserDocumentsDirectory $Username $UserName $UserURLBase $Version $VersionNumber $VoiceStyles $WolframID $WolframUUID',
     contains: [
-      {
-        className: 'comment',
-        begin: /\(\*/, end: /\*\)/
-      },
-      hljs.APOS_STRING_MODE,
+      hljs.COMMENT('\\(\\*', '\\*\\)', {contains: ['self']}),
       hljs.QUOTE_STRING_MODE,
-      hljs.C_NUMBER_MODE,
-      {
-        begin: /\{/, end: /\}/,
-        illegal: /:/
-      }
+      hljs.C_NUMBER_MODE
     ]
   };
 };
@@ -29618,6 +31543,7 @@ module.exports = function(hljs) {
     begin: '\\\\[abfnrtv]\\|\\\\x[0-9a-fA-F]*\\\\\\|%[-+# *.0-9]*[dioxXucsfeEgGp]',
     relevance: 0
   };
+  STRING.contains = STRING.contains.slice() // we need our own copy of contains
   STRING.contains.push(STRING_FMT);
 
   var IMPLICATION = {
@@ -29651,7 +31577,8 @@ module.exports = function(hljs) {
       hljs.NUMBER_MODE,
       ATOM,
       STRING,
-      {begin: /:-/} // relevance booster
+      {begin: /:-/}, // relevance booster
+      {begin: /\.$/} // relevance booster
     ]
   };
 };
@@ -29714,7 +31641,8 @@ module.exports = function(hljs) {
         ')',
         end: '\\s'
       },
-      hljs.COMMENT('[;#]', '$'),
+      // lines ending with ; or # aren't really comments, probably auto-detect fail
+      hljs.COMMENT('[;#](?!\s*$)', '$'),
       hljs.C_BLOCK_COMMENT_MODE,
       hljs.QUOTE_STRING_MODE,
       {
@@ -30491,6 +32419,7 @@ module.exports = function(hljs) {
       hljs.C_BLOCK_COMMENT_MODE,
       hljs.C_NUMBER_MODE,
       hljs.QUOTE_STRING_MODE,
+      hljs.APOS_STRING_MODE,
       {
         className: 'string',
         variants: [
@@ -30498,25 +32427,29 @@ module.exports = function(hljs) {
             begin: '@"', end: '"',
             illegal: '\\n',
             contains: [hljs.BACKSLASH_ESCAPE]
-          },
-          {
-            begin: '\'', end: '[^\\\\]\'',
-            illegal: '[^\\\\][^\']'
           }
         ]
       },
       {
         className: 'meta',
-        begin: '#',
-        end: '$',
+        begin: /#\s*[a-z]+\b/, end: /$/,
+        keywords: {
+          'meta-keyword':
+            'if else elif endif define undef warning error line ' +
+            'pragma ifdef ifndef include'
+        },
         contains: [
           {
+            begin: /\\\n/, relevance: 0
+          },
+          hljs.inherit(hljs.QUOTE_STRING_MODE, {className: 'meta-string'}),
+          {
             className: 'meta-string',
-            variants: [
-              { begin: '\"', end: '\"' },
-              { begin: '<', end: '>' }
-            ]
-          }
+            begin: /<.*?>/, end: /$/,
+            illegal: '\\n',
+          },
+          hljs.C_LINE_COMMENT_MODE,
+          hljs.C_BLOCK_COMMENT_MODE
         ]
       },
       {
@@ -31059,7 +32992,7 @@ module.exports = function(hljs) {
   var DOLLAR_STRING = '\\$([a-zA-Z_]?|[a-zA-Z_][a-zA-Z_0-9]*)\\$';
   var LABEL = '<<\\s*' + UNQUOTED_IDENT + '\\s*>>';
 
-  var SQL_KW = 
+  var SQL_KW =
     // https://www.postgresql.org/docs/11/static/sql-keywords-appendix.html
     // https://www.postgresql.org/docs/11/static/sql-commands.html
     // SQL commands (starting words)
@@ -31109,7 +33042,7 @@ module.exports = function(hljs) {
     'SUPERUSER NOSUPERUSER CREATEDB NOCREATEDB CREATEROLE NOCREATEROLE INHERIT NOINHERIT ' +
     'LOGIN NOLOGIN REPLICATION NOREPLICATION BYPASSRLS NOBYPASSRLS ';
 
-  var PLPGSQL_KW = 
+  var PLPGSQL_KW =
     'ALIAS BEGIN CONSTANT DECLARE END EXCEPTION RETURN PERFORM|10 RAISE GET DIAGNOSTICS ' +
     'STACKED|10 FOREACH LOOP ELSIF EXIT WHILE REVERSE SLICE DEBUG LOG INFO NOTICE WARNING ASSERT ' +
     'OPEN ';
@@ -31132,8 +33065,8 @@ module.exports = function(hljs) {
     'REGNAMESPACE|10 REGCONFIG|10 REGDICTIONARY|10 ';// +
     // some types from standard extensions
     'HSTORE|10 LO LTREE|10 ';
-    
-  var TYPES_RE = 
+
+  var TYPES_RE =
     TYPES.trim()
          .split(' ')
          .map( function(val) { return val.split('|')[0]; } )
@@ -31320,7 +33253,7 @@ module.exports = function(hljs) {
     //
     'GROUPING CAST ';
 
-    var FUNCTIONS_RE = 
+    var FUNCTIONS_RE =
       FUNCTIONS.trim()
                .split(' ')
                .map( function(val) { return val.split('|')[0]; } )
@@ -31744,6 +33677,12 @@ module.exports = function(hljs) {
     begin: hljs.IDENT_RE + '\'', relevance: 0
   };
 
+  var NUMBER_MODE = {
+    className: 'number',
+    begin: '(-?)(\\b0[xX][a-fA-F0-9]+|\\b0[bB][01]+|(\\b\\d+(_\\d+)?(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)',
+    relevance: 0
+  };
+
   /**
    * The `FUNCTION` and `CLASS` modes were intentionally removed to simplify
    * highlighting and fix cases like
@@ -31763,7 +33702,7 @@ module.exports = function(hljs) {
       QUOTE_STRING_MODE,
       SINGLE_QUOTE_CHAR_MODE,
       PRIMED_NAME,
-      hljs.C_NUMBER_MODE,
+      NUMBER_MODE,
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE
     ]
@@ -31779,27 +33718,66 @@ module.exports = function(hljs) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = function(hljs) {
+module.exports = function(hljs){
+
+  var TYPES =
+    ["string", "char", "byte", "int", "long", "bool",  "decimal",  "single",
+     "double", "DateTime", "xml", "array", "hashtable", "void"];
+
+  // https://msdn.microsoft.com/en-us/library/ms714428(v=vs.85).aspx
+  var VALID_VERBS =
+    'Add|Clear|Close|Copy|Enter|Exit|Find|Format|Get|Hide|Join|Lock|' +
+    'Move|New|Open|Optimize|Pop|Push|Redo|Remove|Rename|Reset|Resize|' +
+    'Search|Select|Set|Show|Skip|Split|Step|Switch|Undo|Unlock|' +
+    'Watch|Backup|Checkpoint|Compare|Compress|Convert|ConvertFrom|' +
+    'ConvertTo|Dismount|Edit|Expand|Export|Group|Import|Initialize|' +
+    'Limit|Merge|New|Out|Publish|Restore|Save|Sync|Unpublish|Update|' +
+    'Approve|Assert|Complete|Confirm|Deny|Disable|Enable|Install|Invoke|Register|' +
+    'Request|Restart|Resume|Start|Stop|Submit|Suspend|Uninstall|' +
+    'Unregister|Wait|Debug|Measure|Ping|Repair|Resolve|Test|Trace|Connect|' +
+    'Disconnect|Read|Receive|Send|Write|Block|Grant|Protect|Revoke|Unblock|' +
+    'Unprotect|Use|ForEach|Sort|Tee|Where';
+
+  var COMPARISON_OPERATORS =
+    '-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt|' +
+    '-cle|-clike|-clt|-cmatch|-cne|-cnotcontains|-cnotlike|-cnotmatch|-contains|' +
+    '-creplace|-csplit|-eq|-exact|-f|-file|-ge|-gt|-icontains|-ieq|-ige|-igt|' +
+    '-ile|-ilike|-ilt|-imatch|-in|-ine|-inotcontains|-inotlike|-inotmatch|' +
+    '-ireplace|-is|-isnot|-isplit|-join|-le|-like|-lt|-match|-ne|-not|' +
+    '-notcontains|-notin|-notlike|-notmatch|-or|-regex|-replace|-shl|-shr|' +
+    '-split|-wildcard|-xor';
+
+  var KEYWORDS = {
+    keyword: 'if else foreach return do while until elseif begin for trap data dynamicparam ' +
+    'end break throw param continue finally in switch exit filter try process catch ' +
+    'hidden static parameter'
+    // TODO: 'validate[A-Z]+' can't work in keywords
+  };
+
+  var TITLE_NAME_RE = /\w[\w\d]*((-)[\w\d]+)*/;
+
   var BACKTICK_ESCAPE = {
     begin: '`[\\s\\S]',
     relevance: 0
   };
+
   var VAR = {
     className: 'variable',
     variants: [
-      {begin: /\$[\w\d][\w\d_:]*/}
+      { begin: /\$\B/ },
+      { className: 'keyword', begin: /\$this/ },
+      { begin: /\$[\w\d][\w\d_:]*/ }
     ]
   };
+
   var LITERAL = {
     className: 'literal',
     begin: /\$(null|true|false)\b/
   };
+
   var QUOTE_STRING = {
-    className: 'string',
-    variants: [
-      { begin: /"/, end: /"/ },
-      { begin: /@"/, end: /^"@/ }
-    ],
+    className: "string",
+    variants: [{ begin: /"/, end: /"/ }, { begin: /@"/, end: /^"@/ }],
     contains: [
       BACKTICK_ESCAPE,
       VAR,
@@ -31809,6 +33787,7 @@ module.exports = function(hljs) {
       }
     ]
   };
+
   var APOS_STRING = {
     className: 'string',
     variants: [
@@ -31818,14 +33797,17 @@ module.exports = function(hljs) {
   };
 
   var PS_HELPTAGS = {
-    className: 'doctag',
+    className: "doctag",
     variants: [
-      /* no paramater help tags */ 
-      { begin: /\.(synopsis|description|example|inputs|outputs|notes|link|component|role|functionality)/ },
+      /* no paramater help tags */
+      {
+        begin: /\.(synopsis|description|example|inputs|outputs|notes|link|component|role|functionality)/
+      },
       /* one parameter help tags */
       { begin: /\.(parameter|forwardhelptargetname|forwardhelpcategory|remotehelprunspace|externalhelp)\s+\S+/ }
     ]
   };
+
   var PS_COMMENT = hljs.inherit(
     hljs.COMMENT(null, null),
     {
@@ -31839,24 +33821,143 @@ module.exports = function(hljs) {
     }
   );
 
-  return {
-    aliases: ['ps'],
-    lexemes: /-?[A-z\.\-]+/,
-    case_insensitive: true,
-    keywords: {
-      keyword: 'if else foreach return function do while until elseif begin for trap data dynamicparam end break throw param continue finally in switch exit filter try process catch',
-      built_in: 'Add-Computer Add-Content Add-History Add-JobTrigger Add-Member Add-PSSnapin Add-Type Checkpoint-Computer Clear-Content Clear-EventLog Clear-History Clear-Host Clear-Item Clear-ItemProperty Clear-Variable Compare-Object Complete-Transaction Connect-PSSession Connect-WSMan Convert-Path ConvertFrom-Csv ConvertFrom-Json ConvertFrom-SecureString ConvertFrom-StringData ConvertTo-Csv ConvertTo-Html ConvertTo-Json ConvertTo-SecureString ConvertTo-Xml Copy-Item Copy-ItemProperty Debug-Process Disable-ComputerRestore Disable-JobTrigger Disable-PSBreakpoint Disable-PSRemoting Disable-PSSessionConfiguration Disable-WSManCredSSP Disconnect-PSSession Disconnect-WSMan Disable-ScheduledJob Enable-ComputerRestore Enable-JobTrigger Enable-PSBreakpoint Enable-PSRemoting Enable-PSSessionConfiguration Enable-ScheduledJob Enable-WSManCredSSP Enter-PSSession Exit-PSSession Export-Alias Export-Clixml Export-Console Export-Counter Export-Csv Export-FormatData Export-ModuleMember Export-PSSession ForEach-Object Format-Custom Format-List Format-Table Format-Wide Get-Acl Get-Alias Get-AuthenticodeSignature Get-ChildItem Get-Command Get-ComputerRestorePoint Get-Content Get-ControlPanelItem Get-Counter Get-Credential Get-Culture Get-Date Get-Event Get-EventLog Get-EventSubscriber Get-ExecutionPolicy Get-FormatData Get-Host Get-HotFix Get-Help Get-History Get-IseSnippet Get-Item Get-ItemProperty Get-Job Get-JobTrigger Get-Location Get-Member Get-Module Get-PfxCertificate Get-Process Get-PSBreakpoint Get-PSCallStack Get-PSDrive Get-PSProvider Get-PSSession Get-PSSessionConfiguration Get-PSSnapin Get-Random Get-ScheduledJob Get-ScheduledJobOption Get-Service Get-TraceSource Get-Transaction Get-TypeData Get-UICulture Get-Unique Get-Variable Get-Verb Get-WinEvent Get-WmiObject Get-WSManCredSSP Get-WSManInstance Group-Object Import-Alias Import-Clixml Import-Counter Import-Csv Import-IseSnippet Import-LocalizedData Import-PSSession Import-Module Invoke-AsWorkflow Invoke-Command Invoke-Expression Invoke-History Invoke-Item Invoke-RestMethod Invoke-WebRequest Invoke-WmiMethod Invoke-WSManAction Join-Path Limit-EventLog Measure-Command Measure-Object Move-Item Move-ItemProperty New-Alias New-Event New-EventLog New-IseSnippet New-Item New-ItemProperty New-JobTrigger New-Object New-Module New-ModuleManifest New-PSDrive New-PSSession New-PSSessionConfigurationFile New-PSSessionOption New-PSTransportOption New-PSWorkflowExecutionOption New-PSWorkflowSession New-ScheduledJobOption New-Service New-TimeSpan New-Variable New-WebServiceProxy New-WinEvent New-WSManInstance New-WSManSessionOption Out-Default Out-File Out-GridView Out-Host Out-Null Out-Printer Out-String Pop-Location Push-Location Read-Host Receive-Job Register-EngineEvent Register-ObjectEvent Register-PSSessionConfiguration Register-ScheduledJob Register-WmiEvent Remove-Computer Remove-Event Remove-EventLog Remove-Item Remove-ItemProperty Remove-Job Remove-JobTrigger Remove-Module Remove-PSBreakpoint Remove-PSDrive Remove-PSSession Remove-PSSnapin Remove-TypeData Remove-Variable Remove-WmiObject Remove-WSManInstance Rename-Computer Rename-Item Rename-ItemProperty Reset-ComputerMachinePassword Resolve-Path Restart-Computer Restart-Service Restore-Computer Resume-Job Resume-Service Save-Help Select-Object Select-String Select-Xml Send-MailMessage Set-Acl Set-Alias Set-AuthenticodeSignature Set-Content Set-Date Set-ExecutionPolicy Set-Item Set-ItemProperty Set-JobTrigger Set-Location Set-PSBreakpoint Set-PSDebug Set-PSSessionConfiguration Set-ScheduledJob Set-ScheduledJobOption Set-Service Set-StrictMode Set-TraceSource Set-Variable Set-WmiInstance Set-WSManInstance Set-WSManQuickConfig Show-Command Show-ControlPanelItem Show-EventLog Sort-Object Split-Path Start-Job Start-Process Start-Service Start-Sleep Start-Transaction Start-Transcript Stop-Computer Stop-Job Stop-Process Stop-Service Stop-Transcript Suspend-Job Suspend-Service Tee-Object Test-ComputerSecureChannel Test-Connection Test-ModuleManifest Test-Path Test-PSSessionConfigurationFile Trace-Command Unblock-File Undo-Transaction Unregister-Event Unregister-PSSessionConfiguration Unregister-ScheduledJob Update-FormatData Update-Help Update-List Update-TypeData Use-Transaction Wait-Event Wait-Job Wait-Process Where-Object Write-Debug Write-Error Write-EventLog Write-Host Write-Output Write-Progress Write-Verbose Write-Warning Add-MDTPersistentDrive Disable-MDTMonitorService Enable-MDTMonitorService Get-MDTDeploymentShareStatistics Get-MDTMonitorData Get-MDTOperatingSystemCatalog Get-MDTPersistentDrive Import-MDTApplication Import-MDTDriver Import-MDTOperatingSystem Import-MDTPackage Import-MDTTaskSequence New-MDTDatabase Remove-MDTMonitorData Remove-MDTPersistentDrive Restore-MDTPersistentDrive Set-MDTMonitorData Test-MDTDeploymentShare Test-MDTMonitorData Update-MDTDatabaseSchema Update-MDTDeploymentShare Update-MDTLinkedDS Update-MDTMedia Update-MDTMedia Add-VamtProductKey Export-VamtData Find-VamtManagedMachine Get-VamtConfirmationId Get-VamtProduct Get-VamtProductKey Import-VamtData Initialize-VamtData Install-VamtConfirmationId Install-VamtProductActivation Install-VamtProductKey Update-VamtProduct',
-      nomarkup: '-ne -eq -lt -gt -ge -le -not -like -notlike -match -notmatch -contains -notcontains -in -notin -replace'
-    },
+  var CMDLETS = {
+    className: 'built_in',
+    variants: [
+      { begin: '('.concat(VALID_VERBS, ')+(-)[\\w\\d]+') }
+    ]
+  };
+
+  var PS_CLASS = {
+    className: 'class',
+    beginKeywords: 'class enum', end: /\s*[{]/, excludeEnd: true,
+    relevance: 0,
+    contains: [hljs.TITLE_MODE]
+  };
+
+  var PS_FUNCTION = {
+    className: 'function',
+    begin: /function\s+/, end: /\s*\{|$/,
+    excludeEnd: true,
+    returnBegin: true,
+    relevance: 0,
     contains: [
-      BACKTICK_ESCAPE,
-      hljs.NUMBER_MODE,
+      { begin: "function", relevance: 0, className: "keyword" },
+      { className: "title",
+        begin: TITLE_NAME_RE, relevance:0 },
+      { begin: /\(/, end: /\)/, className: "params",
+        relevance: 0,
+        contains: [VAR] }
+      // CMDLETS
+    ]
+  };
+
+  // Using statment, plus type, plus assembly name.
+  var PS_USING = {
+    begin: /using\s/, end: /$/,
+    returnBegin: true,
+    contains: [
       QUOTE_STRING,
       APOS_STRING,
-      LITERAL,
-      VAR,
-      PS_COMMENT
+      { className: 'keyword', begin: /(using|assembly|command|module|namespace|type)/ }
     ]
+  };
+
+  // Comperison operators & function named parameters.
+  var PS_ARGUMENTS = {
+    variants: [
+      // PS literals are pretty verbose so it's a good idea to accent them a bit.
+      { className: 'operator', begin: '('.concat(COMPARISON_OPERATORS, ')\\b') },
+      { className: 'literal', begin: /(-)[\w\d]+/, relevance:0 }
+    ]
+  };
+
+  var STATIC_MEMBER = {
+    className: 'selector-tag',
+    begin: /::\w+\b/, end: /$/,
+    returnBegin: true,
+    contains: [
+      { className: 'attribute', begin: /\w+/, endsParent: true }
+    ]
+  };
+
+  var HASH_SIGNS = {
+    className: 'selector-tag',
+    begin: /\@\B/,
+    relevance: 0
+  };
+
+  var PS_NEW_OBJECT_TYPE = {
+    className: 'built_in',
+    begin: /New-Object\s+\w/, end: /$/,
+    returnBegin: true,
+    contains: [
+      { begin: /New-Object\s+/, relevance: 0 },
+      { className: 'meta', begin: /([\w\.])+/, endsParent: true }
+    ]
+  };
+
+  // It's a very general rule so I'll narrow it a bit with some strict boundaries
+  // to avoid any possible false-positive collisions!
+  var PS_METHODS = {
+    className: 'function',
+    begin: /\[.*\]\s*[\w]+[ ]??\(/, end: /$/,
+    returnBegin: true,
+    relevance: 0,
+    contains: [
+      {
+        className: 'keyword', begin: '('.concat(
+        KEYWORDS.keyword.toString().replace(/\s/g, '|'
+        ), ')\\b'),
+        endsParent: true,
+        relevance: 0
+      },
+      hljs.inherit(hljs.TITLE_MODE, { endsParent: true })
+    ]
+  };
+
+  var GENTLEMANS_SET = [
+    // STATIC_MEMBER,
+    PS_METHODS,
+    PS_COMMENT,
+    BACKTICK_ESCAPE,
+    hljs.NUMBER_MODE,
+    QUOTE_STRING,
+    APOS_STRING,
+    // PS_NEW_OBJECT_TYPE,
+    CMDLETS,
+    VAR,
+    LITERAL,
+    HASH_SIGNS
+  ];
+
+  var PS_TYPE = {
+    begin: /\[/, end: /\]/,
+    excludeBegin: true,
+    excludeEnd: true,
+    relevance: 0,
+    contains: [].concat(
+      'self',
+      GENTLEMANS_SET,
+      { begin: "(" + TYPES.join("|") + ")", className: "built_in", relevance:0 },
+      { className: 'type', begin: /[\.\w\d]+/, relevance: 0 }
+    )
+  };
+
+  PS_METHODS.contains.unshift(PS_TYPE)
+
+  return {
+    aliases: ["ps", "ps1"],
+    lexemes: /-?[A-z\.\-]+/,
+    case_insensitive: true,
+    keywords: KEYWORDS,
+    contains: GENTLEMANS_SET.concat(
+      PS_CLASS,
+      PS_FUNCTION,
+      PS_USING,
+      PS_ARGUMENTS,
+      PS_TYPE
+    )
   };
 };
 
@@ -32327,17 +34428,22 @@ function(hljs) {
   return {
     aliases: ['pb', 'pbi'],
     keywords: // PB IDE color: #006666 (Blue Stone) + Bold
-      // The following keywords list was taken and adapted from GuShH's PureBasic language file for GeSHi...
-      'And As Break CallDebugger Case CompilerCase CompilerDefault CompilerElse CompilerEndIf CompilerEndSelect ' +
-      'CompilerError CompilerIf CompilerSelect Continue Data DataSection EndDataSection Debug DebugLevel ' +
-      'Default Define Dim DisableASM DisableDebugger DisableExplicit Else ElseIf EnableASM ' +
-      'EnableDebugger EnableExplicit End EndEnumeration EndIf EndImport EndInterface EndMacro EndProcedure ' +
-      'EndSelect EndStructure EndStructureUnion EndWith Enumeration Extends FakeReturn For Next ForEach ' +
-      'ForEver Global Gosub Goto If Import ImportC IncludeBinary IncludeFile IncludePath Interface Macro ' +
-      'NewList Not Or ProcedureReturn Protected Prototype ' +
-      'PrototypeC Read ReDim Repeat Until Restore Return Select Shared Static Step Structure StructureUnion ' +
-      'Swap To Wend While With XIncludeFile XOr ' +
-      'Procedure ProcedureC ProcedureCDLL ProcedureDLL Declare DeclareC DeclareCDLL DeclareDLL',
+      // Keywords from all version of PureBASIC 5.00 upward ...
+      'Align And Array As Break CallDebugger Case CompilerCase CompilerDefault ' +
+      'CompilerElse CompilerElseIf CompilerEndIf CompilerEndSelect CompilerError ' +
+      'CompilerIf CompilerSelect CompilerWarning Continue Data DataSection Debug ' +
+      'DebugLevel Declare DeclareC DeclareCDLL DeclareDLL DeclareModule Default ' +
+      'Define Dim DisableASM DisableDebugger DisableExplicit Else ElseIf EnableASM ' +
+      'EnableDebugger EnableExplicit End EndDataSection EndDeclareModule EndEnumeration ' +
+      'EndIf EndImport EndInterface EndMacro EndModule EndProcedure EndSelect ' +
+      'EndStructure EndStructureUnion EndWith Enumeration EnumerationBinary Extends ' +
+      'FakeReturn For ForEach ForEver Global Gosub Goto If Import ImportC ' +
+      'IncludeBinary IncludeFile IncludePath Interface List Macro MacroExpandedCount ' +
+      'Map Module NewList NewMap Next Not Or Procedure ProcedureC ' +
+      'ProcedureCDLL ProcedureDLL ProcedureReturn Protected Prototype PrototypeC ReDim ' +
+      'Read Repeat Restore Return Runtime Select Shared Static Step Structure ' +
+      'StructureUnion Swap Threaded To UndefineMacro Until Until  UnuseModule ' +
+      'UseModule Wend While With XIncludeFile XOr',
     contains: [
       // COMMENTS | PB IDE color: #00AAAA (Persian Green)
       hljs.COMMENT(';', '$', {relevance: 0}),
@@ -32366,7 +34472,29 @@ function(hljs) {
       CONSTANTS
     ]
   };
-};
+}
+
+/*  ==============================================================================
+                                      CHANGELOG
+    ==============================================================================
+    - v.1.2 (2017-05-12)
+        -- BUG-FIX: Some keywords were accidentally joyned together. Now fixed.
+    - v.1.1 (2017-04-30)
+        -- Updated to PureBASIC 5.60.
+        -- Keywords list now built by extracting them from the PureBASIC SDK's
+           "SyntaxHilighting.dll" (from each PureBASIC version). Tokens from each
+           version are added to the list, and renamed or removed tokens are kept
+           for the sake of covering all versions of the language from PureBASIC
+           v5.00 upward. (NOTE: currently, there are no renamed or deprecated
+           tokens in the keywords list). For more info, see:
+           -- http://www.purebasic.fr/english/viewtopic.php?&p=506269
+           -- https://github.com/tajmone/purebasic-archives/tree/master/syntax-highlighting/guidelines
+    - v.1.0 (April 2016)
+        -- First release
+        -- Keywords list taken and adapted from GuShH's (Gustavo Julio Fiorenza)
+           PureBasic language file for GeSHi:
+           -- https://github.com/easybook/geshi/blob/master/geshi/purebasic.php
+*/;
 
 /***/ }),
 
@@ -32396,6 +34524,10 @@ module.exports = function(hljs) {
     keywords: KEYWORDS,
     illegal: /#/
   };
+  var LITERAL_BRACKET = {
+    begin: /\{\{/,
+    relevance: 0
+  };
   var STRING = {
     className: 'string',
     contains: [hljs.BACKSLASH_ESCAPE],
@@ -32412,11 +34544,11 @@ module.exports = function(hljs) {
       },
       {
         begin: /(fr|rf|f)'''/, end: /'''/,
-        contains: [hljs.BACKSLASH_ESCAPE, PROMPT, SUBST]
+        contains: [hljs.BACKSLASH_ESCAPE, PROMPT, LITERAL_BRACKET, SUBST]
       },
       {
         begin: /(fr|rf|f)"""/, end: /"""/,
-        contains: [hljs.BACKSLASH_ESCAPE, PROMPT, SUBST]
+        contains: [hljs.BACKSLASH_ESCAPE, PROMPT, LITERAL_BRACKET, SUBST]
       },
       {
         begin: /(u|r|ur)'/, end: /'/,
@@ -32434,11 +34566,11 @@ module.exports = function(hljs) {
       },
       {
         begin: /(fr|rf|f)'/, end: /'/,
-        contains: [hljs.BACKSLASH_ESCAPE, SUBST]
+        contains: [hljs.BACKSLASH_ESCAPE, LITERAL_BRACKET, SUBST]
       },
       {
         begin: /(fr|rf|f)"/, end: /"/,
-        contains: [hljs.BACKSLASH_ESCAPE, SUBST]
+        contains: [hljs.BACKSLASH_ESCAPE, LITERAL_BRACKET, SUBST]
       },
       hljs.APOS_STRING_MODE,
       hljs.QUOTE_STRING_MODE
@@ -32455,7 +34587,7 @@ module.exports = function(hljs) {
   var PARAMS = {
     className: 'params',
     begin: /\(/, end: /\)/,
-    contains: ['self', PROMPT, NUMBER, STRING]
+    contains: ['self', PROMPT, NUMBER, STRING, hljs.HASH_COMMENT_MODE]
   };
   SUBST.contains = [STRING, NUMBER, PROMPT];
   return {
@@ -32465,6 +34597,9 @@ module.exports = function(hljs) {
     contains: [
       PROMPT,
       NUMBER,
+      // eat "if" prior to string so that it won't accidentally be
+      // labeled as an f-string as in:
+      { beginKeywords: "if", relevance: 0 },
       STRING,
       hljs.HASH_COMMENT_MODE,
       {
@@ -33238,7 +35373,7 @@ function(hljs) {
   // ToDo: var PARAMETERS_PRINT = 'append as-value brief detail count-only file follow follow-only from interval terse value-list without-paging where info';
   // ToDo: var OPERATORS = '&& and ! not || or in ~ ^ & << >> + - * /';
   // ToDo: var TYPES = 'num number bool boolean str string ip ip6-prefix id time array';
-  // ToDo: The following tokens serve as delimiters in the grammar: ()  []  {}  :   ;   $   / 
+  // ToDo: The following tokens serve as delimiters in the grammar: ()  []  {}  :   ;   $   /
 
   var VAR_PREFIX = 'global local set for foreach';
 
@@ -33249,7 +35384,7 @@ function(hljs) {
       {begin: /\$\{(.*?)}/}
     ]
   };
-  
+
   var QUOTE_STRING = {
     className: 'string',
     begin: /"/, end: /"/,
@@ -33263,12 +35398,12 @@ function(hljs) {
       }
     ]
   };
-  
+
   var APOS_STRING = {
     className: 'string',
     begin: /'/, end: /'/
   };
-  
+
   var IPADDR = '((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\b';
   var IPADDR_wBITMASK =  IPADDR+'/(3[0-2]|[1-2][0-9]|\\d)';
   //////////////////////////////////////////////////////////////////////
@@ -33292,7 +35427,7 @@ function(hljs) {
           { begin: /^\[\</, end: /\>\]$/, },        // F# class declaration?
           { begin: /<\//, end: />/, },              // HTML tags
           { begin: /^facet /, end: /\}/, },         // roboconf - лютый костыль )))
-          { begin: '^1\\.\\.(\\d+)$', end: /$/, },  // tap  
+          { begin: '^1\\.\\.(\\d+)$', end: /$/, },  // tap
         ],
         illegal: /./,
       },
@@ -33301,7 +35436,7 @@ function(hljs) {
       APOS_STRING,
       VAR,
       { // attribute=value
-        begin: /[\w-]+\=([^\s\{\}\[\]\(\)]+)/, 
+        begin: /[\w-]+\=([^\s\{\}\[\]\(\)]+)/,
         relevance: 0,
         returnBegin: true,
         contains: [
@@ -33310,7 +35445,7 @@ function(hljs) {
             begin: /[^=]+/
           },
           {
-            begin: /=/, 
+            begin: /=/,
             endsWithParent:  true,
             relevance: 0,
             contains: [
@@ -33337,7 +35472,7 @@ function(hljs) {
               }, //*/
               {
                 // Не форматировать не классифицированные значения. Необходимо для исключения подсветки значений как built_in.
-                // className: 'number',  
+                // className: 'number',
                 begin: /("[^"]*"|[^\s\{\}\[\]]+)/,
               }, //*/
             ]
@@ -33350,7 +35485,7 @@ function(hljs) {
         begin: /\*[0-9a-fA-F]+/,
       }, //*/
 
-      { 
+      {
         begin: '\\b(' + COMMON_COMMANDS.split(' ').join('|') + ')([\\s\[\(]|\])',
         returnBegin: true,
         contains: [
@@ -33358,10 +35493,10 @@ function(hljs) {
             className: 'builtin-name', //'function',
             begin: /\w+/,
           },
-        ],  
+        ],
       },
-      
-      { 
+
+      {
         className: 'built_in',
         variants: [
           {begin: '(\\.\\./|/|\\s)((' + OBJECTS.split(' ').join('|') + ');?\\s)+',relevance: 10,},
@@ -33486,8 +35621,16 @@ module.exports = function(hljs) {
         // is the last character of a preceding identifier, as in: `func?4`
         begin: /\B\?(\\\d{1,3}|\\x[A-Fa-f0-9]{1,2}|\\u[A-Fa-f0-9]{4}|\\?\S)\b/
       },
-      {
-        begin: /<<(-?)\w+$/, end: /^\s*\w+$/,
+      { // heredocs
+        begin: /<<[-~]?'?(\w+)(?:.|\n)*?\n\s*\1\b/,
+        returnBegin: true,
+        contains: [
+          { begin: /<<[-~]?'?/ },
+          { begin: /\w+/,
+            endSameAsBegin: true,
+            contains: [hljs.BACKSLASH_ESCAPE, SUBST],
+          }
+        ]
       }
     ]
   };
@@ -33685,10 +35828,10 @@ module.exports = function(hljs) {
 module.exports = function(hljs) {
   var NUM_SUFFIX = '([ui](8|16|32|64|128|size)|f(32|64))\?';
   var KEYWORDS =
-    'alignof as be box break const continue crate do else enum extern ' +
-    'false fn for if impl in let loop match mod mut offsetof once priv ' +
-    'proc pub pure ref return self Self sizeof static struct super trait true ' +
-    'type typeof unsafe unsized use virtual while where yield move default';
+    'abstract as async await become box break const continue crate do dyn ' +
+    'else enum extern false final fn for if impl in let loop macro match mod ' +
+    'move mut override priv pub ref return self Self static struct super ' +
+    'trait true try type typeof unsafe unsized use virtual where while yield';
   var BUILTINS =
     // functions
     'drop ' +
@@ -34275,6 +36418,8 @@ module.exports = function(hljs) {
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
+  var AT_IDENTIFIER = '@[a-z-]+' // @font-face
+  var AT_MODIFIERS = "and or not only"
   var IDENT_RE = '[a-zA-Z-][a-zA-Z0-9_-]*';
   var VARIABLE = {
     className: 'variable',
@@ -34326,15 +36471,17 @@ module.exports = function(hljs) {
         relevance: 0
       },
       {
+        className: 'selector-pseudo',
         begin: ':(visited|valid|root|right|required|read-write|read-only|out-range|optional|only-of-type|only-child|nth-of-type|nth-last-of-type|nth-last-child|nth-child|not|link|left|last-of-type|last-child|lang|invalid|indeterminate|in-range|hover|focus|first-of-type|first-line|first-letter|first-child|first|enabled|empty|disabled|default|checked|before|after|active)'
       },
       {
+        className: 'selector-pseudo',
         begin: '::(after|before|choices|first-letter|first-line|repeat-index|repeat-item|selection|value)'
       },
       VARIABLE,
       {
         className: 'attribute',
-        begin: '\\b(z-index|word-wrap|word-spacing|word-break|width|widows|white-space|visibility|vertical-align|unicode-bidi|transition-timing-function|transition-property|transition-duration|transition-delay|transition|transform-style|transform-origin|transform|top|text-underline-position|text-transform|text-shadow|text-rendering|text-overflow|text-indent|text-decoration-style|text-decoration-line|text-decoration-color|text-decoration|text-align-last|text-align|tab-size|table-layout|right|resize|quotes|position|pointer-events|perspective-origin|perspective|page-break-inside|page-break-before|page-break-after|padding-top|padding-right|padding-left|padding-bottom|padding|overflow-y|overflow-x|overflow-wrap|overflow|outline-width|outline-style|outline-offset|outline-color|outline|orphans|order|opacity|object-position|object-fit|normal|none|nav-up|nav-right|nav-left|nav-index|nav-down|min-width|min-height|max-width|max-height|mask|marks|margin-top|margin-right|margin-left|margin-bottom|margin|list-style-type|list-style-position|list-style-image|list-style|line-height|letter-spacing|left|justify-content|initial|inherit|ime-mode|image-orientation|image-resolution|image-rendering|icon|hyphens|height|font-weight|font-variant-ligatures|font-variant|font-style|font-stretch|font-size-adjust|font-size|font-language-override|font-kerning|font-feature-settings|font-family|font|float|flex-wrap|flex-shrink|flex-grow|flex-flow|flex-direction|flex-basis|flex|filter|empty-cells|display|direction|cursor|counter-reset|counter-increment|content|column-width|column-span|column-rule-width|column-rule-style|column-rule-color|column-rule|column-gap|column-fill|column-count|columns|color|clip-path|clip|clear|caption-side|break-inside|break-before|break-after|box-sizing|box-shadow|box-decoration-break|bottom|border-width|border-top-width|border-top-style|border-top-right-radius|border-top-left-radius|border-top-color|border-top|border-style|border-spacing|border-right-width|border-right-style|border-right-color|border-right|border-radius|border-left-width|border-left-style|border-left-color|border-left|border-image-width|border-image-source|border-image-slice|border-image-repeat|border-image-outset|border-image|border-color|border-collapse|border-bottom-width|border-bottom-style|border-bottom-right-radius|border-bottom-left-radius|border-bottom-color|border-bottom|border|background-size|background-repeat|background-position|background-origin|background-image|background-color|background-clip|background-attachment|background-blend-mode|background|backface-visibility|auto|animation-timing-function|animation-play-state|animation-name|animation-iteration-count|animation-fill-mode|animation-duration|animation-direction|animation-delay|animation|align-self|align-items|align-content)\\b',
+        begin: '\\b(src|z-index|word-wrap|word-spacing|word-break|width|widows|white-space|visibility|vertical-align|unicode-bidi|transition-timing-function|transition-property|transition-duration|transition-delay|transition|transform-style|transform-origin|transform|top|text-underline-position|text-transform|text-shadow|text-rendering|text-overflow|text-indent|text-decoration-style|text-decoration-line|text-decoration-color|text-decoration|text-align-last|text-align|tab-size|table-layout|right|resize|quotes|position|pointer-events|perspective-origin|perspective|page-break-inside|page-break-before|page-break-after|padding-top|padding-right|padding-left|padding-bottom|padding|overflow-y|overflow-x|overflow-wrap|overflow|outline-width|outline-style|outline-offset|outline-color|outline|orphans|order|opacity|object-position|object-fit|normal|none|nav-up|nav-right|nav-left|nav-index|nav-down|min-width|min-height|max-width|max-height|mask|marks|margin-top|margin-right|margin-left|margin-bottom|margin|list-style-type|list-style-position|list-style-image|list-style|line-height|letter-spacing|left|justify-content|initial|inherit|ime-mode|image-orientation|image-resolution|image-rendering|icon|hyphens|height|font-weight|font-variant-ligatures|font-variant|font-style|font-stretch|font-size-adjust|font-size|font-language-override|font-kerning|font-feature-settings|font-family|font|float|flex-wrap|flex-shrink|flex-grow|flex-flow|flex-direction|flex-basis|flex|filter|empty-cells|display|direction|cursor|counter-reset|counter-increment|content|column-width|column-span|column-rule-width|column-rule-style|column-rule-color|column-rule|column-gap|column-fill|column-count|columns|color|clip-path|clip|clear|caption-side|break-inside|break-before|break-after|box-sizing|box-shadow|box-decoration-break|bottom|border-width|border-top-width|border-top-style|border-top-right-radius|border-top-left-radius|border-top-color|border-top|border-style|border-spacing|border-right-width|border-right-style|border-right-color|border-right|border-radius|border-left-width|border-left-style|border-left-color|border-left|border-image-width|border-image-source|border-image-slice|border-image-repeat|border-image-outset|border-image|border-color|border-collapse|border-bottom-width|border-bottom-style|border-bottom-right-radius|border-bottom-left-radius|border-bottom-color|border-bottom|border|background-size|background-repeat|background-position|background-origin|background-image|background-color|background-clip|background-attachment|background-blend-mode|background|backface-visibility|auto|animation-timing-function|animation-play-state|animation-name|animation-iteration-count|animation-fill-mode|animation-duration|animation-direction|animation-delay|animation|align-self|align-items|align-content)\\b',
         illegal: '[^\\s]'
       },
       {
@@ -34353,19 +36500,32 @@ module.exports = function(hljs) {
           }
         ]
       },
+      // matching these here allows us to treat them more like regular CSS
+      // rules so everything between the {} gets regular rule highlighting,
+      // which is what we want for page and font-face
+      {
+        begin: '@(page|font-face)',
+        lexemes: AT_IDENTIFIER,
+        keywords: '@page @font-face'
+      },
       {
         begin: '@', end: '[{;]',
-        keywords: 'mixin include extend for if else each while charset import debug media page content font-face namespace warn',
+        returnBegin: true,
+        keywords: AT_MODIFIERS,
         contains: [
+          {
+            begin: AT_IDENTIFIER,
+            className: "keyword"
+          },
           VARIABLE,
           hljs.QUOTE_STRING_MODE,
           hljs.APOS_STRING_MODE,
           HEXCOLOR,
           hljs.CSS_NUMBER_MODE,
-          {
-            begin: '\\s[A-Za-z0-9_.-]+',
-            relevance: 0
-          }
+          // {
+          //   begin: '\\s[A-Za-z0-9_.-]+',
+          //   relevance: 0
+          // }
         ]
       }
     ]
@@ -34387,7 +36547,7 @@ module.exports = function(hljs) {
     contains: [
       {
         className: 'meta',
-        begin: '^\\s{0,3}[\\w\\d\\[\\]()@-]*[>%$#]',
+        begin: '^\\s{0,3}[/\\w\\d\\[\\]()@-]*[>%$#]',
         starts: {
           end: '$', subLanguage: 'bash'
         }
@@ -34605,8 +36765,6 @@ module.exports = function(hljs) {
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
-  var CPP = hljs.getLanguage('cpp').exports;
-
   // In SQF, a variable start with _
   var VARIABLE = {
     className: 'variable',
@@ -34635,6 +36793,30 @@ module.exports = function(hljs) {
         end: '\'',
         contains: [{begin: '\'\'', relevance: 0}]
       }
+    ]
+  };
+
+  // list of keywords from:
+  // https://community.bistudio.com/wiki/PreProcessor_Commands
+  var PREPROCESSOR = {
+    className: 'meta',
+    begin: /#\s*[a-z]+\b/, end: /$/,
+    keywords: {
+      'meta-keyword':
+        'define undef ifdef ifndef else endif include'
+    },
+    contains: [
+      {
+        begin: /\\\n/, relevance: 0
+      },
+      hljs.inherit(STRINGS, {className: 'meta-string'}),
+      {
+        className: 'meta-string',
+        begin: /<[^\n>]*>/, end: /$/,
+        illegal: '\\n',
+      },
+      hljs.C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE
     ]
   };
 
@@ -35003,7 +37185,7 @@ module.exports = function(hljs) {
       VARIABLE,
       FUNCTION,
       STRINGS,
-      CPP.preprocessor
+      PREPROCESSOR
     ],
     illegal: /#|^\$ /
   };
@@ -35149,23 +37331,22 @@ module.exports = function(hljs) {
             'true false null unknown',
           built_in:
             'array bigint binary bit blob bool boolean char character date dec decimal float int int8 integer interval number ' +
-            'numeric real record serial serial8 smallint text time timestamp tinyint varchar varying void'
+            'numeric real record serial serial8 smallint text time timestamp tinyint varchar varchar2 varying void'
         },
         contains: [
           {
             className: 'string',
             begin: '\'', end: '\'',
-            contains: [hljs.BACKSLASH_ESCAPE, {begin: '\'\''}]
+            contains: [{begin: '\'\''}]
           },
           {
             className: 'string',
             begin: '"', end: '"',
-            contains: [hljs.BACKSLASH_ESCAPE, {begin: '""'}]
+            contains: [{begin: '""'}]
           },
           {
             className: 'string',
-            begin: '`', end: '`',
-            contains: [hljs.BACKSLASH_ESCAPE]
+            begin: '`', end: '`'
           },
           hljs.C_NUMBER_MODE,
           hljs.C_BLOCK_COMMENT_MODE,
@@ -35190,86 +37371,223 @@ module.exports = function(hljs) {
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
+  // variable names cannot conflict with block identifiers
+  var BLOCKS = [
+    'functions',
+    'model',
+    'data',
+    'parameters',
+    'quantities',
+    'transformed',
+    'generated'
+  ];
+  var STATEMENTS = [
+    'for',
+    'in',
+    'if',
+    'else',
+    'while',
+    'break',
+    'continue',
+    'return'
+  ];
+  var SPECIAL_FUNCTIONS = [
+    'print',
+    'reject',
+    'increment_log_prob|10',
+    'integrate_ode|10',
+    'integrate_ode_rk45|10',
+    'integrate_ode_bdf|10',
+    'algebra_solver'
+  ];
+  var VAR_TYPES = [
+    'int',
+    'real',
+    'vector',
+    'ordered',
+    'positive_ordered',
+    'simplex',
+    'unit_vector',
+    'row_vector',
+    'matrix',
+    'cholesky_factor_corr|10',
+    'cholesky_factor_cov|10',
+    'corr_matrix|10',
+    'cov_matrix|10',
+    'void'
+  ];
+  var FUNCTIONS = [
+    'Phi', 'Phi_approx', 'abs', 'acos', 'acosh', 'algebra_solver', 'append_array',
+    'append_col', 'append_row', 'asin', 'asinh', 'atan', 'atan2', 'atanh',
+    'bernoulli_cdf', 'bernoulli_lccdf', 'bernoulli_lcdf', 'bernoulli_logit_lpmf',
+    'bernoulli_logit_rng', 'bernoulli_lpmf', 'bernoulli_rng', 'bessel_first_kind',
+    'bessel_second_kind', 'beta_binomial_cdf', 'beta_binomial_lccdf',
+    'beta_binomial_lcdf', 'beta_binomial_lpmf', 'beta_binomial_rng', 'beta_cdf',
+    'beta_lccdf', 'beta_lcdf', 'beta_lpdf', 'beta_rng', 'binary_log_loss',
+    'binomial_cdf', 'binomial_coefficient_log', 'binomial_lccdf', 'binomial_lcdf',
+    'binomial_logit_lpmf', 'binomial_lpmf', 'binomial_rng', 'block',
+    'categorical_logit_lpmf', 'categorical_logit_rng', 'categorical_lpmf',
+    'categorical_rng', 'cauchy_cdf', 'cauchy_lccdf', 'cauchy_lcdf', 'cauchy_lpdf',
+    'cauchy_rng', 'cbrt', 'ceil', 'chi_square_cdf', 'chi_square_lccdf',
+    'chi_square_lcdf', 'chi_square_lpdf', 'chi_square_rng', 'cholesky_decompose',
+    'choose', 'col', 'cols', 'columns_dot_product', 'columns_dot_self', 'cos',
+    'cosh', 'cov_exp_quad', 'crossprod', 'csr_extract_u', 'csr_extract_v',
+    'csr_extract_w', 'csr_matrix_times_vector', 'csr_to_dense_matrix',
+    'cumulative_sum', 'determinant', 'diag_matrix', 'diag_post_multiply',
+    'diag_pre_multiply', 'diagonal', 'digamma', 'dims', 'dirichlet_lpdf',
+    'dirichlet_rng', 'distance', 'dot_product', 'dot_self',
+    'double_exponential_cdf', 'double_exponential_lccdf', 'double_exponential_lcdf',
+    'double_exponential_lpdf', 'double_exponential_rng', 'e', 'eigenvalues_sym',
+    'eigenvectors_sym', 'erf', 'erfc', 'exp', 'exp2', 'exp_mod_normal_cdf',
+    'exp_mod_normal_lccdf', 'exp_mod_normal_lcdf', 'exp_mod_normal_lpdf',
+    'exp_mod_normal_rng', 'expm1', 'exponential_cdf', 'exponential_lccdf',
+    'exponential_lcdf', 'exponential_lpdf', 'exponential_rng', 'fabs',
+    'falling_factorial', 'fdim', 'floor', 'fma', 'fmax', 'fmin', 'fmod',
+    'frechet_cdf', 'frechet_lccdf', 'frechet_lcdf', 'frechet_lpdf', 'frechet_rng',
+    'gamma_cdf', 'gamma_lccdf', 'gamma_lcdf', 'gamma_lpdf', 'gamma_p', 'gamma_q',
+    'gamma_rng', 'gaussian_dlm_obs_lpdf', 'get_lp', 'gumbel_cdf', 'gumbel_lccdf',
+    'gumbel_lcdf', 'gumbel_lpdf', 'gumbel_rng', 'head', 'hypergeometric_lpmf',
+    'hypergeometric_rng', 'hypot', 'inc_beta', 'int_step', 'integrate_ode',
+    'integrate_ode_bdf', 'integrate_ode_rk45', 'inv', 'inv_Phi',
+    'inv_chi_square_cdf', 'inv_chi_square_lccdf', 'inv_chi_square_lcdf',
+    'inv_chi_square_lpdf', 'inv_chi_square_rng', 'inv_cloglog', 'inv_gamma_cdf',
+    'inv_gamma_lccdf', 'inv_gamma_lcdf', 'inv_gamma_lpdf', 'inv_gamma_rng',
+    'inv_logit', 'inv_sqrt', 'inv_square', 'inv_wishart_lpdf', 'inv_wishart_rng',
+    'inverse', 'inverse_spd', 'is_inf', 'is_nan', 'lbeta', 'lchoose', 'lgamma',
+    'lkj_corr_cholesky_lpdf', 'lkj_corr_cholesky_rng', 'lkj_corr_lpdf',
+    'lkj_corr_rng', 'lmgamma', 'lmultiply', 'log', 'log10', 'log1m', 'log1m_exp',
+    'log1m_inv_logit', 'log1p', 'log1p_exp', 'log2', 'log_determinant',
+    'log_diff_exp', 'log_falling_factorial', 'log_inv_logit', 'log_mix',
+    'log_rising_factorial', 'log_softmax', 'log_sum_exp', 'logistic_cdf',
+    'logistic_lccdf', 'logistic_lcdf', 'logistic_lpdf', 'logistic_rng', 'logit',
+    'lognormal_cdf', 'lognormal_lccdf', 'lognormal_lcdf', 'lognormal_lpdf',
+    'lognormal_rng', 'machine_precision', 'matrix_exp', 'max', 'mdivide_left_spd',
+    'mdivide_left_tri_low', 'mdivide_right_spd', 'mdivide_right_tri_low', 'mean',
+    'min', 'modified_bessel_first_kind', 'modified_bessel_second_kind',
+    'multi_gp_cholesky_lpdf', 'multi_gp_lpdf', 'multi_normal_cholesky_lpdf',
+    'multi_normal_cholesky_rng', 'multi_normal_lpdf', 'multi_normal_prec_lpdf',
+    'multi_normal_rng', 'multi_student_t_lpdf', 'multi_student_t_rng',
+    'multinomial_lpmf', 'multinomial_rng', 'multiply_log',
+    'multiply_lower_tri_self_transpose', 'neg_binomial_2_cdf',
+    'neg_binomial_2_lccdf', 'neg_binomial_2_lcdf', 'neg_binomial_2_log_lpmf',
+    'neg_binomial_2_log_rng', 'neg_binomial_2_lpmf', 'neg_binomial_2_rng',
+    'neg_binomial_cdf', 'neg_binomial_lccdf', 'neg_binomial_lcdf',
+    'neg_binomial_lpmf', 'neg_binomial_rng', 'negative_infinity', 'normal_cdf',
+    'normal_lccdf', 'normal_lcdf', 'normal_lpdf', 'normal_rng', 'not_a_number',
+    'num_elements', 'ordered_logistic_lpmf', 'ordered_logistic_rng', 'owens_t',
+    'pareto_cdf', 'pareto_lccdf', 'pareto_lcdf', 'pareto_lpdf', 'pareto_rng',
+    'pareto_type_2_cdf', 'pareto_type_2_lccdf', 'pareto_type_2_lcdf',
+    'pareto_type_2_lpdf', 'pareto_type_2_rng', 'pi', 'poisson_cdf', 'poisson_lccdf',
+    'poisson_lcdf', 'poisson_log_lpmf', 'poisson_log_rng', 'poisson_lpmf',
+    'poisson_rng', 'positive_infinity', 'pow', 'print', 'prod', 'qr_Q', 'qr_R',
+    'quad_form', 'quad_form_diag', 'quad_form_sym', 'rank', 'rayleigh_cdf',
+    'rayleigh_lccdf', 'rayleigh_lcdf', 'rayleigh_lpdf', 'rayleigh_rng', 'reject',
+    'rep_array', 'rep_matrix', 'rep_row_vector', 'rep_vector', 'rising_factorial',
+    'round', 'row', 'rows', 'rows_dot_product', 'rows_dot_self',
+    'scaled_inv_chi_square_cdf', 'scaled_inv_chi_square_lccdf',
+    'scaled_inv_chi_square_lcdf', 'scaled_inv_chi_square_lpdf',
+    'scaled_inv_chi_square_rng', 'sd', 'segment', 'sin', 'singular_values', 'sinh',
+    'size', 'skew_normal_cdf', 'skew_normal_lccdf', 'skew_normal_lcdf',
+    'skew_normal_lpdf', 'skew_normal_rng', 'softmax', 'sort_asc', 'sort_desc',
+    'sort_indices_asc', 'sort_indices_desc', 'sqrt', 'sqrt2', 'square',
+    'squared_distance', 'step', 'student_t_cdf', 'student_t_lccdf',
+    'student_t_lcdf', 'student_t_lpdf', 'student_t_rng', 'sub_col', 'sub_row',
+    'sum', 'tail', 'tan', 'tanh', 'target', 'tcrossprod', 'tgamma', 'to_array_1d',
+    'to_array_2d', 'to_matrix', 'to_row_vector', 'to_vector', 'trace',
+    'trace_gen_quad_form', 'trace_quad_form', 'trigamma', 'trunc', 'uniform_cdf',
+    'uniform_lccdf', 'uniform_lcdf', 'uniform_lpdf', 'uniform_rng', 'variance',
+    'von_mises_lpdf', 'von_mises_rng', 'weibull_cdf', 'weibull_lccdf',
+    'weibull_lcdf', 'weibull_lpdf', 'weibull_rng', 'wiener_lpdf', 'wishart_lpdf',
+    'wishart_rng'
+  ];
+  var DISTRIBUTIONS = [
+    'bernoulli', 'bernoulli_logit', 'beta', 'beta_binomial', 'binomial',
+    'binomial_logit', 'categorical', 'categorical_logit', 'cauchy', 'chi_square',
+    'dirichlet', 'double_exponential', 'exp_mod_normal', 'exponential', 'frechet',
+    'gamma', 'gaussian_dlm_obs', 'gumbel', 'hypergeometric', 'inv_chi_square',
+    'inv_gamma', 'inv_wishart', 'lkj_corr', 'lkj_corr_cholesky', 'logistic',
+    'lognormal', 'multi_gp', 'multi_gp_cholesky', 'multi_normal',
+    'multi_normal_cholesky', 'multi_normal_prec', 'multi_student_t', 'multinomial',
+    'neg_binomial', 'neg_binomial_2', 'neg_binomial_2_log', 'normal',
+    'ordered_logistic', 'pareto', 'pareto_type_2', 'poisson', 'poisson_log',
+    'rayleigh', 'scaled_inv_chi_square', 'skew_normal', 'student_t', 'uniform',
+    'von_mises', 'weibull', 'wiener', 'wishart'
+  ];
+
   return {
+    aliases: ['stanfuncs'],
+    keywords: {
+      'title': BLOCKS.join(' '),
+      'keyword': STATEMENTS.concat(VAR_TYPES).concat(SPECIAL_FUNCTIONS).join(' '),
+      'built_in': FUNCTIONS.join(' ')
+    },
+    lexemes: hljs.IDENT_RE,
     contains: [
-      hljs.HASH_COMMENT_MODE,
       hljs.C_LINE_COMMENT_MODE,
-      hljs.C_BLOCK_COMMENT_MODE,
+      hljs.COMMENT(
+        /#/,
+        /$/,
+        {
+          relevance: 0,
+          keywords: {
+            'meta-keyword': 'include'
+          }
+        }
+      ),
+      hljs.COMMENT(
+        /\/\*/,
+        /\*\//,
+        {
+          relevance: 0,
+          // highlight doc strings mentioned in Stan reference
+          contains: [
+            {
+              className: 'doctag',
+              begin: /@(return|param)/
+            }
+          ]
+        }
+      ),
       {
-        begin: hljs.UNDERSCORE_IDENT_RE,
-        lexemes: hljs.UNDERSCORE_IDENT_RE,
-        keywords: {
-          // Stan's keywords
-          name:
-            'for in while repeat until if then else',
-          // Stan's probablity distributions (less beta and gamma, as commonly
-          // used for parameter names). So far, _log and _rng variants are not
-          // included
-          symbol:
-            'bernoulli bernoulli_logit binomial binomial_logit '               +
-            'beta_binomial hypergeometric categorical categorical_logit '      +
-            'ordered_logistic neg_binomial neg_binomial_2 '                    +
-            'neg_binomial_2_log poisson poisson_log multinomial normal '       +
-            'exp_mod_normal skew_normal student_t cauchy double_exponential '  +
-            'logistic gumbel lognormal chi_square inv_chi_square '             +
-            'scaled_inv_chi_square exponential inv_gamma weibull frechet '     +
-            'rayleigh wiener pareto pareto_type_2 von_mises uniform '          +
-            'multi_normal multi_normal_prec multi_normal_cholesky multi_gp '   +
-            'multi_gp_cholesky multi_student_t gaussian_dlm_obs dirichlet '    +
-            'lkj_corr lkj_corr_cholesky wishart inv_wishart',
-          // Stan's data types
-          'selector-tag':
-            'int real vector simplex unit_vector ordered positive_ordered '    +
-            'row_vector matrix cholesky_factor_corr cholesky_factor_cov '      +
-            'corr_matrix cov_matrix',
-          // Stan's model blocks
-          title:
-            'functions model data parameters quantities transformed '          +
-            'generated',
-          literal:
-            'true false'
-        },
-        relevance: 0
-      },
-      // The below is all taken from the R language definition
-      {
-        // hex value
-        className: 'number',
-        begin: "0[xX][0-9a-fA-F]+[Li]?\\b",
-        relevance: 0
+        // hack: in range constraints, lower must follow "<"
+        begin: /<\s*lower\s*=/,
+        keywords: 'lower'
       },
       {
-        // hex value
-        className: 'number',
-        begin: "0[xX][0-9a-fA-F]+[Li]?\\b",
-        relevance: 0
+        // hack: in range constraints, upper must follow either , or <
+        // <lower = ..., upper = ...> or <upper = ...>
+        begin: /[<,]*upper\s*=/,
+        keywords: 'upper'
       },
       {
-        // explicit integer
-        className: 'number',
-        begin: "\\d+(?:[eE][+\\-]?\\d*)?L\\b",
-        relevance: 0
+        className: 'keyword',
+        begin: /\btarget\s*\+=/,
+        relevance: 10
       },
       {
-        // number with trailing decimal
+        begin: '~\\s*(' + hljs.IDENT_RE + ')\\s*\\(',
+        keywords: DISTRIBUTIONS.join(' ')
+      },
+      {
         className: 'number',
-        begin: "\\d+\\.(?!\\d)(?:i\\b)?",
+        variants: [
+          {
+            begin: /\b\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/
+          },
+          {
+            begin: /\.\d+(?:[eE][+-]?\d+)?\b/
+          }
+        ],
         relevance: 0
       },
       {
-        // number
-        className: 'number',
-        begin: "\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",
-        relevance: 0
-      },
-      {
-        // number with leading decimal
-        className: 'number',
-        begin: "\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",
+        className: 'string',
+        begin: '"',
+        end: '"',
         relevance: 0
       }
     ]
-  };
+  }
 };
 
 /***/ }),
@@ -35281,11 +37599,15 @@ module.exports = function(hljs) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = function(hljs) {
+module.exports = /*
+  This is a fork and modification of Drew McDonald's file (https://github.com/drewmcdonald/stata-highlighting). I have also included a list of builtin commands from https://bugs.kde.org/show_bug.cgi?id=135646.
+*/
+
+function(hljs) {
   return {
     aliases: ['do', 'ado'],
     case_insensitive: true,
-    keywords: 'if else in foreach for forv forva forval forvalu forvalue forvalues by bys bysort xi quietly qui capture about ac ac_7 acprplot acprplot_7 adjust ado adopath adoupdate alpha ameans an ano anov anova anova_estat anova_terms anovadef aorder ap app appe appen append arch arch_dr arch_estat arch_p archlm areg areg_p args arima arima_dr arima_estat arima_p as asmprobit asmprobit_estat asmprobit_lf asmprobit_mfx__dlg asmprobit_p ass asse asser assert avplot avplot_7 avplots avplots_7 bcskew0 bgodfrey binreg bip0_lf biplot bipp_lf bipr_lf bipr_p biprobit bitest bitesti bitowt blogit bmemsize boot bootsamp bootstrap bootstrap_8 boxco_l boxco_p boxcox boxcox_6 boxcox_p bprobit br break brier bro brow brows browse brr brrstat bs bs_7 bsampl_w bsample bsample_7 bsqreg bstat bstat_7 bstat_8 bstrap bstrap_7 ca ca_estat ca_p cabiplot camat canon canon_8 canon_8_p canon_estat canon_p cap caprojection capt captu captur capture cat cc cchart cchart_7 cci cd censobs_table centile cf char chdir checkdlgfiles checkestimationsample checkhlpfiles checksum chelp ci cii cl class classutil clear cli clis clist clo clog clog_lf clog_p clogi clogi_sw clogit clogit_lf clogit_p clogitp clogl_sw cloglog clonevar clslistarray cluster cluster_measures cluster_stop cluster_tree cluster_tree_8 clustermat cmdlog cnr cnre cnreg cnreg_p cnreg_sw cnsreg codebook collaps4 collapse colormult_nb colormult_nw compare compress conf confi confir confirm conren cons const constr constra constrai constrain constraint continue contract copy copyright copysource cor corc corr corr2data corr_anti corr_kmo corr_smc corre correl correla correlat correlate corrgram cou coun count cox cox_p cox_sw coxbase coxhaz coxvar cprplot cprplot_7 crc cret cretu cretur creturn cross cs cscript cscript_log csi ct ct_is ctset ctst_5 ctst_st cttost cumsp cumsp_7 cumul cusum cusum_7 cutil d|0 datasig datasign datasigna datasignat datasignatu datasignatur datasignature datetof db dbeta de dec deco decod decode deff des desc descr descri describ describe destring dfbeta dfgls dfuller di di_g dir dirstats dis discard disp disp_res disp_s displ displa display distinct do doe doed doedi doedit dotplot dotplot_7 dprobit drawnorm drop ds ds_util dstdize duplicates durbina dwstat dydx e|0 ed edi edit egen eivreg emdef en enc enco encod encode eq erase ereg ereg_lf ereg_p ereg_sw ereghet ereghet_glf ereghet_glf_sh ereghet_gp ereghet_ilf ereghet_ilf_sh ereghet_ip eret eretu eretur ereturn err erro error est est_cfexist est_cfname est_clickable est_expand est_hold est_table est_unhold est_unholdok estat estat_default estat_summ estat_vce_only esti estimates etodow etof etomdy ex exi exit expand expandcl fac fact facto factor factor_estat factor_p factor_pca_rotated factor_rotate factormat fcast fcast_compute fcast_graph fdades fdadesc fdadescr fdadescri fdadescrib fdadescribe fdasav fdasave fdause fh_st file open file read file close file filefilter fillin find_hlp_file findfile findit findit_7 fit fl fli flis flist for5_0 form forma format fpredict frac_154 frac_adj frac_chk frac_cox frac_ddp frac_dis frac_dv frac_in frac_mun frac_pp frac_pq frac_pv frac_wgt frac_xo fracgen fracplot fracplot_7 fracpoly fracpred fron_ex fron_hn fron_p fron_tn fron_tn2 frontier ftodate ftoe ftomdy ftowdate g|0 gamhet_glf gamhet_gp gamhet_ilf gamhet_ip gamma gamma_d2 gamma_p gamma_sw gammahet gdi_hexagon gdi_spokes ge gen gene gener genera generat generate genrank genstd genvmean gettoken gl gladder gladder_7 glim_l01 glim_l02 glim_l03 glim_l04 glim_l05 glim_l06 glim_l07 glim_l08 glim_l09 glim_l10 glim_l11 glim_l12 glim_lf glim_mu glim_nw1 glim_nw2 glim_nw3 glim_p glim_v1 glim_v2 glim_v3 glim_v4 glim_v5 glim_v6 glim_v7 glm glm_6 glm_p glm_sw glmpred glo glob globa global glogit glogit_8 glogit_p gmeans gnbre_lf gnbreg gnbreg_5 gnbreg_p gomp_lf gompe_sw gomper_p gompertz gompertzhet gomphet_glf gomphet_glf_sh gomphet_gp gomphet_ilf gomphet_ilf_sh gomphet_ip gphdot gphpen gphprint gprefs gprobi_p gprobit gprobit_8 gr gr7 gr_copy gr_current gr_db gr_describe gr_dir gr_draw gr_draw_replay gr_drop gr_edit gr_editviewopts gr_example gr_example2 gr_export gr_print gr_qscheme gr_query gr_read gr_rename gr_replay gr_save gr_set gr_setscheme gr_table gr_undo gr_use graph graph7 grebar greigen greigen_7 greigen_8 grmeanby grmeanby_7 gs_fileinfo gs_filetype gs_graphinfo gs_stat gsort gwood h|0 hadimvo hareg hausman haver he heck_d2 heckma_p heckman heckp_lf heckpr_p heckprob hel help hereg hetpr_lf hetpr_p hetprob hettest hexdump hilite hist hist_7 histogram hlogit hlu hmeans hotel hotelling hprobit hreg hsearch icd9 icd9_ff icd9p iis impute imtest inbase include inf infi infil infile infix inp inpu input ins insheet insp inspe inspec inspect integ inten intreg intreg_7 intreg_p intrg2_ll intrg_ll intrg_ll2 ipolate iqreg ir irf irf_create irfm iri is_svy is_svysum isid istdize ivprob_1_lf ivprob_lf ivprobit ivprobit_p ivreg ivreg_footnote ivtob_1_lf ivtob_lf ivtobit ivtobit_p jackknife jacknife jknife jknife_6 jknife_8 jkstat joinby kalarma1 kap kap_3 kapmeier kappa kapwgt kdensity kdensity_7 keep ksm ksmirnov ktau kwallis l|0 la lab labe label labelbook ladder levels levelsof leverage lfit lfit_p li lincom line linktest lis list lloghet_glf lloghet_glf_sh lloghet_gp lloghet_ilf lloghet_ilf_sh lloghet_ip llogi_sw llogis_p llogist llogistic llogistichet lnorm_lf lnorm_sw lnorma_p lnormal lnormalhet lnormhet_glf lnormhet_glf_sh lnormhet_gp lnormhet_ilf lnormhet_ilf_sh lnormhet_ip lnskew0 loadingplot loc loca local log logi logis_lf logistic logistic_p logit logit_estat logit_p loglogs logrank loneway lookfor lookup lowess lowess_7 lpredict lrecomp lroc lroc_7 lrtest ls lsens lsens_7 lsens_x lstat ltable ltable_7 ltriang lv lvr2plot lvr2plot_7 m|0 ma mac macr macro makecns man manova manova_estat manova_p manovatest mantel mark markin markout marksample mat mat_capp mat_order mat_put_rr mat_rapp mata mata_clear mata_describe mata_drop mata_matdescribe mata_matsave mata_matuse mata_memory mata_mlib mata_mosave mata_rename mata_which matalabel matcproc matlist matname matr matri matrix matrix_input__dlg matstrik mcc mcci md0_ md1_ md1debug_ md2_ md2debug_ mds mds_estat mds_p mdsconfig mdslong mdsmat mdsshepard mdytoe mdytof me_derd mean means median memory memsize meqparse mer merg merge mfp mfx mhelp mhodds minbound mixed_ll mixed_ll_reparm mkassert mkdir mkmat mkspline ml ml_5 ml_adjs ml_bhhhs ml_c_d ml_check ml_clear ml_cnt ml_debug ml_defd ml_e0 ml_e0_bfgs ml_e0_cycle ml_e0_dfp ml_e0i ml_e1 ml_e1_bfgs ml_e1_bhhh ml_e1_cycle ml_e1_dfp ml_e2 ml_e2_cycle ml_ebfg0 ml_ebfr0 ml_ebfr1 ml_ebh0q ml_ebhh0 ml_ebhr0 ml_ebr0i ml_ecr0i ml_edfp0 ml_edfr0 ml_edfr1 ml_edr0i ml_eds ml_eer0i ml_egr0i ml_elf ml_elf_bfgs ml_elf_bhhh ml_elf_cycle ml_elf_dfp ml_elfi ml_elfs ml_enr0i ml_enrr0 ml_erdu0 ml_erdu0_bfgs ml_erdu0_bhhh ml_erdu0_bhhhq ml_erdu0_cycle ml_erdu0_dfp ml_erdu0_nrbfgs ml_exde ml_footnote ml_geqnr ml_grad0 ml_graph ml_hbhhh ml_hd0 ml_hold ml_init ml_inv ml_log ml_max ml_mlout ml_mlout_8 ml_model ml_nb0 ml_opt ml_p ml_plot ml_query ml_rdgrd ml_repor ml_s_e ml_score ml_searc ml_technique ml_unhold mleval mlf_ mlmatbysum mlmatsum mlog mlogi mlogit mlogit_footnote mlogit_p mlopts mlsum mlvecsum mnl0_ mor more mov move mprobit mprobit_lf mprobit_p mrdu0_ mrdu1_ mvdecode mvencode mvreg mvreg_estat n|0 nbreg nbreg_al nbreg_lf nbreg_p nbreg_sw nestreg net newey newey_7 newey_p news nl nl_7 nl_9 nl_9_p nl_p nl_p_7 nlcom nlcom_p nlexp2 nlexp2_7 nlexp2a nlexp2a_7 nlexp3 nlexp3_7 nlgom3 nlgom3_7 nlgom4 nlgom4_7 nlinit nllog3 nllog3_7 nllog4 nllog4_7 nlog_rd nlogit nlogit_p nlogitgen nlogittree nlpred no nobreak noi nois noisi noisil noisily note notes notes_dlg nptrend numlabel numlist odbc old_ver olo olog ologi ologi_sw ologit ologit_p ologitp on one onew onewa oneway op_colnm op_comp op_diff op_inv op_str opr opro oprob oprob_sw oprobi oprobi_p oprobit oprobitp opts_exclusive order orthog orthpoly ou out outf outfi outfil outfile outs outsh outshe outshee outsheet ovtest pac pac_7 palette parse parse_dissim pause pca pca_8 pca_display pca_estat pca_p pca_rotate pcamat pchart pchart_7 pchi pchi_7 pcorr pctile pentium pergram pergram_7 permute permute_8 personal peto_st pkcollapse pkcross pkequiv pkexamine pkexamine_7 pkshape pksumm pksumm_7 pl plo plot plugin pnorm pnorm_7 poisgof poiss_lf poiss_sw poisso_p poisson poisson_estat post postclose postfile postutil pperron pr prais prais_e prais_e2 prais_p predict predictnl preserve print pro prob probi probit probit_estat probit_p proc_time procoverlay procrustes procrustes_estat procrustes_p profiler prog progr progra program prop proportion prtest prtesti pwcorr pwd q\\s qby qbys qchi qchi_7 qladder qladder_7 qnorm qnorm_7 qqplot qqplot_7 qreg qreg_c qreg_p qreg_sw qu quadchk quantile quantile_7 que quer query range ranksum ratio rchart rchart_7 rcof recast reclink recode reg reg3 reg3_p regdw regr regre regre_p2 regres regres_p regress regress_estat regriv_p remap ren rena renam rename renpfix repeat replace report reshape restore ret retu retur return rm rmdir robvar roccomp roccomp_7 roccomp_8 rocf_lf rocfit rocfit_8 rocgold rocplot rocplot_7 roctab roctab_7 rolling rologit rologit_p rot rota rotat rotate rotatemat rreg rreg_p ru run runtest rvfplot rvfplot_7 rvpplot rvpplot_7 sa safesum sample sampsi sav save savedresults saveold sc sca scal scala scalar scatter scm_mine sco scob_lf scob_p scobi_sw scobit scor score scoreplot scoreplot_help scree screeplot screeplot_help sdtest sdtesti se search separate seperate serrbar serrbar_7 serset set set_defaults sfrancia sh she shel shell shewhart shewhart_7 signestimationsample signrank signtest simul simul_7 simulate simulate_8 sktest sleep slogit slogit_d2 slogit_p smooth snapspan so sor sort spearman spikeplot spikeplot_7 spikeplt spline_x split sqreg sqreg_p sret sretu sretur sreturn ssc st st_ct st_hc st_hcd st_hcd_sh st_is st_issys st_note st_promo st_set st_show st_smpl st_subid stack statsby statsby_8 stbase stci stci_7 stcox stcox_estat stcox_fr stcox_fr_ll stcox_p stcox_sw stcoxkm stcoxkm_7 stcstat stcurv stcurve stcurve_7 stdes stem stepwise stereg stfill stgen stir stjoin stmc stmh stphplot stphplot_7 stphtest stphtest_7 stptime strate strate_7 streg streg_sw streset sts sts_7 stset stsplit stsum sttocc sttoct stvary stweib su suest suest_8 sum summ summa summar summari summariz summarize sunflower sureg survcurv survsum svar svar_p svmat svy svy_disp svy_dreg svy_est svy_est_7 svy_estat svy_get svy_gnbreg_p svy_head svy_header svy_heckman_p svy_heckprob_p svy_intreg_p svy_ivreg_p svy_logistic_p svy_logit_p svy_mlogit_p svy_nbreg_p svy_ologit_p svy_oprobit_p svy_poisson_p svy_probit_p svy_regress_p svy_sub svy_sub_7 svy_x svy_x_7 svy_x_p svydes svydes_8 svygen svygnbreg svyheckman svyheckprob svyintreg svyintreg_7 svyintrg svyivreg svylc svylog_p svylogit svymarkout svymarkout_8 svymean svymlog svymlogit svynbreg svyolog svyologit svyoprob svyoprobit svyopts svypois svypois_7 svypoisson svyprobit svyprobt svyprop svyprop_7 svyratio svyreg svyreg_p svyregress svyset svyset_7 svyset_8 svytab svytab_7 svytest svytotal sw sw_8 swcnreg swcox swereg swilk swlogis swlogit swologit swoprbt swpois swprobit swqreg swtobit swweib symmetry symmi symplot symplot_7 syntax sysdescribe sysdir sysuse szroeter ta tab tab1 tab2 tab_or tabd tabdi tabdis tabdisp tabi table tabodds tabodds_7 tabstat tabu tabul tabula tabulat tabulate te tempfile tempname tempvar tes test testnl testparm teststd tetrachoric time_it timer tis tob tobi tobit tobit_p tobit_sw token tokeni tokeniz tokenize tostring total translate translator transmap treat_ll treatr_p treatreg trim trnb_cons trnb_mean trpoiss_d2 trunc_ll truncr_p truncreg tsappend tset tsfill tsline tsline_ex tsreport tsrevar tsrline tsset tssmooth tsunab ttest ttesti tut_chk tut_wait tutorial tw tware_st two twoway twoway__fpfit_serset twoway__function_gen twoway__histogram_gen twoway__ipoint_serset twoway__ipoints_serset twoway__kdensity_gen twoway__lfit_serset twoway__normgen_gen twoway__pci_serset twoway__qfit_serset twoway__scatteri_serset twoway__sunflower_gen twoway_ksm_serset ty typ type typeof u|0 unab unabbrev unabcmd update us use uselabel var var_mkcompanion var_p varbasic varfcast vargranger varirf varirf_add varirf_cgraph varirf_create varirf_ctable varirf_describe varirf_dir varirf_drop varirf_erase varirf_graph varirf_ograph varirf_rename varirf_set varirf_table varlist varlmar varnorm varsoc varstable varstable_w varstable_w2 varwle vce vec vec_fevd vec_mkphi vec_p vec_p_w vecirf_create veclmar veclmar_w vecnorm vecnorm_w vecrank vecstable verinst vers versi versio version view viewsource vif vwls wdatetof webdescribe webseek webuse weib1_lf weib2_lf weib_lf weib_lf0 weibhet_glf weibhet_glf_sh weibhet_glfa weibhet_glfa_sh weibhet_gp weibhet_ilf weibhet_ilf_sh weibhet_ilfa weibhet_ilfa_sh weibhet_ip weibu_sw weibul_p weibull weibull_c weibull_s weibullhet wh whelp whi which whil while wilc_st wilcoxon win wind windo window winexec wntestb wntestb_7 wntestq xchart xchart_7 xcorr xcorr_7 xi xi_6 xmlsav xmlsave xmluse xpose xsh xshe xshel xshell xt_iis xt_tis xtab_p xtabond xtbin_p xtclog xtcloglog xtcloglog_8 xtcloglog_d2 xtcloglog_pa_p xtcloglog_re_p xtcnt_p xtcorr xtdata xtdes xtfront_p xtfrontier xtgee xtgee_elink xtgee_estat xtgee_makeivar xtgee_p xtgee_plink xtgls xtgls_p xthaus xthausman xtht_p xthtaylor xtile xtint_p xtintreg xtintreg_8 xtintreg_d2 xtintreg_p xtivp_1 xtivp_2 xtivreg xtline xtline_ex xtlogit xtlogit_8 xtlogit_d2 xtlogit_fe_p xtlogit_pa_p xtlogit_re_p xtmixed xtmixed_estat xtmixed_p xtnb_fe xtnb_lf xtnbreg xtnbreg_pa_p xtnbreg_refe_p xtpcse xtpcse_p xtpois xtpoisson xtpoisson_d2 xtpoisson_pa_p xtpoisson_refe_p xtpred xtprobit xtprobit_8 xtprobit_d2 xtprobit_re_p xtps_fe xtps_lf xtps_ren xtps_ren_8 xtrar_p xtrc xtrc_p xtrchh xtrefe_p xtreg xtreg_be xtreg_fe xtreg_ml xtreg_pa_p xtreg_re xtregar xtrere_p xtset xtsf_ll xtsf_llti xtsum xttab xttest0 xttobit xttobit_8 xttobit_p xttrans yx yxview__barlike_draw yxview_area_draw yxview_bar_draw yxview_dot_draw yxview_dropline_draw yxview_function_draw yxview_iarrow_draw yxview_ilabels_draw yxview_normal_draw yxview_pcarrow_draw yxview_pcbarrow_draw yxview_pccapsym_draw yxview_pcscatter_draw yxview_pcspike_draw yxview_rarea_draw yxview_rbar_draw yxview_rbarm_draw yxview_rcap_draw yxview_rcapsym_draw yxview_rconnected_draw yxview_rline_draw yxview_rscatter_draw yxview_rspike_draw yxview_spike_draw yxview_sunflower_draw zap_s zinb zinb_llf zinb_plf zip zip_llf zip_p zip_plf zt_ct_5 zt_hc_5 zt_hcd_5 zt_is_5 zt_iss_5 zt_sho_5 zt_smp_5 ztbase_5 ztcox_5 ztdes_5 ztereg_5 ztfill_5 ztgen_5 ztir_5 ztjoin_5 ztnb ztnb_p ztp ztp_p zts_5 ztset_5 ztspli_5 ztsum_5 zttoct_5 ztvary_5 ztweib_5',
+    keywords: 'if else in foreach for forv forva forval forvalu forvalue forvalues by bys bysort xi quietly qui capture about ac ac_7 acprplot acprplot_7 adjust ado adopath adoupdate alpha ameans an ano anov anova anova_estat anova_terms anovadef aorder ap app appe appen append arch arch_dr arch_estat arch_p archlm areg areg_p args arima arima_dr arima_estat arima_p as asmprobit asmprobit_estat asmprobit_lf asmprobit_mfx__dlg asmprobit_p ass asse asser assert avplot avplot_7 avplots avplots_7 bcskew0 bgodfrey bias binreg bip0_lf biplot bipp_lf bipr_lf bipr_p biprobit bitest bitesti bitowt blogit bmemsize boot bootsamp bootstrap bootstrap_8 boxco_l boxco_p boxcox boxcox_6 boxcox_p bprobit br break brier bro brow brows browse brr brrstat bs bs_7 bsampl_w bsample bsample_7 bsqreg bstat bstat_7 bstat_8 bstrap bstrap_7 bubble bubbleplot ca ca_estat ca_p cabiplot camat canon canon_8 canon_8_p canon_estat canon_p cap caprojection capt captu captur capture cat cc cchart cchart_7 cci cd censobs_table centile cf char chdir checkdlgfiles checkestimationsample checkhlpfiles checksum chelp ci cii cl class classutil clear cli clis clist clo clog clog_lf clog_p clogi clogi_sw clogit clogit_lf clogit_p clogitp clogl_sw cloglog clonevar clslistarray cluster cluster_measures cluster_stop cluster_tree cluster_tree_8 clustermat cmdlog cnr cnre cnreg cnreg_p cnreg_sw cnsreg codebook collaps4 collapse colormult_nb colormult_nw compare compress conf confi confir confirm conren cons const constr constra constrai constrain constraint continue contract copy copyright copysource cor corc corr corr2data corr_anti corr_kmo corr_smc corre correl correla correlat correlate corrgram cou coun count cox cox_p cox_sw coxbase coxhaz coxvar cprplot cprplot_7 crc cret cretu cretur creturn cross cs cscript cscript_log csi ct ct_is ctset ctst_5 ctst_st cttost cumsp cumsp_7 cumul cusum cusum_7 cutil d|0 datasig datasign datasigna datasignat datasignatu datasignatur datasignature datetof db dbeta de dec deco decod decode deff des desc descr descri describ describe destring dfbeta dfgls dfuller di di_g dir dirstats dis discard disp disp_res disp_s displ displa display distinct do doe doed doedi doedit dotplot dotplot_7 dprobit drawnorm drop ds ds_util dstdize duplicates durbina dwstat dydx e|0 ed edi edit egen eivreg emdef en enc enco encod encode eq erase ereg ereg_lf ereg_p ereg_sw ereghet ereghet_glf ereghet_glf_sh ereghet_gp ereghet_ilf ereghet_ilf_sh ereghet_ip eret eretu eretur ereturn err erro error esize est est_cfexist est_cfname est_clickable est_expand est_hold est_table est_unhold est_unholdok estat estat_default estat_summ estat_vce_only esti estimates etodow etof etomdy ex exi exit expand expandcl fac fact facto factor factor_estat factor_p factor_pca_rotated factor_rotate factormat fcast fcast_compute fcast_graph fdades fdadesc fdadescr fdadescri fdadescrib fdadescribe fdasav fdasave fdause fh_st file open file read file close file filefilter fillin find_hlp_file findfile findit findit_7 fit fl fli flis flist for5_0 forest forestplot form forma format fpredict frac_154 frac_adj frac_chk frac_cox frac_ddp frac_dis frac_dv frac_in frac_mun frac_pp frac_pq frac_pv frac_wgt frac_xo fracgen fracplot fracplot_7 fracpoly fracpred fron_ex fron_hn fron_p fron_tn fron_tn2 frontier ftodate ftoe ftomdy ftowdate funnel funnelplot g|0 gamhet_glf gamhet_gp gamhet_ilf gamhet_ip gamma gamma_d2 gamma_p gamma_sw gammahet gdi_hexagon gdi_spokes ge gen gene gener genera generat generate genrank genstd genvmean gettoken gl gladder gladder_7 glim_l01 glim_l02 glim_l03 glim_l04 glim_l05 glim_l06 glim_l07 glim_l08 glim_l09 glim_l10 glim_l11 glim_l12 glim_lf glim_mu glim_nw1 glim_nw2 glim_nw3 glim_p glim_v1 glim_v2 glim_v3 glim_v4 glim_v5 glim_v6 glim_v7 glm glm_6 glm_p glm_sw glmpred glo glob globa global glogit glogit_8 glogit_p gmeans gnbre_lf gnbreg gnbreg_5 gnbreg_p gomp_lf gompe_sw gomper_p gompertz gompertzhet gomphet_glf gomphet_glf_sh gomphet_gp gomphet_ilf gomphet_ilf_sh gomphet_ip gphdot gphpen gphprint gprefs gprobi_p gprobit gprobit_8 gr gr7 gr_copy gr_current gr_db gr_describe gr_dir gr_draw gr_draw_replay gr_drop gr_edit gr_editviewopts gr_example gr_example2 gr_export gr_print gr_qscheme gr_query gr_read gr_rename gr_replay gr_save gr_set gr_setscheme gr_table gr_undo gr_use graph graph7 grebar greigen greigen_7 greigen_8 grmeanby grmeanby_7 gs_fileinfo gs_filetype gs_graphinfo gs_stat gsort gwood h|0 hadimvo hareg hausman haver he heck_d2 heckma_p heckman heckp_lf heckpr_p heckprob hel help hereg hetpr_lf hetpr_p hetprob hettest hexdump hilite hist hist_7 histogram hlogit hlu hmeans hotel hotelling hprobit hreg hsearch icd9 icd9_ff icd9p iis impute imtest inbase include inf infi infil infile infix inp inpu input ins insheet insp inspe inspec inspect integ inten intreg intreg_7 intreg_p intrg2_ll intrg_ll intrg_ll2 ipolate iqreg ir irf irf_create irfm iri is_svy is_svysum isid istdize ivprob_1_lf ivprob_lf ivprobit ivprobit_p ivreg ivreg_footnote ivtob_1_lf ivtob_lf ivtobit ivtobit_p jackknife jacknife jknife jknife_6 jknife_8 jkstat joinby kalarma1 kap kap_3 kapmeier kappa kapwgt kdensity kdensity_7 keep ksm ksmirnov ktau kwallis l|0 la lab labbe labbeplot labe label labelbook ladder levels levelsof leverage lfit lfit_p li lincom line linktest lis list lloghet_glf lloghet_glf_sh lloghet_gp lloghet_ilf lloghet_ilf_sh lloghet_ip llogi_sw llogis_p llogist llogistic llogistichet lnorm_lf lnorm_sw lnorma_p lnormal lnormalhet lnormhet_glf lnormhet_glf_sh lnormhet_gp lnormhet_ilf lnormhet_ilf_sh lnormhet_ip lnskew0 loadingplot loc loca local log logi logis_lf logistic logistic_p logit logit_estat logit_p loglogs logrank loneway lookfor lookup lowess lowess_7 lpredict lrecomp lroc lroc_7 lrtest ls lsens lsens_7 lsens_x lstat ltable ltable_7 ltriang lv lvr2plot lvr2plot_7 m|0 ma mac macr macro makecns man manova manova_estat manova_p manovatest mantel mark markin markout marksample mat mat_capp mat_order mat_put_rr mat_rapp mata mata_clear mata_describe mata_drop mata_matdescribe mata_matsave mata_matuse mata_memory mata_mlib mata_mosave mata_rename mata_which matalabel matcproc matlist matname matr matri matrix matrix_input__dlg matstrik mcc mcci md0_ md1_ md1debug_ md2_ md2debug_ mds mds_estat mds_p mdsconfig mdslong mdsmat mdsshepard mdytoe mdytof me_derd mean means median memory memsize menl meqparse mer merg merge meta mfp mfx mhelp mhodds minbound mixed_ll mixed_ll_reparm mkassert mkdir mkmat mkspline ml ml_5 ml_adjs ml_bhhhs ml_c_d ml_check ml_clear ml_cnt ml_debug ml_defd ml_e0 ml_e0_bfgs ml_e0_cycle ml_e0_dfp ml_e0i ml_e1 ml_e1_bfgs ml_e1_bhhh ml_e1_cycle ml_e1_dfp ml_e2 ml_e2_cycle ml_ebfg0 ml_ebfr0 ml_ebfr1 ml_ebh0q ml_ebhh0 ml_ebhr0 ml_ebr0i ml_ecr0i ml_edfp0 ml_edfr0 ml_edfr1 ml_edr0i ml_eds ml_eer0i ml_egr0i ml_elf ml_elf_bfgs ml_elf_bhhh ml_elf_cycle ml_elf_dfp ml_elfi ml_elfs ml_enr0i ml_enrr0 ml_erdu0 ml_erdu0_bfgs ml_erdu0_bhhh ml_erdu0_bhhhq ml_erdu0_cycle ml_erdu0_dfp ml_erdu0_nrbfgs ml_exde ml_footnote ml_geqnr ml_grad0 ml_graph ml_hbhhh ml_hd0 ml_hold ml_init ml_inv ml_log ml_max ml_mlout ml_mlout_8 ml_model ml_nb0 ml_opt ml_p ml_plot ml_query ml_rdgrd ml_repor ml_s_e ml_score ml_searc ml_technique ml_unhold mleval mlf_ mlmatbysum mlmatsum mlog mlogi mlogit mlogit_footnote mlogit_p mlopts mlsum mlvecsum mnl0_ mor more mov move mprobit mprobit_lf mprobit_p mrdu0_ mrdu1_ mvdecode mvencode mvreg mvreg_estat n|0 nbreg nbreg_al nbreg_lf nbreg_p nbreg_sw nestreg net newey newey_7 newey_p news nl nl_7 nl_9 nl_9_p nl_p nl_p_7 nlcom nlcom_p nlexp2 nlexp2_7 nlexp2a nlexp2a_7 nlexp3 nlexp3_7 nlgom3 nlgom3_7 nlgom4 nlgom4_7 nlinit nllog3 nllog3_7 nllog4 nllog4_7 nlog_rd nlogit nlogit_p nlogitgen nlogittree nlpred no nobreak noi nois noisi noisil noisily note notes notes_dlg nptrend numlabel numlist odbc old_ver olo olog ologi ologi_sw ologit ologit_p ologitp on one onew onewa oneway op_colnm op_comp op_diff op_inv op_str opr opro oprob oprob_sw oprobi oprobi_p oprobit oprobitp opts_exclusive order orthog orthpoly ou out outf outfi outfil outfile outs outsh outshe outshee outsheet ovtest pac pac_7 palette parse parse_dissim pause pca pca_8 pca_display pca_estat pca_p pca_rotate pcamat pchart pchart_7 pchi pchi_7 pcorr pctile pentium pergram pergram_7 permute permute_8 personal peto_st pkcollapse pkcross pkequiv pkexamine pkexamine_7 pkshape pksumm pksumm_7 pl plo plot plugin pnorm pnorm_7 poisgof poiss_lf poiss_sw poisso_p poisson poisson_estat post postclose postfile postutil pperron pr prais prais_e prais_e2 prais_p predict predictnl preserve print pro prob probi probit probit_estat probit_p proc_time procoverlay procrustes procrustes_estat procrustes_p profiler prog progr progra program prop proportion prtest prtesti pwcorr pwd q\\s qby qbys qchi qchi_7 qladder qladder_7 qnorm qnorm_7 qqplot qqplot_7 qreg qreg_c qreg_p qreg_sw qu quadchk quantile quantile_7 que quer query range ranksum ratio rchart rchart_7 rcof recast reclink recode reg reg3 reg3_p regdw regr regre regre_p2 regres regres_p regress regress_estat regriv_p remap ren rena renam rename renpfix repeat replace report reshape restore ret retu retur return rm rmdir robvar roccomp roccomp_7 roccomp_8 rocf_lf rocfit rocfit_8 rocgold rocplot rocplot_7 roctab roctab_7 rolling rologit rologit_p rot rota rotat rotate rotatemat rreg rreg_p ru run runtest rvfplot rvfplot_7 rvpplot rvpplot_7 sa safesum sample sampsi sav save savedresults saveold sc sca scal scala scalar scatter scm_mine sco scob_lf scob_p scobi_sw scobit scor score scoreplot scoreplot_help scree screeplot screeplot_help sdtest sdtesti se search separate seperate serrbar serrbar_7 serset set set_defaults sfrancia sh she shel shell shewhart shewhart_7 signestimationsample signrank signtest simul simul_7 simulate simulate_8 sktest sleep slogit slogit_d2 slogit_p smooth snapspan so sor sort spearman spikeplot spikeplot_7 spikeplt spline_x split sqreg sqreg_p sret sretu sretur sreturn ssc st st_ct st_hc st_hcd st_hcd_sh st_is st_issys st_note st_promo st_set st_show st_smpl st_subid stack statsby statsby_8 stbase stci stci_7 stcox stcox_estat stcox_fr stcox_fr_ll stcox_p stcox_sw stcoxkm stcoxkm_7 stcstat stcurv stcurve stcurve_7 stdes stem stepwise stereg stfill stgen stir stjoin stmc stmh stphplot stphplot_7 stphtest stphtest_7 stptime strate strate_7 streg streg_sw streset sts sts_7 stset stsplit stsum sttocc sttoct stvary stweib su suest suest_8 sum summ summa summar summari summariz summarize sunflower sureg survcurv survsum svar svar_p svmat svy svy_disp svy_dreg svy_est svy_est_7 svy_estat svy_get svy_gnbreg_p svy_head svy_header svy_heckman_p svy_heckprob_p svy_intreg_p svy_ivreg_p svy_logistic_p svy_logit_p svy_mlogit_p svy_nbreg_p svy_ologit_p svy_oprobit_p svy_poisson_p svy_probit_p svy_regress_p svy_sub svy_sub_7 svy_x svy_x_7 svy_x_p svydes svydes_8 svygen svygnbreg svyheckman svyheckprob svyintreg svyintreg_7 svyintrg svyivreg svylc svylog_p svylogit svymarkout svymarkout_8 svymean svymlog svymlogit svynbreg svyolog svyologit svyoprob svyoprobit svyopts svypois svypois_7 svypoisson svyprobit svyprobt svyprop svyprop_7 svyratio svyreg svyreg_p svyregress svyset svyset_7 svyset_8 svytab svytab_7 svytest svytotal sw sw_8 swcnreg swcox swereg swilk swlogis swlogit swologit swoprbt swpois swprobit swqreg swtobit swweib symmetry symmi symplot symplot_7 syntax sysdescribe sysdir sysuse szroeter ta tab tab1 tab2 tab_or tabd tabdi tabdis tabdisp tabi table tabodds tabodds_7 tabstat tabu tabul tabula tabulat tabulate te tempfile tempname tempvar tes test testnl testparm teststd tetrachoric time_it timer tis tob tobi tobit tobit_p tobit_sw token tokeni tokeniz tokenize tostring total translate translator transmap treat_ll treatr_p treatreg trim trimfill trnb_cons trnb_mean trpoiss_d2 trunc_ll truncr_p truncreg tsappend tset tsfill tsline tsline_ex tsreport tsrevar tsrline tsset tssmooth tsunab ttest ttesti tut_chk tut_wait tutorial tw tware_st two twoway twoway__fpfit_serset twoway__function_gen twoway__histogram_gen twoway__ipoint_serset twoway__ipoints_serset twoway__kdensity_gen twoway__lfit_serset twoway__normgen_gen twoway__pci_serset twoway__qfit_serset twoway__scatteri_serset twoway__sunflower_gen twoway_ksm_serset ty typ type typeof u|0 unab unabbrev unabcmd update us use uselabel var var_mkcompanion var_p varbasic varfcast vargranger varirf varirf_add varirf_cgraph varirf_create varirf_ctable varirf_describe varirf_dir varirf_drop varirf_erase varirf_graph varirf_ograph varirf_rename varirf_set varirf_table varlist varlmar varnorm varsoc varstable varstable_w varstable_w2 varwle vce vec vec_fevd vec_mkphi vec_p vec_p_w vecirf_create veclmar veclmar_w vecnorm vecnorm_w vecrank vecstable verinst vers versi versio version view viewsource vif vwls wdatetof webdescribe webseek webuse weib1_lf weib2_lf weib_lf weib_lf0 weibhet_glf weibhet_glf_sh weibhet_glfa weibhet_glfa_sh weibhet_gp weibhet_ilf weibhet_ilf_sh weibhet_ilfa weibhet_ilfa_sh weibhet_ip weibu_sw weibul_p weibull weibull_c weibull_s weibullhet wh whelp whi which whil while wilc_st wilcoxon win wind windo window winexec wntestb wntestb_7 wntestq xchart xchart_7 xcorr xcorr_7 xi xi_6 xmlsav xmlsave xmluse xpose xsh xshe xshel xshell xt_iis xt_tis xtab_p xtabond xtbin_p xtclog xtcloglog xtcloglog_8 xtcloglog_d2 xtcloglog_pa_p xtcloglog_re_p xtcnt_p xtcorr xtdata xtdes xtfront_p xtfrontier xtgee xtgee_elink xtgee_estat xtgee_makeivar xtgee_p xtgee_plink xtgls xtgls_p xthaus xthausman xtht_p xthtaylor xtile xtint_p xtintreg xtintreg_8 xtintreg_d2 xtintreg_p xtivp_1 xtivp_2 xtivreg xtline xtline_ex xtlogit xtlogit_8 xtlogit_d2 xtlogit_fe_p xtlogit_pa_p xtlogit_re_p xtmixed xtmixed_estat xtmixed_p xtnb_fe xtnb_lf xtnbreg xtnbreg_pa_p xtnbreg_refe_p xtpcse xtpcse_p xtpois xtpoisson xtpoisson_d2 xtpoisson_pa_p xtpoisson_refe_p xtpred xtprobit xtprobit_8 xtprobit_d2 xtprobit_re_p xtps_fe xtps_lf xtps_ren xtps_ren_8 xtrar_p xtrc xtrc_p xtrchh xtrefe_p xtreg xtreg_be xtreg_fe xtreg_ml xtreg_pa_p xtreg_re xtregar xtrere_p xtset xtsf_ll xtsf_llti xtsum xttab xttest0 xttobit xttobit_8 xttobit_p xttrans yx yxview__barlike_draw yxview_area_draw yxview_bar_draw yxview_dot_draw yxview_dropline_draw yxview_function_draw yxview_iarrow_draw yxview_ilabels_draw yxview_normal_draw yxview_pcarrow_draw yxview_pcbarrow_draw yxview_pccapsym_draw yxview_pcscatter_draw yxview_pcspike_draw yxview_rarea_draw yxview_rbar_draw yxview_rbarm_draw yxview_rcap_draw yxview_rcapsym_draw yxview_rconnected_draw yxview_rline_draw yxview_rscatter_draw yxview_rspike_draw yxview_spike_draw yxview_sunflower_draw zap_s zinb zinb_llf zinb_plf zip zip_llf zip_p zip_plf zt_ct_5 zt_hc_5 zt_hcd_5 zt_is_5 zt_iss_5 zt_sho_5 zt_smp_5 ztbase_5 ztcox_5 ztdes_5 ztereg_5 ztfill_5 ztgen_5 ztir_5 ztjoin_5 ztnb ztnb_p ztp ztp_p zts_5 ztset_5 ztspli_5 ztsum_5 zttoct_5 ztvary_5 ztweib_5',
         contains: [
       {
         className: 'symbol',
@@ -35307,7 +37629,7 @@ module.exports = function(hljs) {
         className: 'built_in',
         variants: [
           {
-            begin: '\\b(abs|acos|asin|atan|atan2|atanh|ceil|cloglog|comb|cos|digamma|exp|floor|invcloglog|invlogit|ln|lnfact|lnfactorial|lngamma|log|log10|max|min|mod|reldif|round|sign|sin|sqrt|sum|tan|tanh|trigamma|trunc|betaden|Binomial|binorm|binormal|chi2|chi2tail|dgammapda|dgammapdada|dgammapdadx|dgammapdx|dgammapdxdx|F|Fden|Ftail|gammaden|gammap|ibeta|invbinomial|invchi2|invchi2tail|invF|invFtail|invgammap|invibeta|invnchi2|invnFtail|invnibeta|invnorm|invnormal|invttail|nbetaden|nchi2|nFden|nFtail|nibeta|norm|normal|normalden|normd|npnchi2|tden|ttail|uniform|abbrev|char|index|indexnot|length|lower|ltrim|match|plural|proper|real|regexm|regexr|regexs|reverse|rtrim|string|strlen|strlower|strltrim|strmatch|strofreal|strpos|strproper|strreverse|strrtrim|strtrim|strupper|subinstr|subinword|substr|trim|upper|word|wordcount|_caller|autocode|byteorder|chop|clip|cond|e|epsdouble|epsfloat|group|inlist|inrange|irecode|matrix|maxbyte|maxdouble|maxfloat|maxint|maxlong|mi|minbyte|mindouble|minfloat|minint|minlong|missing|r|recode|replay|return|s|scalar|d|date|day|dow|doy|halfyear|mdy|month|quarter|week|year|d|daily|dofd|dofh|dofm|dofq|dofw|dofy|h|halfyearly|hofd|m|mofd|monthly|q|qofd|quarterly|tin|twithin|w|weekly|wofd|y|yearly|yh|ym|yofd|yq|yw|cholesky|colnumb|colsof|corr|det|diag|diag0cnt|el|get|hadamard|I|inv|invsym|issym|issymmetric|J|matmissing|matuniform|mreldif|nullmat|rownumb|rowsof|sweep|syminv|trace|vec|vecdiag)(?=\\(|$)'
+            begin: '\\b(abs|acos|asin|atan|atan2|atanh|ceil|cloglog|comb|cos|digamma|exp|floor|invcloglog|invlogit|ln|lnfact|lnfactorial|lngamma|log|log10|max|min|mod|reldif|round|sign|sin|sqrt|sum|tan|tanh|trigamma|trunc|betaden|Binomial|binorm|binormal|chi2|chi2tail|dgammapda|dgammapdada|dgammapdadx|dgammapdx|dgammapdxdx|F|Fden|Ftail|gammaden|gammap|ibeta|invbinomial|invchi2|invchi2tail|invF|invFtail|invgammap|invibeta|invnchi2|invnFtail|invnibeta|invnorm|invnormal|invttail|nbetaden|nchi2|nFden|nFtail|nibeta|norm|normal|normalden|normd|npnchi2|tden|ttail|uniform|abbrev|char|index|indexnot|length|lower|ltrim|match|plural|proper|real|regexm|regexr|regexs|reverse|rtrim|string|strlen|strlower|strltrim|strmatch|strofreal|strpos|strproper|strreverse|strrtrim|strtrim|strupper|subinstr|subinword|substr|trim|upper|word|wordcount|_caller|autocode|byteorder|chop|clip|cond|e|epsdouble|epsfloat|group|inlist|inrange|irecode|matrix|maxbyte|maxdouble|maxfloat|maxint|maxlong|mi|minbyte|mindouble|minfloat|minint|minlong|missing|r|recode|replay|return|s|scalar|d|date|day|dow|doy|halfyear|mdy|month|quarter|week|year|d|daily|dofd|dofh|dofm|dofq|dofw|dofy|h|halfyearly|hofd|m|mofd|monthly|q|qofd|quarterly|tin|twithin|w|weekly|wofd|y|yearly|yh|ym|yofd|yq|yw|cholesky|colnumb|colsof|corr|det|diag|diag0cnt|el|get|hadamard|I|inv|invsym|issym|issymmetric|J|matmissing|matuniform|mreldif|nullmat|rownumb|rowsof|sweep|syminv|trace|vec|vecdiag)(?=\\()'
           }
         ]
       },
@@ -35500,7 +37822,7 @@ module.exports = function(hljs) {
     'video'
   ];
 
-  var TAG_END = '[\\.\\s\\n\\[\\:,]';
+  var LOOKAHEAD_TAG_END = '(?=[\\.\\s\\n\\[\\:,])';
 
   var ATTRIBUTES = [
     'align-content',
@@ -35743,34 +38065,25 @@ module.exports = function(hljs) {
 
       // class tag
       {
-        begin: '\\.[a-zA-Z][a-zA-Z0-9_-]*' + TAG_END,
-        returnBegin: true,
-        contains: [
-          {className: 'selector-class', begin: '\\.[a-zA-Z][a-zA-Z0-9_-]*'}
-        ]
+        begin: '\\.[a-zA-Z][a-zA-Z0-9_-]*' + LOOKAHEAD_TAG_END,
+        className: 'selector-class'
       },
 
       // id tag
       {
-        begin: '\\#[a-zA-Z][a-zA-Z0-9_-]*' + TAG_END,
-        returnBegin: true,
-        contains: [
-          {className: 'selector-id', begin: '\\#[a-zA-Z][a-zA-Z0-9_-]*'}
-        ]
+        begin: '\\#[a-zA-Z][a-zA-Z0-9_-]*' + LOOKAHEAD_TAG_END,
+        className: 'selector-id'
       },
 
       // tags
       {
-        begin: '\\b(' + TAGS.join('|') + ')' + TAG_END,
-        returnBegin: true,
-        contains: [
-          {className: 'selector-tag', begin: '\\b[a-zA-Z][a-zA-Z0-9_-]*'}
-        ]
+        begin: '\\b(' + TAGS.join('|') + ')' + LOOKAHEAD_TAG_END,
+        className: 'selector-tag'
       },
 
       // psuedo selectors
       {
-        begin: '&?:?:\\b(' + PSEUDO_SELECTORS.join('|') + ')' + TAG_END
+        begin: '&?:?:\\b(' + PSEUDO_SELECTORS.join('|') + ')' + LOOKAHEAD_TAG_END
       },
 
       // @ keywords
@@ -36009,7 +38322,8 @@ module.exports = function(hljs) {
                   '@NSCopying|@NSManaged|@objc|@objcMembers|@convention|@required|' +
                   '@noreturn|@IBAction|@IBDesignable|@IBInspectable|@IBOutlet|' +
                   '@infix|@prefix|@postfix|@autoclosure|@testable|@available|' +
-                  '@nonobjc|@NSApplicationMain|@UIApplicationMain)'
+                  '@nonobjc|@NSApplicationMain|@UIApplicationMain|@dynamicMemberLookup|' +
+                  '@propertyWrapper)'
 
       },
       {
@@ -36425,17 +38739,17 @@ module.exports = function(hljs) {
   var FILTER = {
     begin: /\|[A-Za-z_]+:?/,
     keywords:
-      'abs batch capitalize convert_encoding date date_modify default ' +
-      'escape first format join json_encode keys last length lower ' +
-      'merge nl2br number_format raw replace reverse round slice sort split ' +
-      'striptags title trim upper url_encode',
+      'abs batch capitalize column convert_encoding date date_modify default ' +
+      'escape filter first format inky_to_html inline_css join json_encode keys last ' +
+      'length lower map markdown merge nl2br number_format raw reduce replace ' +
+      'reverse round slice sort spaceless split striptags title trim upper url_encode',
     contains: [
       FUNCTIONS
     ]
   };
 
-  var TAGS = 'autoescape block do embed extends filter flush for ' +
-    'if import include macro sandbox set spaceless use verbatim';
+  var TAGS = 'apply autoescape block deprecated do embed extends filter flush for from ' +
+    'if import include macro sandbox set use verbatim with';
 
   TAGS = TAGS + ' ' + TAGS.split(' ').map(function(t){return 'end' + t}).join(' ');
 
@@ -36531,6 +38845,62 @@ module.exports = function(hljs) {
       ARGS
     ]
   };
+  var NUMBER = {
+    className: 'number',
+    variants: [
+      { begin: '\\b(0[bB][01]+)n?' },
+      { begin: '\\b(0[oO][0-7]+)n?' },
+      { begin: hljs.C_NUMBER_RE + 'n?' }
+    ],
+    relevance: 0
+  };
+  var SUBST = {
+    className: 'subst',
+    begin: '\\$\\{', end: '\\}',
+    keywords: KEYWORDS,
+    contains: []  // defined later
+  };
+  var HTML_TEMPLATE = {
+    begin: 'html`', end: '',
+    starts: {
+      end: '`', returnEnd: false,
+      contains: [
+        hljs.BACKSLASH_ESCAPE,
+        SUBST
+      ],
+      subLanguage: 'xml',
+    }
+  };
+  var CSS_TEMPLATE = {
+    begin: 'css`', end: '',
+    starts: {
+      end: '`', returnEnd: false,
+      contains: [
+        hljs.BACKSLASH_ESCAPE,
+        SUBST
+      ],
+      subLanguage: 'css',
+    }
+  };
+  var TEMPLATE_STRING = {
+    className: 'string',
+    begin: '`', end: '`',
+    contains: [
+      hljs.BACKSLASH_ESCAPE,
+      SUBST
+    ]
+  };
+  SUBST.contains = [
+    hljs.APOS_STRING_MODE,
+    hljs.QUOTE_STRING_MODE,
+    HTML_TEMPLATE,
+    CSS_TEMPLATE,
+    TEMPLATE_STRING,
+    NUMBER,
+    hljs.REGEXP_MODE
+  ];
+
+
 
   return {
     aliases: ['ts'],
@@ -36542,28 +38912,12 @@ module.exports = function(hljs) {
       },
       hljs.APOS_STRING_MODE,
       hljs.QUOTE_STRING_MODE,
-      { // template string
-        className: 'string',
-        begin: '`', end: '`',
-        contains: [
-          hljs.BACKSLASH_ESCAPE,
-          {
-            className: 'subst',
-            begin: '\\$\\{', end: '\\}'
-          }
-        ]
-      },
+      HTML_TEMPLATE,
+      CSS_TEMPLATE,
+      TEMPLATE_STRING,
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
-      {
-        className: 'number',
-        variants: [
-          { begin: '\\b(0[bB][01]+)' },
-          { begin: '\\b(0[oO][0-7]+)' },
-          { begin: hljs.C_NUMBER_RE }
-        ],
-        relevance: 0
-      },
+      NUMBER,
       { // "value" container
         begin: '(' + hljs.RE_STARTERS_RE + '|\\b(case|return|throw)\\b)\\s*',
         keywords: 'return throw case',
@@ -36604,7 +38958,7 @@ module.exports = function(hljs) {
       },
       {
         className: 'function',
-        begin: 'function', end: /[\{;]/, excludeEnd: true,
+        beginKeywords: 'function', end: /[\{;]/, excludeEnd: true,
         keywords: KEYWORDS,
         contains: [
           'self',
@@ -36615,7 +38969,7 @@ module.exports = function(hljs) {
         relevance: 0 // () => {} is more typical in TypeScript
       },
       {
-        beginKeywords: 'constructor', end: /\{/, excludeEnd: true,
+        beginKeywords: 'constructor', end: /[\{;]/, excludeEnd: true,
         contains: [
           'self',
           PARAMS
@@ -36719,17 +39073,17 @@ module.exports = function(hljs) {
     case_insensitive: true,
     keywords: {
       keyword:
-        'addhandler addressof alias and andalso aggregate ansi as assembly auto binary by byref byval ' + /* a-b */
+        'addhandler addressof alias and andalso aggregate ansi as async assembly auto await binary by byref byval ' + /* a-b */
         'call case catch class compare const continue custom declare default delegate dim distinct do ' + /* c-d */
         'each equals else elseif end enum erase error event exit explicit finally for friend from function ' + /* e-f */
-        'get global goto group handles if implements imports in inherits interface into is isfalse isnot istrue ' + /* g-i */
+        'get global goto group handles if implements imports in inherits interface into is isfalse isnot istrue iterator ' + /* g-i */
         'join key let lib like loop me mid mod module mustinherit mustoverride mybase myclass ' + /* j-m */
-        'namespace narrowing new next not notinheritable notoverridable ' + /* n */
+        'nameof namespace narrowing new next not notinheritable notoverridable ' + /* n */
         'of off on operator option optional or order orelse overloads overridable overrides ' + /* o */
         'paramarray partial preserve private property protected public ' + /* p */
         'raiseevent readonly redim rem removehandler resume return ' + /* r */
         'select set shadows shared skip static step stop structure strict sub synclock ' + /* s */
-        'take text then throw to try unicode until using when where while widening with withevents writeonly xor', /* t-x */
+        'take text then throw to try unicode until using when where while widening with withevents writeonly xor yield', /* t-y */
       built_in:
         'boolean byte cbool cbyte cchar cdate cdec cdbl char cint clng cobj csbyte cshort csng cstr ctype ' +  /* b-c */
         'date decimal directcast double gettype getxmlnamespace iif integer long object ' + /* d-o */
@@ -37373,6 +39727,23 @@ module.exports = function(hljs) {
 
 module.exports = function(hljs) {
   var XML_IDENT_RE = '[A-Za-z0-9\\._:-]+';
+  var XML_ENTITIES = {
+    className: 'symbol',
+    begin: '&[a-z]+;|&#[0-9]+;|&#x[a-f0-9]+;'
+  };
+  var XML_META_KEYWORDS = {
+	  begin: '\\s',
+	  contains:[
+	    {
+	      className: 'meta-keyword',
+	      begin: '#?[a-z_][a-z1-9_-]+',
+	      illegal: '\\n',
+      }
+	  ]
+  };
+  var XML_META_PAR_KEYWORDS = hljs.inherit(XML_META_KEYWORDS, {begin: '\\(', end: '\\)'});
+  var APOS_META_STRING_MODE = hljs.inherit(hljs.APOS_STRING_MODE, {className: 'meta-string'});
+  var QUOTE_META_STRING_MODE = hljs.inherit(hljs.QUOTE_STRING_MODE, {className: 'meta-string'});
   var TAG_INTERNALS = {
     endsWithParent: true,
     illegal: /</,
@@ -37391,8 +39762,8 @@ module.exports = function(hljs) {
             className: 'string',
             endsParent: true,
             variants: [
-              {begin: /"/, end: /"/},
-              {begin: /'/, end: /'/},
+              {begin: /"/, end: /"/, contains: [XML_ENTITIES]},
+              {begin: /'/, end: /'/, contains: [XML_ENTITIES]},
               {begin: /[^\s"'=<>`]+/}
             ]
           }
@@ -37401,14 +39772,34 @@ module.exports = function(hljs) {
     ]
   };
   return {
-    aliases: ['html', 'xhtml', 'rss', 'atom', 'xjb', 'xsd', 'xsl', 'plist'],
+    aliases: ['html', 'xhtml', 'rss', 'atom', 'xjb', 'xsd', 'xsl', 'plist', 'wsf', 'svg'],
     case_insensitive: true,
     contains: [
       {
         className: 'meta',
-        begin: '<!DOCTYPE', end: '>',
+        begin: '<![a-z]', end: '>',
         relevance: 10,
-        contains: [{begin: '\\[', end: '\\]'}]
+        contains: [
+				  XML_META_KEYWORDS,
+				  QUOTE_META_STRING_MODE,
+				  APOS_META_STRING_MODE,
+					XML_META_PAR_KEYWORDS,
+					{
+					  begin: '\\[', end: '\\]',
+					  contains:[
+						  {
+					      className: 'meta',
+					      begin: '<![a-z]', end: '>',
+					      contains: [
+					        XML_META_KEYWORDS,
+					        XML_META_PAR_KEYWORDS,
+					        QUOTE_META_STRING_MODE,
+					        APOS_META_STRING_MODE
+						    ]
+			        }
+					  ]
+				  }
+				]
       },
       hljs.COMMENT(
         '<!--',
@@ -37421,6 +39812,7 @@ module.exports = function(hljs) {
         begin: '<\\!\\[CDATA\\[', end: '\\]\\]>',
         relevance: 10
       },
+      XML_ENTITIES,
       {
         className: 'meta',
         begin: /<\?xml/, end: /\?>/, relevance: 10
@@ -37446,7 +39838,7 @@ module.exports = function(hljs) {
         ending braket. The '$' is needed for the lexeme to be recognized
         by hljs.subMode() that tests lexemes outside the stream.
         */
-        begin: '<style(?=\\s|>|$)', end: '>',
+        begin: '<style(?=\\s|>)', end: '>',
         keywords: {name: 'style'},
         contains: [TAG_INTERNALS],
         starts: {
@@ -37457,7 +39849,7 @@ module.exports = function(hljs) {
       {
         className: 'tag',
         // See the comment in the <style tag about the lookahead pattern
-        begin: '<script(?=\\s|>|$)', end: '>',
+        begin: '<script(?=\\s|>)', end: '>',
         keywords: {name: 'script'},
         contains: [TAG_INTERNALS],
         starts: {
@@ -37670,14 +40062,16 @@ module.exports = function(hljs) {
 module.exports = function(hljs) {
   var LITERALS = 'true false yes no null';
 
-  var keyPrefix = '^[ \\-]*';
-  var keyName =  '[a-zA-Z_][\\w\\-]*';
+  // Define keys as starting with a word character
+  // ...containing word chars, spaces, colons, forward-slashes, hyphens and periods
+  // ...and ending with a colon followed immediately by a space, tab or newline.
+  // The YAML spec allows for much more than this, but this covers most use-cases.
   var KEY = {
     className: 'attr',
     variants: [
-      { begin: keyPrefix + keyName + ":"},
-      { begin: keyPrefix + '"' + keyName + '"' + ":"},
-      { begin: keyPrefix + "'" + keyName + "'" + ":"}
+      { begin: '\\w[\\w :\\/.-]*:(?=[ \t]|$)' },
+      { begin: '"\\w[\\w :\\/.-]*":(?=[ \t]|$)' }, //double quoted keys
+      { begin: '\'\\w[\\w :\\/.-]*\':(?=[ \t]|$)' } //single quoted keys
     ]
   };
 
@@ -37713,12 +40107,12 @@ module.exports = function(hljs) {
         relevance: 10
       },
       { // multi line string
+        // Blocks start with a | or > followed by a newline
+        //
+        // Indentation of subsequent lines must be the same to
+        // be considered part of the block
         className: 'string',
-        begin: '[\\|>] *$',
-        returnEnd: true,
-        contains: STRING.contains,
-        // very simple termination: next hash key
-        end: KEY.variants[0].begin
+        begin: '[\\|>]([0-9]?[+-])?[ ]*\\n( *)[\\S ]+\\n(\\2[\\S ]+\\n?)*',
       },
       { // Ruby/Rails erb
         begin: '<%[%=-]?', end: '[%-]?%>',
@@ -37745,7 +40139,8 @@ module.exports = function(hljs) {
       },
       { // array listing
         className: 'bullet',
-        begin: '^ *-',
+      // TODO: remove |$ hack when we have proper look-ahead support
+      begin: '\\-(?=[ ]|$)',
         relevance: 0
       },
       hljs.HASH_COMMENT_MODE,
@@ -37753,7 +40148,12 @@ module.exports = function(hljs) {
         beginKeywords: LITERALS,
         keywords: {literal: LITERALS}
       },
-      hljs.C_NUMBER_MODE,
+      // numbers are any valid C-style number that
+      // sit isolated from other words
+      {
+        className: 'number',
+        begin: hljs.C_NUMBER_RE + '\\b'
+      },
       STRING
     ]
   };
@@ -38790,38 +41190,6 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ "./node_modules/is-buffer/index.js":
-/*!*****************************************!*\
-  !*** ./node_modules/is-buffer/index.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-module.exports = function (obj) {
-  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-}
-
-function isBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/is-plain-object/index.js":
 /*!***********************************************!*\
   !*** ./node_modules/is-plain-object/index.js ***!
@@ -38986,7 +41354,7 @@ module.exports = function kindOf(val) {
 };
 
 function ctorName(val) {
-  return val.constructor ? val.constructor.name : null;
+  return typeof val.constructor === 'function' ? val.constructor.name : null;
 }
 
 function isArray(val) {
@@ -39051,747 +41419,125 @@ function isBuffer(val) {
 
 /***/ }),
 
-/***/ "./node_modules/preact/dist/preact.mjs":
-/*!*********************************************!*\
-  !*** ./node_modules/preact/dist/preact.mjs ***!
-  \*********************************************/
-/*! exports provided: default, h, createElement, cloneElement, createRef, Component, render, rerender, options */
-/***/ (function(__webpack_module__, __webpack_exports__, __webpack_require__) {
+/***/ "./node_modules/preact/compat/dist/compat.module.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/preact/compat/dist/compat.module.js ***!
+  \**********************************************************/
+/*! exports provided: useState, useReducer, useEffect, useLayoutEffect, useRef, useImperativeHandle, useMemo, useCallback, useContext, useDebugValue, useErrorBoundary, createElement, createContext, createRef, Fragment, Component, default, version, Children, render, hydrate, unmountComponentAtNode, createPortal, createFactory, cloneElement, isValidElement, findDOMNode, PureComponent, memo, forwardRef, unstable_batchedUpdates, StrictMode, Suspense, SuspenseList, lazy, __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return h; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "version", function() { return tn; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Children", function() { return N; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return H; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hydrate", function() { return Z; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unmountComponentAtNode", function() { return on; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPortal", function() { return P; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createFactory", function() { return en; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cloneElement", function() { return un; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isValidElement", function() { return rn; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findDOMNode", function() { return cn; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PureComponent", function() { return w; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "memo", function() { return C; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forwardRef", function() { return k; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unstable_batchedUpdates", function() { return ln; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StrictMode", function() { return fn; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Suspense", function() { return F; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SuspenseList", function() { return I; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "lazy", function() { return D; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED", function() { return nn; });
+/* harmony import */ var preact_hooks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact/hooks */ "./node_modules/preact/hooks/dist/hooks.module.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useState", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useState"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useReducer", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useReducer"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useEffect", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useEffect"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLayoutEffect", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useLayoutEffect"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useRef", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useRef"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useImperativeHandle", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useImperativeHandle"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useMemo", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useMemo"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useCallback", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useCallback"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useContext", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useContext"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useDebugValue", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useDebugValue"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useErrorBoundary", function() { return preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useErrorBoundary"]; });
+
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return preact__WEBPACK_IMPORTED_MODULE_1__["createElement"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createContext", function() { return preact__WEBPACK_IMPORTED_MODULE_1__["createContext"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createRef", function() { return preact__WEBPACK_IMPORTED_MODULE_1__["createRef"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Fragment", function() { return preact__WEBPACK_IMPORTED_MODULE_1__["Fragment"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return preact__WEBPACK_IMPORTED_MODULE_1__["Component"]; });
+
+function S(n,t){for(var e in t)n[e]=t[e];return n}function g(n,t){for(var e in n)if("__source"!==e&&!(e in t))return!0;for(var r in t)if("__source"!==r&&n[r]!==t[r])return!0;return!1}function w(n){this.props=n}function C(n,t){function e(n){var e=this.props.ref,r=e==n.ref;return!r&&e&&(e.call?e(null):e.current=null),t?!t(this.props,n)||!r:g(this.props,n)}function r(t){return this.shouldComponentUpdate=e,Object(preact__WEBPACK_IMPORTED_MODULE_1__["createElement"])(n,t)}return r.displayName="Memo("+(n.displayName||n.name)+")",r.prototype.isReactComponent=!0,r.__f=!0,r}(w.prototype=new preact__WEBPACK_IMPORTED_MODULE_1__["Component"]).isPureReactComponent=!0,w.prototype.shouldComponentUpdate=function(n,t){return g(this.props,n)||g(this.state,t)};var R=preact__WEBPACK_IMPORTED_MODULE_1__["options"].__b;preact__WEBPACK_IMPORTED_MODULE_1__["options"].__b=function(n){n.type&&n.type.__f&&n.ref&&(n.props.ref=n.ref,n.ref=null),R&&R(n)};var x="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.forward_ref")||3911;function k(n){function t(t,e){var r=S({},t);return delete r.ref,n(r,(e=t.ref||e)&&("object"!=typeof e||"current"in e)?e:null)}return t.$$typeof=x,t.render=t,t.prototype.isReactComponent=t.__f=!0,t.displayName="ForwardRef("+(n.displayName||n.name)+")",t}var A=function(n,t){return null==n?null:Object(preact__WEBPACK_IMPORTED_MODULE_1__["toChildArray"])(Object(preact__WEBPACK_IMPORTED_MODULE_1__["toChildArray"])(n).map(t))},N={map:A,forEach:A,count:function(n){return n?Object(preact__WEBPACK_IMPORTED_MODULE_1__["toChildArray"])(n).length:0},only:function(n){var t=Object(preact__WEBPACK_IMPORTED_MODULE_1__["toChildArray"])(n);if(1!==t.length)throw"Children.only";return t[0]},toArray:preact__WEBPACK_IMPORTED_MODULE_1__["toChildArray"]},O=preact__WEBPACK_IMPORTED_MODULE_1__["options"].__e;function L(n){return n&&((n=S({},n)).__c=null,n.__k=n.__k&&n.__k.map(L)),n}function U(n){return n&&(n.__v=null,n.__k=n.__k&&n.__k.map(U)),n}function F(){this.__u=0,this.t=null,this.__b=null}function M(n){var t=n.__.__c;return t&&t.__e&&t.__e(n)}function D(n){var t,e,r;function u(u){if(t||(t=n()).then(function(n){e=n.default||n},function(n){r=n}),r)throw r;if(!e)throw t;return Object(preact__WEBPACK_IMPORTED_MODULE_1__["createElement"])(e,u)}return u.displayName="Lazy",u.__f=!0,u}function I(){this.u=null,this.o=null}preact__WEBPACK_IMPORTED_MODULE_1__["options"].__e=function(n,t,e){if(n.then)for(var r,u=t;u=u.__;)if((r=u.__c)&&r.__c)return null==t.__e&&(t.__e=e.__e,t.__k=e.__k),r.__c(n,t.__c);O(n,t,e)},(F.prototype=new preact__WEBPACK_IMPORTED_MODULE_1__["Component"]).__c=function(n,t){var e=this;null==e.t&&(e.t=[]),e.t.push(t);var r=M(e.__v),u=!1,o=function(){u||(u=!0,t.componentWillUnmount=t.__c,r?r(i):i())};t.__c=t.componentWillUnmount,t.componentWillUnmount=function(){o(),t.__c&&t.__c()};var i=function(){var n;if(!--e.__u)for(e.__v.__k[0]=U(e.state.__e),e.setState({__e:e.__b=null});n=e.t.pop();)n.forceUpdate()},c=e.__v;c&&!0===c.__h||e.__u++||e.setState({__e:e.__b=e.__v.__k[0]}),n.then(o,o)},F.prototype.componentWillUnmount=function(){this.t=[]},F.prototype.render=function(n,t){this.__b&&(this.__v.__k&&(this.__v.__k[0]=L(this.__b)),this.__b=null);var e=t.__e&&Object(preact__WEBPACK_IMPORTED_MODULE_1__["createElement"])(preact__WEBPACK_IMPORTED_MODULE_1__["Fragment"],null,n.fallback);return e&&(e.__h=null),[Object(preact__WEBPACK_IMPORTED_MODULE_1__["createElement"])(preact__WEBPACK_IMPORTED_MODULE_1__["Fragment"],null,t.__e?null:n.children),e]};var T=function(n,t,e){if(++e[1]===e[0]&&n.o.delete(t),n.props.revealOrder&&("t"!==n.props.revealOrder[0]||!n.o.size))for(e=n.u;e;){for(;e.length>3;)e.pop()();if(e[1]<e[0])break;n.u=e=e[2]}};function W(n){return this.getChildContext=function(){return n.context},n.children}function j(n){var t=this,e=n.i,r=Object(preact__WEBPACK_IMPORTED_MODULE_1__["createElement"])(W,{context:t.context},n.__v);t.componentWillUnmount=function(){var n=t.l.parentNode;n&&n.removeChild(t.l),Object(preact__WEBPACK_IMPORTED_MODULE_1__["__u"])(t.s)},t.i&&t.i!==e&&(t.componentWillUnmount(),t.h=!1),n.__v?t.h?(e.__k=t.__k,Object(preact__WEBPACK_IMPORTED_MODULE_1__["render"])(r,e),t.__k=e.__k):(t.l=document.createTextNode(""),t.__k=e.__k,Object(preact__WEBPACK_IMPORTED_MODULE_1__["hydrate"])("",e),e.appendChild(t.l),t.h=!0,t.i=e,Object(preact__WEBPACK_IMPORTED_MODULE_1__["render"])(r,e,t.l),e.__k=t.__k,t.__k=t.l.__k):t.h&&t.componentWillUnmount(),t.s=r}function P(n,t){return Object(preact__WEBPACK_IMPORTED_MODULE_1__["createElement"])(j,{__v:n,i:t})}(I.prototype=new preact__WEBPACK_IMPORTED_MODULE_1__["Component"]).__e=function(n){var t=this,e=M(t.__v),r=t.o.get(n);return r[0]++,function(u){var o=function(){t.props.revealOrder?(r.push(u),T(t,n,r)):u()};e?e(o):o()}},I.prototype.render=function(n){this.u=null,this.o=new Map;var t=Object(preact__WEBPACK_IMPORTED_MODULE_1__["toChildArray"])(n.children);n.revealOrder&&"b"===n.revealOrder[0]&&t.reverse();for(var e=t.length;e--;)this.o.set(t[e],this.u=[1,0,this.u]);return n.children},I.prototype.componentDidUpdate=I.prototype.componentDidMount=function(){var n=this;this.o.forEach(function(t,e){T(n,e,t)})};var z="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.element")||60103,V=/^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|fill|flood|font|glyph(?!R)|horiz|marker(?!H|W|U)|overline|paint|stop|strikethrough|stroke|text(?!L)|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/,B="undefined"!=typeof Symbol?/fil|che|rad/i:/fil|che|ra/i;function H(n,t,e){return null==t.__k&&(t.textContent=""),Object(preact__WEBPACK_IMPORTED_MODULE_1__["render"])(n,t),"function"==typeof e&&e(),n?n.__c:null}function Z(n,t,e){return Object(preact__WEBPACK_IMPORTED_MODULE_1__["hydrate"])(n,t),"function"==typeof e&&e(),n?n.__c:null}preact__WEBPACK_IMPORTED_MODULE_1__["Component"].prototype.isReactComponent={},["componentWillMount","componentWillReceiveProps","componentWillUpdate"].forEach(function(n){Object.defineProperty(preact__WEBPACK_IMPORTED_MODULE_1__["Component"].prototype,n,{configurable:!0,get:function(){return this["UNSAFE_"+n]},set:function(t){Object.defineProperty(this,n,{configurable:!0,writable:!0,value:t})}})});var Y=preact__WEBPACK_IMPORTED_MODULE_1__["options"].event;function $(){}function q(){return this.cancelBubble}function G(){return this.defaultPrevented}preact__WEBPACK_IMPORTED_MODULE_1__["options"].event=function(n){return Y&&(n=Y(n)),n.persist=$,n.isPropagationStopped=q,n.isDefaultPrevented=G,n.nativeEvent=n};var J,K={configurable:!0,get:function(){return this.class}},Q=preact__WEBPACK_IMPORTED_MODULE_1__["options"].vnode;preact__WEBPACK_IMPORTED_MODULE_1__["options"].vnode=function(n){var t=n.type,e=n.props,r=e;if("string"==typeof t){for(var u in r={},e){var o=e[u];"defaultValue"===u&&"value"in e&&null==e.value?u="value":"download"===u&&!0===o?o="":/ondoubleclick/i.test(u)?u="ondblclick":/^onchange(textarea|input)/i.test(u+t)&&!B.test(e.type)?u="oninput":/^on(Ani|Tra|Tou|BeforeInp)/.test(u)?u=u.toLowerCase():V.test(u)?u=u.replace(/[A-Z0-9]/,"-$&").toLowerCase():null===o&&(o=void 0),r[u]=o}"select"==t&&r.multiple&&Array.isArray(r.value)&&(r.value=Object(preact__WEBPACK_IMPORTED_MODULE_1__["toChildArray"])(e.children).forEach(function(n){n.props.selected=-1!=r.value.indexOf(n.props.value)})),n.props=r}t&&e.class!=e.className&&(K.enumerable="className"in e,null!=e.className&&(r.class=e.className),Object.defineProperty(r,"className",K)),n.$$typeof=z,Q&&Q(n)};var X=preact__WEBPACK_IMPORTED_MODULE_1__["options"].__r;preact__WEBPACK_IMPORTED_MODULE_1__["options"].__r=function(n){X&&X(n),J=n.__c};var nn={ReactCurrentDispatcher:{current:{readContext:function(n){return J.__n[n.__c].props.value}}}},tn="16.8.0";function en(n){return preact__WEBPACK_IMPORTED_MODULE_1__["createElement"].bind(null,n)}function rn(n){return!!n&&n.$$typeof===z}function un(n){return rn(n)?preact__WEBPACK_IMPORTED_MODULE_1__["cloneElement"].apply(null,arguments):n}function on(n){return!!n.__k&&(Object(preact__WEBPACK_IMPORTED_MODULE_1__["render"])(null,n),!0)}function cn(n){return n&&(n.base||1===n.nodeType&&n)||null}var ln=function(n,t){return n(t)},fn=preact__WEBPACK_IMPORTED_MODULE_1__["Fragment"];/* harmony default export */ __webpack_exports__["default"] = ({useState:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useState"],useReducer:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useReducer"],useEffect:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useEffect"],useLayoutEffect:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useLayoutEffect"],useRef:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useRef"],useImperativeHandle:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useImperativeHandle"],useMemo:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useMemo"],useCallback:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useCallback"],useContext:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useContext"],useDebugValue:preact_hooks__WEBPACK_IMPORTED_MODULE_0__["useDebugValue"],version:"16.8.0",Children:N,render:H,hydrate:Z,unmountComponentAtNode:on,createPortal:P,createElement:preact__WEBPACK_IMPORTED_MODULE_1__["createElement"],createContext:preact__WEBPACK_IMPORTED_MODULE_1__["createContext"],createFactory:en,cloneElement:un,createRef:preact__WEBPACK_IMPORTED_MODULE_1__["createRef"],Fragment:preact__WEBPACK_IMPORTED_MODULE_1__["Fragment"],isValidElement:rn,findDOMNode:cn,Component:preact__WEBPACK_IMPORTED_MODULE_1__["Component"],PureComponent:w,memo:C,forwardRef:k,unstable_batchedUpdates:ln,StrictMode:preact__WEBPACK_IMPORTED_MODULE_1__["Fragment"],Suspense:F,SuspenseList:I,lazy:D,__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:nn});
+//# sourceMappingURL=compat.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/preact/dist/preact.module.js":
+/*!***************************************************!*\
+  !*** ./node_modules/preact/dist/preact.module.js ***!
+  \***************************************************/
+/*! exports provided: render, hydrate, createElement, h, Fragment, createRef, isValidElement, Component, cloneElement, createContext, toChildArray, __u, options */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return O; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hydrate", function() { return S; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return h; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cloneElement", function() { return cloneElement; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createRef", function() { return createRef; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return Component; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rerender", function() { return rerender; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "options", function() { return options; });
-var VNode = function VNode() {};
-
-var options = {};
-
-var stack = [];
-
-var EMPTY_CHILDREN = [];
-
-function h(nodeName, attributes) {
-	var children = EMPTY_CHILDREN,
-	    lastSimple,
-	    child,
-	    simple,
-	    i;
-	for (i = arguments.length; i-- > 2;) {
-		stack.push(arguments[i]);
-	}
-	if (attributes && attributes.children != null) {
-		if (!stack.length) stack.push(attributes.children);
-		delete attributes.children;
-	}
-	while (stack.length) {
-		if ((child = stack.pop()) && child.pop !== undefined) {
-			for (i = child.length; i--;) {
-				stack.push(child[i]);
-			}
-		} else {
-			if (typeof child === 'boolean') child = null;
-
-			if (simple = typeof nodeName !== 'function') {
-				if (child == null) child = '';else if (typeof child === 'number') child = String(child);else if (typeof child !== 'string') simple = false;
-			}
-
-			if (simple && lastSimple) {
-				children[children.length - 1] += child;
-			} else if (children === EMPTY_CHILDREN) {
-				children = [child];
-			} else {
-				children.push(child);
-			}
-
-			lastSimple = simple;
-		}
-	}
-
-	var p = new VNode();
-	p.nodeName = nodeName;
-	p.children = children;
-	p.attributes = attributes == null ? undefined : attributes;
-	p.key = attributes == null ? undefined : attributes.key;
-
-	if (options.vnode !== undefined) options.vnode(p);
-
-	return p;
-}
-
-function extend(obj, props) {
-  for (var i in props) {
-    obj[i] = props[i];
-  }return obj;
-}
-
-function applyRef(ref, value) {
-  if (ref != null) {
-    if (typeof ref == 'function') ref(value);else ref.current = value;
-  }
-}
-
-var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
-
-function cloneElement(vnode, props) {
-  return h(vnode.nodeName, extend(extend({}, vnode.attributes), props), arguments.length > 2 ? [].slice.call(arguments, 2) : vnode.children);
-}
-
-var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
-
-var items = [];
-
-function enqueueRender(component) {
-	if (!component._dirty && (component._dirty = true) && items.push(component) == 1) {
-		(options.debounceRendering || defer)(rerender);
-	}
-}
-
-function rerender() {
-	var p;
-	while (p = items.pop()) {
-		if (p._dirty) renderComponent(p);
-	}
-}
-
-function isSameNodeType(node, vnode, hydrating) {
-	if (typeof vnode === 'string' || typeof vnode === 'number') {
-		return node.splitText !== undefined;
-	}
-	if (typeof vnode.nodeName === 'string') {
-		return !node._componentConstructor && isNamedNode(node, vnode.nodeName);
-	}
-	return hydrating || node._componentConstructor === vnode.nodeName;
-}
-
-function isNamedNode(node, nodeName) {
-	return node.normalizedNodeName === nodeName || node.nodeName.toLowerCase() === nodeName.toLowerCase();
-}
-
-function getNodeProps(vnode) {
-	var props = extend({}, vnode.attributes);
-	props.children = vnode.children;
-
-	var defaultProps = vnode.nodeName.defaultProps;
-	if (defaultProps !== undefined) {
-		for (var i in defaultProps) {
-			if (props[i] === undefined) {
-				props[i] = defaultProps[i];
-			}
-		}
-	}
-
-	return props;
-}
-
-function createNode(nodeName, isSvg) {
-	var node = isSvg ? document.createElementNS('http://www.w3.org/2000/svg', nodeName) : document.createElement(nodeName);
-	node.normalizedNodeName = nodeName;
-	return node;
-}
-
-function removeNode(node) {
-	var parentNode = node.parentNode;
-	if (parentNode) parentNode.removeChild(node);
-}
-
-function setAccessor(node, name, old, value, isSvg) {
-	if (name === 'className') name = 'class';
-
-	if (name === 'key') {} else if (name === 'ref') {
-		applyRef(old, null);
-		applyRef(value, node);
-	} else if (name === 'class' && !isSvg) {
-		node.className = value || '';
-	} else if (name === 'style') {
-		if (!value || typeof value === 'string' || typeof old === 'string') {
-			node.style.cssText = value || '';
-		}
-		if (value && typeof value === 'object') {
-			if (typeof old !== 'string') {
-				for (var i in old) {
-					if (!(i in value)) node.style[i] = '';
-				}
-			}
-			for (var i in value) {
-				node.style[i] = typeof value[i] === 'number' && IS_NON_DIMENSIONAL.test(i) === false ? value[i] + 'px' : value[i];
-			}
-		}
-	} else if (name === 'dangerouslySetInnerHTML') {
-		if (value) node.innerHTML = value.__html || '';
-	} else if (name[0] == 'o' && name[1] == 'n') {
-		var useCapture = name !== (name = name.replace(/Capture$/, ''));
-		name = name.toLowerCase().substring(2);
-		if (value) {
-			if (!old) node.addEventListener(name, eventProxy, useCapture);
-		} else {
-			node.removeEventListener(name, eventProxy, useCapture);
-		}
-		(node._listeners || (node._listeners = {}))[name] = value;
-	} else if (name !== 'list' && name !== 'type' && !isSvg && name in node) {
-		try {
-			node[name] = value == null ? '' : value;
-		} catch (e) {}
-		if ((value == null || value === false) && name != 'spellcheck') node.removeAttribute(name);
-	} else {
-		var ns = isSvg && name !== (name = name.replace(/^xlink:?/, ''));
-
-		if (value == null || value === false) {
-			if (ns) node.removeAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase());else node.removeAttribute(name);
-		} else if (typeof value !== 'function') {
-			if (ns) node.setAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase(), value);else node.setAttribute(name, value);
-		}
-	}
-}
-
-function eventProxy(e) {
-	return this._listeners[e.type](options.event && options.event(e) || e);
-}
-
-var mounts = [];
-
-var diffLevel = 0;
-
-var isSvgMode = false;
-
-var hydrating = false;
-
-function flushMounts() {
-	var c;
-	while (c = mounts.shift()) {
-		if (options.afterMount) options.afterMount(c);
-		if (c.componentDidMount) c.componentDidMount();
-	}
-}
-
-function diff(dom, vnode, context, mountAll, parent, componentRoot) {
-	if (!diffLevel++) {
-		isSvgMode = parent != null && parent.ownerSVGElement !== undefined;
-
-		hydrating = dom != null && !('__preactattr_' in dom);
-	}
-
-	var ret = idiff(dom, vnode, context, mountAll, componentRoot);
-
-	if (parent && ret.parentNode !== parent) parent.appendChild(ret);
-
-	if (! --diffLevel) {
-		hydrating = false;
-
-		if (!componentRoot) flushMounts();
-	}
-
-	return ret;
-}
-
-function idiff(dom, vnode, context, mountAll, componentRoot) {
-	var out = dom,
-	    prevSvgMode = isSvgMode;
-
-	if (vnode == null || typeof vnode === 'boolean') vnode = '';
-
-	if (typeof vnode === 'string' || typeof vnode === 'number') {
-		if (dom && dom.splitText !== undefined && dom.parentNode && (!dom._component || componentRoot)) {
-			if (dom.nodeValue != vnode) {
-				dom.nodeValue = vnode;
-			}
-		} else {
-			out = document.createTextNode(vnode);
-			if (dom) {
-				if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
-				recollectNodeTree(dom, true);
-			}
-		}
-
-		out['__preactattr_'] = true;
-
-		return out;
-	}
-
-	var vnodeName = vnode.nodeName;
-	if (typeof vnodeName === 'function') {
-		return buildComponentFromVNode(dom, vnode, context, mountAll);
-	}
-
-	isSvgMode = vnodeName === 'svg' ? true : vnodeName === 'foreignObject' ? false : isSvgMode;
-
-	vnodeName = String(vnodeName);
-	if (!dom || !isNamedNode(dom, vnodeName)) {
-		out = createNode(vnodeName, isSvgMode);
-
-		if (dom) {
-			while (dom.firstChild) {
-				out.appendChild(dom.firstChild);
-			}
-			if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
-
-			recollectNodeTree(dom, true);
-		}
-	}
-
-	var fc = out.firstChild,
-	    props = out['__preactattr_'],
-	    vchildren = vnode.children;
-
-	if (props == null) {
-		props = out['__preactattr_'] = {};
-		for (var a = out.attributes, i = a.length; i--;) {
-			props[a[i].name] = a[i].value;
-		}
-	}
-
-	if (!hydrating && vchildren && vchildren.length === 1 && typeof vchildren[0] === 'string' && fc != null && fc.splitText !== undefined && fc.nextSibling == null) {
-		if (fc.nodeValue != vchildren[0]) {
-			fc.nodeValue = vchildren[0];
-		}
-	} else if (vchildren && vchildren.length || fc != null) {
-			innerDiffNode(out, vchildren, context, mountAll, hydrating || props.dangerouslySetInnerHTML != null);
-		}
-
-	diffAttributes(out, vnode.attributes, props);
-
-	isSvgMode = prevSvgMode;
-
-	return out;
-}
-
-function innerDiffNode(dom, vchildren, context, mountAll, isHydrating) {
-	var originalChildren = dom.childNodes,
-	    children = [],
-	    keyed = {},
-	    keyedLen = 0,
-	    min = 0,
-	    len = originalChildren.length,
-	    childrenLen = 0,
-	    vlen = vchildren ? vchildren.length : 0,
-	    j,
-	    c,
-	    f,
-	    vchild,
-	    child;
-
-	if (len !== 0) {
-		for (var i = 0; i < len; i++) {
-			var _child = originalChildren[i],
-			    props = _child['__preactattr_'],
-			    key = vlen && props ? _child._component ? _child._component.__key : props.key : null;
-			if (key != null) {
-				keyedLen++;
-				keyed[key] = _child;
-			} else if (props || (_child.splitText !== undefined ? isHydrating ? _child.nodeValue.trim() : true : isHydrating)) {
-				children[childrenLen++] = _child;
-			}
-		}
-	}
-
-	if (vlen !== 0) {
-		for (var i = 0; i < vlen; i++) {
-			vchild = vchildren[i];
-			child = null;
-
-			var key = vchild.key;
-			if (key != null) {
-				if (keyedLen && keyed[key] !== undefined) {
-					child = keyed[key];
-					keyed[key] = undefined;
-					keyedLen--;
-				}
-			} else if (min < childrenLen) {
-					for (j = min; j < childrenLen; j++) {
-						if (children[j] !== undefined && isSameNodeType(c = children[j], vchild, isHydrating)) {
-							child = c;
-							children[j] = undefined;
-							if (j === childrenLen - 1) childrenLen--;
-							if (j === min) min++;
-							break;
-						}
-					}
-				}
-
-			child = idiff(child, vchild, context, mountAll);
-
-			f = originalChildren[i];
-			if (child && child !== dom && child !== f) {
-				if (f == null) {
-					dom.appendChild(child);
-				} else if (child === f.nextSibling) {
-					removeNode(f);
-				} else {
-					dom.insertBefore(child, f);
-				}
-			}
-		}
-	}
-
-	if (keyedLen) {
-		for (var i in keyed) {
-			if (keyed[i] !== undefined) recollectNodeTree(keyed[i], false);
-		}
-	}
-
-	while (min <= childrenLen) {
-		if ((child = children[childrenLen--]) !== undefined) recollectNodeTree(child, false);
-	}
-}
-
-function recollectNodeTree(node, unmountOnly) {
-	var component = node._component;
-	if (component) {
-		unmountComponent(component);
-	} else {
-		if (node['__preactattr_'] != null) applyRef(node['__preactattr_'].ref, null);
-
-		if (unmountOnly === false || node['__preactattr_'] == null) {
-			removeNode(node);
-		}
-
-		removeChildren(node);
-	}
-}
-
-function removeChildren(node) {
-	node = node.lastChild;
-	while (node) {
-		var next = node.previousSibling;
-		recollectNodeTree(node, true);
-		node = next;
-	}
-}
-
-function diffAttributes(dom, attrs, old) {
-	var name;
-
-	for (name in old) {
-		if (!(attrs && attrs[name] != null) && old[name] != null) {
-			setAccessor(dom, name, old[name], old[name] = undefined, isSvgMode);
-		}
-	}
-
-	for (name in attrs) {
-		if (name !== 'children' && name !== 'innerHTML' && (!(name in old) || attrs[name] !== (name === 'value' || name === 'checked' ? dom[name] : old[name]))) {
-			setAccessor(dom, name, old[name], old[name] = attrs[name], isSvgMode);
-		}
-	}
-}
-
-var recyclerComponents = [];
-
-function createComponent(Ctor, props, context) {
-	var inst,
-	    i = recyclerComponents.length;
-
-	if (Ctor.prototype && Ctor.prototype.render) {
-		inst = new Ctor(props, context);
-		Component.call(inst, props, context);
-	} else {
-		inst = new Component(props, context);
-		inst.constructor = Ctor;
-		inst.render = doRender;
-	}
-
-	while (i--) {
-		if (recyclerComponents[i].constructor === Ctor) {
-			inst.nextBase = recyclerComponents[i].nextBase;
-			recyclerComponents.splice(i, 1);
-			return inst;
-		}
-	}
-
-	return inst;
-}
-
-function doRender(props, state, context) {
-	return this.constructor(props, context);
-}
-
-function setComponentProps(component, props, renderMode, context, mountAll) {
-	if (component._disable) return;
-	component._disable = true;
-
-	component.__ref = props.ref;
-	component.__key = props.key;
-	delete props.ref;
-	delete props.key;
-
-	if (typeof component.constructor.getDerivedStateFromProps === 'undefined') {
-		if (!component.base || mountAll) {
-			if (component.componentWillMount) component.componentWillMount();
-		} else if (component.componentWillReceiveProps) {
-			component.componentWillReceiveProps(props, context);
-		}
-	}
-
-	if (context && context !== component.context) {
-		if (!component.prevContext) component.prevContext = component.context;
-		component.context = context;
-	}
-
-	if (!component.prevProps) component.prevProps = component.props;
-	component.props = props;
-
-	component._disable = false;
-
-	if (renderMode !== 0) {
-		if (renderMode === 1 || options.syncComponentUpdates !== false || !component.base) {
-			renderComponent(component, 1, mountAll);
-		} else {
-			enqueueRender(component);
-		}
-	}
-
-	applyRef(component.__ref, component);
-}
-
-function renderComponent(component, renderMode, mountAll, isChild) {
-	if (component._disable) return;
-
-	var props = component.props,
-	    state = component.state,
-	    context = component.context,
-	    previousProps = component.prevProps || props,
-	    previousState = component.prevState || state,
-	    previousContext = component.prevContext || context,
-	    isUpdate = component.base,
-	    nextBase = component.nextBase,
-	    initialBase = isUpdate || nextBase,
-	    initialChildComponent = component._component,
-	    skip = false,
-	    snapshot = previousContext,
-	    rendered,
-	    inst,
-	    cbase;
-
-	if (component.constructor.getDerivedStateFromProps) {
-		state = extend(extend({}, state), component.constructor.getDerivedStateFromProps(props, state));
-		component.state = state;
-	}
-
-	if (isUpdate) {
-		component.props = previousProps;
-		component.state = previousState;
-		component.context = previousContext;
-		if (renderMode !== 2 && component.shouldComponentUpdate && component.shouldComponentUpdate(props, state, context) === false) {
-			skip = true;
-		} else if (component.componentWillUpdate) {
-			component.componentWillUpdate(props, state, context);
-		}
-		component.props = props;
-		component.state = state;
-		component.context = context;
-	}
-
-	component.prevProps = component.prevState = component.prevContext = component.nextBase = null;
-	component._dirty = false;
-
-	if (!skip) {
-		rendered = component.render(props, state, context);
-
-		if (component.getChildContext) {
-			context = extend(extend({}, context), component.getChildContext());
-		}
-
-		if (isUpdate && component.getSnapshotBeforeUpdate) {
-			snapshot = component.getSnapshotBeforeUpdate(previousProps, previousState);
-		}
-
-		var childComponent = rendered && rendered.nodeName,
-		    toUnmount,
-		    base;
-
-		if (typeof childComponent === 'function') {
-
-			var childProps = getNodeProps(rendered);
-			inst = initialChildComponent;
-
-			if (inst && inst.constructor === childComponent && childProps.key == inst.__key) {
-				setComponentProps(inst, childProps, 1, context, false);
-			} else {
-				toUnmount = inst;
-
-				component._component = inst = createComponent(childComponent, childProps, context);
-				inst.nextBase = inst.nextBase || nextBase;
-				inst._parentComponent = component;
-				setComponentProps(inst, childProps, 0, context, false);
-				renderComponent(inst, 1, mountAll, true);
-			}
-
-			base = inst.base;
-		} else {
-			cbase = initialBase;
-
-			toUnmount = initialChildComponent;
-			if (toUnmount) {
-				cbase = component._component = null;
-			}
-
-			if (initialBase || renderMode === 1) {
-				if (cbase) cbase._component = null;
-				base = diff(cbase, rendered, context, mountAll || !isUpdate, initialBase && initialBase.parentNode, true);
-			}
-		}
-
-		if (initialBase && base !== initialBase && inst !== initialChildComponent) {
-			var baseParent = initialBase.parentNode;
-			if (baseParent && base !== baseParent) {
-				baseParent.replaceChild(base, initialBase);
-
-				if (!toUnmount) {
-					initialBase._component = null;
-					recollectNodeTree(initialBase, false);
-				}
-			}
-		}
-
-		if (toUnmount) {
-			unmountComponent(toUnmount);
-		}
-
-		component.base = base;
-		if (base && !isChild) {
-			var componentRef = component,
-			    t = component;
-			while (t = t._parentComponent) {
-				(componentRef = t).base = base;
-			}
-			base._component = componentRef;
-			base._componentConstructor = componentRef.constructor;
-		}
-	}
-
-	if (!isUpdate || mountAll) {
-		mounts.push(component);
-	} else if (!skip) {
-
-		if (component.componentDidUpdate) {
-			component.componentDidUpdate(previousProps, previousState, snapshot);
-		}
-		if (options.afterUpdate) options.afterUpdate(component);
-	}
-
-	while (component._renderCallbacks.length) {
-		component._renderCallbacks.pop().call(component);
-	}if (!diffLevel && !isChild) flushMounts();
-}
-
-function buildComponentFromVNode(dom, vnode, context, mountAll) {
-	var c = dom && dom._component,
-	    originalComponent = c,
-	    oldDom = dom,
-	    isDirectOwner = c && dom._componentConstructor === vnode.nodeName,
-	    isOwner = isDirectOwner,
-	    props = getNodeProps(vnode);
-	while (c && !isOwner && (c = c._parentComponent)) {
-		isOwner = c.constructor === vnode.nodeName;
-	}
-
-	if (c && isOwner && (!mountAll || c._component)) {
-		setComponentProps(c, props, 3, context, mountAll);
-		dom = c.base;
-	} else {
-		if (originalComponent && !isDirectOwner) {
-			unmountComponent(originalComponent);
-			dom = oldDom = null;
-		}
-
-		c = createComponent(vnode.nodeName, props, context);
-		if (dom && !c.nextBase) {
-			c.nextBase = dom;
-
-			oldDom = null;
-		}
-		setComponentProps(c, props, 1, context, mountAll);
-		dom = c.base;
-
-		if (oldDom && dom !== oldDom) {
-			oldDom._component = null;
-			recollectNodeTree(oldDom, false);
-		}
-	}
-
-	return dom;
-}
-
-function unmountComponent(component) {
-	if (options.beforeUnmount) options.beforeUnmount(component);
-
-	var base = component.base;
-
-	component._disable = true;
-
-	if (component.componentWillUnmount) component.componentWillUnmount();
-
-	component.base = null;
-
-	var inner = component._component;
-	if (inner) {
-		unmountComponent(inner);
-	} else if (base) {
-		if (base['__preactattr_'] != null) applyRef(base['__preactattr_'].ref, null);
-
-		component.nextBase = base;
-
-		removeNode(base);
-		recyclerComponents.push(component);
-
-		removeChildren(base);
-	}
-
-	applyRef(component.__ref, null);
-}
-
-function Component(props, context) {
-	this._dirty = true;
-
-	this.context = context;
-
-	this.props = props;
-
-	this.state = this.state || {};
-
-	this._renderCallbacks = [];
-}
-
-extend(Component.prototype, {
-	setState: function setState(state, callback) {
-		if (!this.prevState) this.prevState = this.state;
-		this.state = extend(extend({}, this.state), typeof state === 'function' ? state(this.state, this.props) : state);
-		if (callback) this._renderCallbacks.push(callback);
-		enqueueRender(this);
-	},
-	forceUpdate: function forceUpdate(callback) {
-		if (callback) this._renderCallbacks.push(callback);
-		renderComponent(this, 2);
-	},
-	render: function render() {}
-});
-
-function render(vnode, parent, merge) {
-  return diff(merge, vnode, {}, false, parent, false);
-}
-
-function createRef() {
-	return {};
-}
-
-var preact = {
-	h: h,
-	createElement: h,
-	cloneElement: cloneElement,
-	createRef: createRef,
-	Component: Component,
-	render: render,
-	rerender: rerender,
-	options: options
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (preact);
-
-//# sourceMappingURL=preact.mjs.map
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return h; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Fragment", function() { return p; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createRef", function() { return y; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isValidElement", function() { return l; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return d; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cloneElement", function() { return q; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createContext", function() { return B; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toChildArray", function() { return b; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__u", function() { return L; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "options", function() { return n; });
+var n,l,u,i,t,o,r,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function s(n,l){for(var u in l)n[u]=l[u];return n}function a(n){var l=n.parentNode;l&&l.removeChild(n)}function h(n,l,u){var i,t,o,r=arguments,f={};for(o in l)"key"==o?i=l[o]:"ref"==o?t=l[o]:f[o]=l[o];if(arguments.length>3)for(u=[u],o=3;o<arguments.length;o++)u.push(r[o]);if(null!=u&&(f.children=u),"function"==typeof n&&null!=n.defaultProps)for(o in n.defaultProps)void 0===f[o]&&(f[o]=n.defaultProps[o]);return v(n,f,i,t,null)}function v(l,u,i,t,o){var r={type:l,props:u,key:i,ref:t,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:o};return null==o&&(r.__v=r),null!=n.vnode&&n.vnode(r),r}function y(){return{current:null}}function p(n){return n.children}function d(n,l){this.props=n,this.context=l}function _(n,l){if(null==l)return n.__?_(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return"function"==typeof n.type?_(n):null}function w(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return w(n)}}function k(l){(!l.__d&&(l.__d=!0)&&u.push(l)&&!g.__r++||t!==n.debounceRendering)&&((t=n.debounceRendering)||i)(g)}function g(){for(var n;g.__r=u.length;)n=u.sort(function(n,l){return n.__v.__b-l.__v.__b}),u=[],n.some(function(n){var l,u,i,t,o,r,f;n.__d&&(r=(o=(l=n).__v).__e,(f=l.__P)&&(u=[],(i=s({},o)).__v=i,t=$(f,o,i,l.__n,void 0!==f.ownerSVGElement,null!=o.__h?[r]:null,u,null==r?_(o):r,o.__h),j(u,o),t!=r&&w(o)))})}function m(n,l,u,i,t,o,r,c,s,h){var y,d,w,k,g,m,b,A=i&&i.__k||e,P=A.length;for(s==f&&(s=null!=r?r[0]:P?_(i,0):null),u.__k=[],y=0;y<l.length;y++)if(null!=(k=u.__k[y]=null==(k=l[y])||"boolean"==typeof k?null:"string"==typeof k||"number"==typeof k?v(null,k,null,null,k):Array.isArray(k)?v(p,{children:k},null,null,null):null!=k.__e||null!=k.__c?v(k.type,k.props,k.key,null,k.__v):k)){if(k.__=u,k.__b=u.__b+1,null===(w=A[y])||w&&k.key==w.key&&k.type===w.type)A[y]=void 0;else for(d=0;d<P;d++){if((w=A[d])&&k.key==w.key&&k.type===w.type){A[d]=void 0;break}w=null}g=$(n,k,w=w||f,t,o,r,c,s,h),(d=k.ref)&&w.ref!=d&&(b||(b=[]),w.ref&&b.push(w.ref,null,k),b.push(d,k.__c||g,k)),null!=g?(null==m&&(m=g),s=x(n,k,w,A,r,g,s),h||"option"!=u.type?"function"==typeof u.type&&(u.__d=s):n.value=""):s&&w.__e==s&&s.parentNode!=n&&(s=_(w))}if(u.__e=m,null!=r&&"function"!=typeof u.type)for(y=r.length;y--;)null!=r[y]&&a(r[y]);for(y=P;y--;)null!=A[y]&&L(A[y],A[y]);if(b)for(y=0;y<b.length;y++)I(b[y],b[++y],b[++y])}function b(n,l){return l=l||[],null==n||"boolean"==typeof n||(Array.isArray(n)?n.some(function(n){b(n,l)}):l.push(n)),l}function x(n,l,u,i,t,o,r){var f,e,c;if(void 0!==l.__d)f=l.__d,l.__d=void 0;else if(t==u||o!=r||null==o.parentNode)n:if(null==r||r.parentNode!==n)n.appendChild(o),f=null;else{for(e=r,c=0;(e=e.nextSibling)&&c<i.length;c+=2)if(e==o)break n;n.insertBefore(o,r),f=r}return void 0!==f?f:o.nextSibling}function A(n,l,u,i,t){var o;for(o in u)"children"===o||"key"===o||o in l||C(n,o,null,u[o],i);for(o in l)t&&"function"!=typeof l[o]||"children"===o||"key"===o||"value"===o||"checked"===o||u[o]===l[o]||C(n,o,l[o],u[o],i)}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]=null==u?"":"number"!=typeof u||c.test(l)?u:u+"px"}function C(n,l,u,i,t){var o,r,f;if(t&&"className"==l&&(l="class"),"style"===l)if("string"==typeof u)n.style.cssText=u;else{if("string"==typeof i&&(n.style.cssText=i=""),i)for(l in i)u&&l in u||P(n.style,l,"");if(u)for(l in u)i&&u[l]===i[l]||P(n.style,l,u[l])}else"o"===l[0]&&"n"===l[1]?(o=l!==(l=l.replace(/Capture$/,"")),(r=l.toLowerCase())in n&&(l=r),l=l.slice(2),n.l||(n.l={}),n.l[l+o]=u,f=o?N:z,u?i||n.addEventListener(l,f,o):n.removeEventListener(l,f,o)):"list"!==l&&"tagName"!==l&&"form"!==l&&"type"!==l&&"size"!==l&&"download"!==l&&"href"!==l&&!t&&l in n?n[l]=null==u?"":u:"function"!=typeof u&&"dangerouslySetInnerHTML"!==l&&(l!==(l=l.replace(/xlink:?/,""))?null==u||!1===u?n.removeAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase()):n.setAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase(),u):null==u||!1===u&&!/^ar/.test(l)?n.removeAttribute(l):n.setAttribute(l,u))}function z(l){this.l[l.type+!1](n.event?n.event(l):l)}function N(l){this.l[l.type+!0](n.event?n.event(l):l)}function T(n,l,u){var i,t;for(i=0;i<n.__k.length;i++)(t=n.__k[i])&&(t.__=n,t.__e&&("function"==typeof t.type&&t.__k.length>1&&T(t,l,u),l=x(u,t,t,n.__k,null,t.__e,l),"function"==typeof n.type&&(n.__d=l)))}function $(l,u,i,t,o,r,f,e,c){var a,h,v,y,_,w,k,g,b,x,A,P=u.type;if(void 0!==u.constructor)return null;null!=i.__h&&(c=i.__h,e=u.__e=i.__e,u.__h=null,r=[e]),(a=n.__b)&&a(u);try{n:if("function"==typeof P){if(g=u.props,b=(a=P.contextType)&&t[a.__c],x=a?b?b.props.value:a.__:t,i.__c?k=(h=u.__c=i.__c).__=h.__E:("prototype"in P&&P.prototype.render?u.__c=h=new P(g,x):(u.__c=h=new d(g,x),h.constructor=P,h.render=M),b&&b.sub(h),h.props=g,h.state||(h.state={}),h.context=x,h.__n=t,v=h.__d=!0,h.__h=[]),null==h.__s&&(h.__s=h.state),null!=P.getDerivedStateFromProps&&(h.__s==h.state&&(h.__s=s({},h.__s)),s(h.__s,P.getDerivedStateFromProps(g,h.__s))),y=h.props,_=h.state,v)null==P.getDerivedStateFromProps&&null!=h.componentWillMount&&h.componentWillMount(),null!=h.componentDidMount&&h.__h.push(h.componentDidMount);else{if(null==P.getDerivedStateFromProps&&g!==y&&null!=h.componentWillReceiveProps&&h.componentWillReceiveProps(g,x),!h.__e&&null!=h.shouldComponentUpdate&&!1===h.shouldComponentUpdate(g,h.__s,x)||u.__v===i.__v){h.props=g,h.state=h.__s,u.__v!==i.__v&&(h.__d=!1),h.__v=u,u.__e=i.__e,u.__k=i.__k,h.__h.length&&f.push(h),T(u,e,l);break n}null!=h.componentWillUpdate&&h.componentWillUpdate(g,h.__s,x),null!=h.componentDidUpdate&&h.__h.push(function(){h.componentDidUpdate(y,_,w)})}h.context=x,h.props=g,h.state=h.__s,(a=n.__r)&&a(u),h.__d=!1,h.__v=u,h.__P=l,a=h.render(h.props,h.state,h.context),h.state=h.__s,null!=h.getChildContext&&(t=s(s({},t),h.getChildContext())),v||null==h.getSnapshotBeforeUpdate||(w=h.getSnapshotBeforeUpdate(y,_)),A=null!=a&&a.type==p&&null==a.key?a.props.children:a,m(l,Array.isArray(A)?A:[A],u,i,t,o,r,f,e,c),h.base=u.__e,u.__h=null,h.__h.length&&f.push(h),k&&(h.__E=h.__=null),h.__e=!1}else null==r&&u.__v===i.__v?(u.__k=i.__k,u.__e=i.__e):u.__e=H(i.__e,u,i,t,o,r,f,c);(a=n.diffed)&&a(u)}catch(l){u.__v=null,(c||null!=r)&&(u.__e=e,u.__h=!!c,r[r.indexOf(e)]=null),n.__e(l,u,i)}return u.__e}function j(l,u){n.__c&&n.__c(u,l),l.some(function(u){try{l=u.__h,u.__h=[],l.some(function(n){n.call(u)})}catch(l){n.__e(l,u.__v)}})}function H(n,l,u,i,t,o,r,c){var s,a,h,v,y,p=u.props,d=l.props;if(t="svg"===l.type||t,null!=o)for(s=0;s<o.length;s++)if(null!=(a=o[s])&&((null===l.type?3===a.nodeType:a.localName===l.type)||n==a)){n=a,o[s]=null;break}if(null==n){if(null===l.type)return document.createTextNode(d);n=t?document.createElementNS("http://www.w3.org/2000/svg",l.type):document.createElement(l.type,d.is&&{is:d.is}),o=null,c=!1}if(null===l.type)p===d||c&&n.data===d||(n.data=d);else{if(null!=o&&(o=e.slice.call(n.childNodes)),h=(p=u.props||f).dangerouslySetInnerHTML,v=d.dangerouslySetInnerHTML,!c){if(null!=o)for(p={},y=0;y<n.attributes.length;y++)p[n.attributes[y].name]=n.attributes[y].value;(v||h)&&(v&&(h&&v.__html==h.__html||v.__html===n.innerHTML)||(n.innerHTML=v&&v.__html||""))}A(n,d,p,t,c),v?l.__k=[]:(s=l.props.children,m(n,Array.isArray(s)?s:[s],l,u,i,"foreignObject"!==l.type&&t,o,r,f,c)),c||("value"in d&&void 0!==(s=d.value)&&(s!==n.value||"progress"===l.type&&!s)&&C(n,"value",s,p.value,!1),"checked"in d&&void 0!==(s=d.checked)&&s!==n.checked&&C(n,"checked",s,p.checked,!1))}return n}function I(l,u,i){try{"function"==typeof l?l(u):l.current=u}catch(l){n.__e(l,i)}}function L(l,u,i){var t,o,r;if(n.unmount&&n.unmount(l),(t=l.ref)&&(t.current&&t.current!==l.__e||I(t,null,u)),i||"function"==typeof l.type||(i=null!=(o=l.__e)),l.__e=l.__d=void 0,null!=(t=l.__c)){if(t.componentWillUnmount)try{t.componentWillUnmount()}catch(l){n.__e(l,u)}t.base=t.__P=null}if(t=l.__k)for(r=0;r<t.length;r++)t[r]&&L(t[r],u,i);null!=o&&a(o)}function M(n,l,u){return this.constructor(n,u)}function O(l,u,i){var t,r,c;n.__&&n.__(l,u),r=(t=i===o)?null:i&&i.__k||u.__k,l=h(p,null,[l]),c=[],$(u,(t?u:i||u).__k=l,r||f,f,void 0!==u.ownerSVGElement,i&&!t?[i]:r?null:u.childNodes.length?e.slice.call(u.childNodes):null,c,i||f,t),j(c,l)}function S(n,l){O(n,l,o)}function q(n,l,u){var i,t,o,r=arguments,f=s({},n.props);for(o in l)"key"==o?i=l[o]:"ref"==o?t=l[o]:f[o]=l[o];if(arguments.length>3)for(u=[u],o=3;o<arguments.length;o++)u.push(r[o]);return null!=u&&(f.children=u),v(n.type,f,i||n.key,t||n.ref,null)}function B(n,l){var u={__c:l="__cC"+r++,__:n,Consumer:function(n,l){return n.children(l)},Provider:function(n,u,i){return this.getChildContext||(u=[],(i={})[l]=this,this.getChildContext=function(){return i},this.shouldComponentUpdate=function(n){this.props.value!==n.value&&u.some(k)},this.sub=function(n){u.push(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u.splice(u.indexOf(n),1),l&&l.call(n)}}),n.children}};return u.Provider.__=u.Consumer.contextType=u}n={__e:function(n,l){for(var u,i,t,o=l.__h;l=l.__;)if((u=l.__c)&&!u.__)try{if((i=u.constructor)&&null!=i.getDerivedStateFromError&&(u.setState(i.getDerivedStateFromError(n)),t=u.__d),null!=u.componentDidCatch&&(u.componentDidCatch(n),t=u.__d),t)return l.__h=o,u.__E=u}catch(l){n=l}throw n}},l=function(n){return null!=n&&void 0===n.constructor},d.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=s({},this.state),"function"==typeof n&&(n=n(s({},u),this.props)),n&&s(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),k(this))},d.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),k(this))},d.prototype.render=p,u=[],i="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,g.__r=0,o=f,r=0;
+//# sourceMappingURL=preact.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/preact/hooks/dist/hooks.module.js":
+/*!********************************************************!*\
+  !*** ./node_modules/preact/hooks/dist/hooks.module.js ***!
+  \********************************************************/
+/*! exports provided: useState, useReducer, useEffect, useLayoutEffect, useRef, useImperativeHandle, useMemo, useCallback, useContext, useDebugValue, useErrorBoundary */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useState", function() { return m; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useReducer", function() { return p; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useEffect", function() { return y; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useLayoutEffect", function() { return l; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useRef", function() { return h; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useImperativeHandle", function() { return s; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useMemo", function() { return _; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useCallback", function() { return A; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useContext", function() { return F; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useDebugValue", function() { return T; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useErrorBoundary", function() { return d; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var t,u,r,o=0,i=[],c=preact__WEBPACK_IMPORTED_MODULE_0__["options"].__r,f=preact__WEBPACK_IMPORTED_MODULE_0__["options"].diffed,e=preact__WEBPACK_IMPORTED_MODULE_0__["options"].__c,a=preact__WEBPACK_IMPORTED_MODULE_0__["options"].unmount;function v(t,r){preact__WEBPACK_IMPORTED_MODULE_0__["options"].__h&&preact__WEBPACK_IMPORTED_MODULE_0__["options"].__h(u,t,o||r),o=0;var i=u.__H||(u.__H={__:[],__h:[]});return t>=i.__.length&&i.__.push({}),i.__[t]}function m(n){return o=1,p(k,n)}function p(n,r,o){var i=v(t++,2);return i.t=n,i.__c||(i.__=[o?o(r):k(void 0,r),function(n){var t=i.t(i.__[0],n);i.__[0]!==t&&(i.__=[t,i.__[1]],i.__c.setState({}))}],i.__c=u),i.__}function y(r,o){var i=v(t++,3);!preact__WEBPACK_IMPORTED_MODULE_0__["options"].__s&&j(i.__H,o)&&(i.__=r,i.__H=o,u.__H.__h.push(i))}function l(r,o){var i=v(t++,4);!preact__WEBPACK_IMPORTED_MODULE_0__["options"].__s&&j(i.__H,o)&&(i.__=r,i.__H=o,u.__h.push(i))}function h(n){return o=5,_(function(){return{current:n}},[])}function s(n,t,u){o=6,l(function(){"function"==typeof n?n(t()):n&&(n.current=t())},null==u?u:u.concat(n))}function _(n,u){var r=v(t++,7);return j(r.__H,u)&&(r.__=n(),r.__H=u,r.__h=n),r.__}function A(n,t){return o=8,_(function(){return n},t)}function F(n){var r=u.context[n.__c],o=v(t++,9);return o.__c=n,r?(null==o.__&&(o.__=!0,r.sub(u)),r.props.value):n.__}function T(t,u){preact__WEBPACK_IMPORTED_MODULE_0__["options"].useDebugValue&&preact__WEBPACK_IMPORTED_MODULE_0__["options"].useDebugValue(u?u(t):t)}function d(n){var r=v(t++,10),o=m();return r.__=n,u.componentDidCatch||(u.componentDidCatch=function(n){r.__&&r.__(n),o[1](n)}),[o[0],function(){o[1](void 0)}]}function q(){i.some(function(t){if(t.__P)try{t.__H.__h.forEach(b),t.__H.__h.forEach(g),t.__H.__h=[]}catch(u){return t.__H.__h=[],preact__WEBPACK_IMPORTED_MODULE_0__["options"].__e(u,t.__v),!0}}),i=[]}preact__WEBPACK_IMPORTED_MODULE_0__["options"].__r=function(n){c&&c(n),t=0;var r=(u=n.__c).__H;r&&(r.__h.forEach(b),r.__h.forEach(g),r.__h=[])},preact__WEBPACK_IMPORTED_MODULE_0__["options"].diffed=function(t){f&&f(t);var u=t.__c;u&&u.__H&&u.__H.__h.length&&(1!==i.push(u)&&r===preact__WEBPACK_IMPORTED_MODULE_0__["options"].requestAnimationFrame||((r=preact__WEBPACK_IMPORTED_MODULE_0__["options"].requestAnimationFrame)||function(n){var t,u=function(){clearTimeout(r),x&&cancelAnimationFrame(t),setTimeout(n)},r=setTimeout(u,100);x&&(t=requestAnimationFrame(u))})(q))},preact__WEBPACK_IMPORTED_MODULE_0__["options"].__c=function(t,u){u.some(function(t){try{t.__h.forEach(b),t.__h=t.__h.filter(function(n){return!n.__||g(n)})}catch(r){u.some(function(n){n.__h&&(n.__h=[])}),u=[],preact__WEBPACK_IMPORTED_MODULE_0__["options"].__e(r,t.__v)}}),e&&e(t,u)},preact__WEBPACK_IMPORTED_MODULE_0__["options"].unmount=function(t){a&&a(t);var u=t.__c;if(u&&u.__H)try{u.__H.__.forEach(b)}catch(t){preact__WEBPACK_IMPORTED_MODULE_0__["options"].__e(t,u.__v)}};var x="function"==typeof requestAnimationFrame;function b(n){"function"==typeof n.u&&n.u()}function g(n){n.u=n.__()}function j(n,t){return!n||n.length!==t.length||t.some(function(t,u){return t!==n[u]})}function k(n,t){return"function"==typeof t?t(n):t}
+//# sourceMappingURL=hooks.module.js.map
 
 
 /***/ }),
@@ -40091,7 +41837,7 @@ module.exports = clone;
 /*!*****************************************!*\
   !*** ./node_modules/tslib/tslib.es6.js ***!
   \*****************************************/
-/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault */
+/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __createBinding, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault, __classPrivateFieldGet, __classPrivateFieldSet */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40104,10 +41850,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__metadata", function() { return __metadata; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__awaiter", function() { return __awaiter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__generator", function() { return __generator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__createBinding", function() { return __createBinding; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__exportStar", function() { return __exportStar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__values", function() { return __values; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__read", function() { return __read; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spread", function() { return __spread; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spreadArrays", function() { return __spreadArrays; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__await", function() { return __await; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncGenerator", function() { return __asyncGenerator; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncDelegator", function() { return __asyncDelegator; });
@@ -40115,19 +41863,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__makeTemplateObject", function() { return __makeTemplateObject; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importStar", function() { return __importStar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importDefault", function() { return __importDefault; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldGet", function() { return __classPrivateFieldGet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldSet", function() { return __classPrivateFieldSet; });
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
+Copyright (c) Microsoft Corporation.
 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
 
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 /* global Reflect, Promise */
 
@@ -40160,8 +41910,10 @@ function __rest(s, e) {
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
         t[p] = s[p];
     if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-            t[p[i]] = s[p[i]];
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
     return t;
 }
 
@@ -40181,10 +41933,11 @@ function __metadata(metadataKey, metadataValue) {
 }
 
 function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 }
@@ -40217,19 +41970,25 @@ function __generator(thisArg, body) {
     }
 }
 
+function __createBinding(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}
+
 function __exportStar(m, exports) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 
 function __values(o) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);
-    return {
+    if (o && typeof o.length === "number") return {
         next: function () {
             if (o && i >= o.length) o = void 0;
             return { value: o && o[i++], done: !o };
         }
     };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 
 function __read(o, n) {
@@ -40254,6 +42013,14 @@ function __spread() {
         ar = ar.concat(__read(arguments[i]));
     return ar;
 }
+
+function __spreadArrays() {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 
 function __await(v) {
     return this instanceof __await ? (this.v = v, this) : new __await(v);
@@ -40300,6 +42067,21 @@ function __importStar(mod) {
 
 function __importDefault(mod) {
     return (mod && mod.__esModule) ? mod : { default: mod };
+}
+
+function __classPrivateFieldGet(receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to get private field on non-instance");
+    }
+    return privateMap.get(receiver);
+}
+
+function __classPrivateFieldSet(receiver, privateMap, value) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to set private field on non-instance");
+    }
+    privateMap.set(receiver, value);
+    return value;
 }
 
 
@@ -40386,7 +42168,7 @@ var initDemos = function () {
         window.setTimeout(function () { return homeDemo_1["default"].init(); });
     }
     if (document.querySelector('.as-integrationDemo')) {
-        window.setTimeout(function () { return integrationDemo_1["default"].init(); }, 1000);
+        window.setTimeout(function () { return integrationDemo_1["default"].init(); }, 100);
     }
     /**
      * Product
@@ -40395,7 +42177,7 @@ var initDemos = function () {
         window.setTimeout(function () { return mainDemo_1["default"].init(); });
     }
     if (document.querySelector('.as-filtersDemo')) {
-        window.setTimeout(function () { return filtersDemo_1["default"].init(); }, 1000);
+        window.setTimeout(function () { return filtersDemo_1["default"].init(); }, 100);
     }
 };
 exports["default"] = initDemos;
@@ -40445,7 +42227,7 @@ filtersDemo.addWidgets(multipleFilter({
         showLess: '<span class="show-more">+ show less</span>'
     },
     classNames: {
-        container: 'filter author'
+        container: 'filter author',
     }
 }), multipleFilter({
     target: '.as-filtersDemo__genreFilter',
@@ -40506,6 +42288,7 @@ var homeUI = apisearch_ui_1["default"].create({
 homeUI.addWidgets(homeUI.widgets.searchInput({
     target: '.as-homeDemo__searchBox',
     autofocus: true,
+    autocomplete: true,
     template: {
         clearSearch: '<i class="fa fa-times-circle" aria-hidden="true"></i>'
     }
@@ -40518,7 +42301,7 @@ homeUI.addWidgets(homeUI.widgets.searchInput({
     viewLimit: 2,
     sortBy: ['_count', 'desc'],
     template: {
-        item: "\n                    <input type=\"checkbox\" id=\"filter_{{values.id}}\" {{#isActive}}checked=\"checked\"{{/isActive}}>\n                    <label for=\"filter_{{values.id}}\">{{{values.name}}} ({{n}})</label>\n                "
+        item: "\n                    <input type=\"checkbox\" id=\"filter_{{values.id}}\" {{#isActive}}checked=\"checked\"{{/isActive}}>\n                    <label for=\"filter_{{values.id}}\">{{{values.name}}} ({{n}})</label>\n                ",
     },
     classNames: {
         container: 'panel',
@@ -40539,7 +42322,7 @@ homeUI.addWidgets(homeUI.widgets.searchInput({
         query.setAutoFuzziness();
     },
     template: {
-        itemsList: "<ul>\n                    {{#items}}\n                    <li>\n                        <img src=\"{{metadata.image}}\" height=\"40px\" width=\"40px\">\n                        <span class=\"ml-3\">{{metadata.title}}</span>\n                        <span style=\"color: #777777; font-size: .8rem\">({{indexedMetadata.year}})</span>\n                        {{#indexedMetadata.rating}}\n                            <span class=\"as-result__albumRating pull-right\">\n                                <i class=\"fa fa-star mr-1\"></i>{{indexedMetadata.rating}}\n                            </span>\n                        {{/indexedMetadata.rating}}\n                    </li>\n                    {{/items}}\n                    {{^items}}\n                    <li>\n                        <i class=\"fa fa-meh-o\" aria-hidden=\"true\"></i>\n                        No results\n                    </li>\n                    {{/items}}\n                </ul>"
+        itemsList: "<ul>\n                    {{#items}}\n                    <li>\n                        <img src=\"{{metadata.image}}\" height=\"40px\" width=\"40px\">\n                        <span class=\"ml-3\">{{metadata.title}}</span>\n                        <span style=\"color: #777777; font-size: .8rem\">({{indexedMetadata.year}})</span>\n                        {{#indexedMetadata.rating}}\n                            <span class=\"as-result__albumRating pull-right\">\n                                <i class=\"fa fa-star mr-1\"></i>{{indexedMetadata.rating}}\n                            </span>\n                        {{/indexedMetadata.rating}}\n                    </li>\n                    {{/items}}\n                    {{^items}}\n                    <li>\n                        <i class=\"fa fa-meh-o\" aria-hidden=\"true\"></i>\n                        No results\n                    </li>\n                    {{/items}}\n                </ul>",
     }
 }));
 exports["default"] = homeUI;
@@ -40569,6 +42352,7 @@ var integrationsUI = apisearch_ui_1["default"].create({
 });
 integrationsUI.addWidgets(integrationsUI.widgets.searchInput({
     target: '.as-integrationDemo__searchBox',
+    autocomplete: true,
     template: {
         clearSearch: '<i class="fa fa-times-circle" aria-hidden="true"></i>'
     }
@@ -40582,7 +42366,7 @@ integrationsUI.addWidgets(integrationsUI.widgets.searchInput({
         { type: 'album', id: 'mw0002080092' }
     ],
     template: {
-        itemsList: "<ul>\n                {{#items}}\n                <li>\n                    <img src=\"{{metadata.image}}\" height=\"40px\">\n                    <span class=\"ml-3\">{{metadata.title}}</span>\n                    <span style=\"color: #777777; font-size: .8rem\">({{indexedMetadata.year}})</span>\n                    {{#indexedMetadata.rating}}\n                        <span class=\"as-result__albumRating pull-right\">\n                            <i class=\"fa fa-star mr-1\"></i>{{indexedMetadata.rating}}\n                        </span>\n                    {{/indexedMetadata.rating}}\n                </li>\n                {{/items}}\n                {{^items}}\n                <li>\n                    <i class=\"fa fa-meh-o\" aria-hidden=\"true\"></i>\n                    No results\n                </li>\n                {{/items}}\n            </ul>"
+        itemsList: "<ul>\n                {{#items}}\n                <li>\n                    <img src=\"{{metadata.image}}\" height=\"40px\">\n                    <span class=\"ml-3\">{{metadata.title}}</span>\n                    <span style=\"color: #777777; font-size: .8rem\">({{indexedMetadata.year}})</span>\n                    {{#indexedMetadata.rating}}\n                        <span class=\"as-result__albumRating pull-right\">\n                            <i class=\"fa fa-star mr-1\"></i>{{indexedMetadata.rating}}\n                        </span>\n                    {{/indexedMetadata.rating}}\n                </li>\n                {{/items}}\n                {{^items}}\n                <li>\n                    <i class=\"fa fa-meh-o\" aria-hidden=\"true\"></i>\n                    No results\n                </li>\n                {{/items}}\n            </ul>",
     }
 }));
 exports["default"] = integrationsUI;
@@ -40600,6 +42384,7 @@ exports["default"] = integrationsUI;
 "use strict";
 
 exports.__esModule = true;
+exports.mainDemo = void 0;
 var apisearch_ui_1 = __webpack_require__(/*! apisearch-ui */ "./node_modules/apisearch-ui/lib/index.js");
 var resultTemplate = "\n    <div class=\"row\">\n        {{#items}}\n        <div class=\"col-6 col-sm-4 mb-3\">\n            <div class=\"as-result__album\" style=\"background-image: url('{{#metadata.image}}{{metadata.image}}{{/metadata.image}}{{^metadata.image}}https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/no-cover.jpg{{/metadata.image}}')\">\n                <span class=\"as-result__albumTitle\">{{metadata.title}}</span>\n                <span class=\"as-result__albumYear\">{{indexedMetadata.year}}</span>\n\n                {{#indexedMetadata.rating}}\n                <span class=\"as-result__albumRating\">\n                    <i class=\"fa fa-star\"></i>{{indexedMetadata.rating}}\n                </span>\n                {{/indexedMetadata.rating}}\n            </div>\n        </div>\n        {{/items}}\n    </div>\n    {{^items}}\n    <div class=\"as-result__notFound\">\n        <span class=\"as-result__notFoundEmoji\">\uD83D\uDE32</span>\n        <span class=\"as-result__notFoundText\">No results found</span>\n    </div>\n    {{/items}}\n";
 var regularFilterItemTemplate = "\n    <li class=\"{{#isActive}}as-multipleFilter__item--active{{/isActive}}\">\n        <span class=\"as-multipleFilter__itemContent\">\n            <i class=\"{{#isActive}}fa fa-check-square{{/isActive}}{{^isActive}}fa fa-square-o{{/isActive}}\"></i>\n            <span class=\"as-multipleFilter__itemText\">{{values.name}}</span>\n        </span>\n        <span class=\"as-multipleFilter__itemCount\">{{n}}</span>\n    </li>\n";
@@ -40742,6 +42527,7 @@ exports["default"] = exports.mainDemo;
 "use strict";
 
 exports.__esModule = true;
+exports.codeHighlights = exports.burgerAction = exports.addNavbarClassOnScroll = void 0;
 var hljs = __webpack_require__(/*! highlight.js */ "./node_modules/highlight.js/lib/index.js");
 /**
  * Add navbar class on scroll down

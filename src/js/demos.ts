@@ -14,7 +14,7 @@ const initDemos = () => {
         window.setTimeout(() => homeUI.init());
     }
     if (document.querySelector('.as-integrationDemo')) {
-        window.setTimeout(() => integrationsUI.init(), 1000);
+        window.setTimeout(() => integrationsUI.init(), 100);
     }
 
     /**
@@ -24,7 +24,7 @@ const initDemos = () => {
         window.setTimeout(() => mainDemo.init());
     }
     if (document.querySelector('.as-filtersDemo')) {
-        window.setTimeout(() => filtersDemo.init(), 1000);
+        window.setTimeout(() => filtersDemo.init(), 100);
     }
 };
 

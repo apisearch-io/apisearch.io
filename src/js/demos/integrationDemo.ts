@@ -13,6 +13,7 @@ let integrationsUI = apisearchUI.create({
 integrationsUI.addWidgets(
     integrationsUI.widgets.searchInput({
         target: '.as-integrationDemo__searchBox',
+        autocomplete: true,
         template: {
             clearSearch: '<i class="fa fa-times-circle" aria-hidden="true"></i>'
         }
