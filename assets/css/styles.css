@@ -10295,6 +10295,7 @@ h3 {
   left: 0;
   display: block;
   z-index: 0;
+  transform: skewY(-6deg);
 }
 .c-employeesGrid__employeeImage {
   position: relative;
@@ -10572,10 +10573,6 @@ h3 {
   overflow: hidden;
   min-height: 50rem;
 }
-.c-pricing__option--extra {
-  min-height: 10rem;
-  display: none;
-}
 .c-pricing__option:before {
   content: "";
   width: 100%;
@@ -10586,12 +10583,13 @@ h3 {
   left: 0;
   display: block;
   z-index: 0;
+  transform: skewY(-4deg);
 }
 .c-pricing__option:hover {
   box-shadow: 0 5px 2rem 1px rgba(0, 0, 0, 0.15);
 }
-.c-pricing__col--extra {
-  height: 300px;
+.c-pricing__option--community {
+  margin-top: 2rem;
 }
 .c-pricing__option--community:before {
   background-image: -webkit-linear-gradient(left, #0ee6a9, #00b0c3);
@@ -10600,7 +10598,7 @@ h3 {
   background-image: -o-linear-gradient(left, #0ee6a9, #00b0c3);
   background-image: linear-gradient(to right, #0ee6a9, #00b0c3);
 }
-.c-pricing__option--medium:before {
+.c-pricing__option--standard:before {
   background-image: -webkit-linear-gradient(left, #00b0c3, #159bff);
   background-image: -moz-linear-gradient(left, #00b0c3, #159bff);
   background-image: -ms-linear-gradient(left, #00b0c3, #159bff);
@@ -10614,6 +10612,9 @@ h3 {
   background-image: -o-linear-gradient(left, #159bff, #0070ff);
   background-image: linear-gradient(to right, #159bff, #0070ff);
 }
+.c-pricing__option--enterprise {
+  margin-top: 2rem;
+}
 .c-pricing__option--enterprise:before {
   background-image: -webkit-linear-gradient(left, #0070ff, #0005c2);
   background-image: -moz-linear-gradient(left, #0070ff, #0005c2);
@@ -10621,20 +10622,10 @@ h3 {
   background-image: -o-linear-gradient(left, #0070ff, #0005c2);
   background-image: linear-gradient(to right, #0070ff, #0005c2);
 }
-.c-pricing__option--extra:before {
-  background-image: -webkit-linear-gradient(left, #b0b0b0, #848484);
-  background-image: -moz-linear-gradient(left, #b0b0b0, #848484);
-  background-image: -ms-linear-gradient(left, #b0b0b0, #848484);
-  background-image: -o-linear-gradient(left, #b0b0b0, #848484);
-  background-image: linear-gradient(to right, #b0b0b0, #848484);
-}
 .c-pricing__optionHeader {
   border-radius: 0.8rem 0.8rem 0 0;
   padding: 1.5rem;
   margin-bottom: 3rem;
-}
-.c-pricing__option--extra .c-pricing__optionHeader {
-  margin-bottom: 1rem;
 }
 .c-pricing__optionTitle {
   text-shadow: -1px 1px 1px #027ad5;
@@ -10642,9 +10633,6 @@ h3 {
   color: white;
   text-align: center;
   font-weight: 600;
-}
-.c-pricing__option--extra .c-pricing__optionTitle {
-  text-shadow: -1px 1px 1px #848484;
 }
 .c-pricing__optionPrice {
   position: relative;
@@ -10748,9 +10736,6 @@ h3 {
 .c-detailedPricing__featureAvailability > .fa.fa-minus {
   color: rgba(0, 153, 255, 0.33);
 }
-.c-detailedPricing__featureAvailability > .fa.fa-clock {
-  color: rgb(255, 99, 132);
-}
 .c-detailedPricing__header {
   margin-bottom: 2rem;
 }
@@ -10780,7 +10765,7 @@ h3 {
   background-image: -o-linear-gradient(left, #0ee6a9, #00b0c3);
   background-image: linear-gradient(to right, #0ee6a9, #00b0c3);
 }
-.c-detailedPricing__headerOption--medium:after {
+.c-detailedPricing__headerOption--standard:after {
   background-image: -webkit-linear-gradient(left, #00b0c3, #159bff);
   background-image: -moz-linear-gradient(left, #00b0c3, #159bff);
   background-image: -ms-linear-gradient(left, #00b0c3, #159bff);
@@ -10795,13 +10780,6 @@ h3 {
   background-image: linear-gradient(to right, #159bff, #0070ff);
 }
 .c-detailedPricing__headerOption--enterprise:after {
-  background-image: -webkit-linear-gradient(left, #0070ff, #0005c2);
-  background-image: -moz-linear-gradient(left, #0070ff, #0005c2);
-  background-image: -ms-linear-gradient(left, #0070ff, #0005c2);
-  background-image: -o-linear-gradient(left, #0070ff, #0005c2);
-  background-image: linear-gradient(to right, #0070ff, #0005c2);
-}
-.c-detailedPricing__headerOption--extra:after {
   background-image: -webkit-linear-gradient(left, #0070ff, #0005c2);
   background-image: -moz-linear-gradient(left, #0070ff, #0005c2);
   background-image: -ms-linear-gradient(left, #0070ff, #0005c2);
@@ -10823,7 +10801,7 @@ h3 {
   background: #15202e;
   padding-top: 3rem;
   padding-bottom: 0;
-  box-shadow: 0 -5px 14px 0 rgba(0, 0, 0, 0.13);
+  box-shadow: 0 -5px 14px 0px rgba(0, 0, 0, 0.13);
   position: relative;
 }
 .c-footer__title {
@@ -10978,6 +10956,7 @@ h3 {
   content: "";
   width: 127%;
   left: -5rem;
+  height: 18rem;
   box-shadow: 0 -12px 4rem rgba(5, 0, 76, 0.07);
   position: absolute;
   bottom: -8rem;
@@ -11228,8 +11207,9 @@ a.o-button--simple:hover {
   margin-bottom: 1rem;
 }
 .as-integrationDemo .as-searchInput:before {
-  font-family: FontAwesome;
+  font-family: "Font Awesome 5 Free";
   content: "";
+  font-weight: 900;
   position: absolute;
   left: 1rem;
   color: rgba(0, 123, 255, 0.54);
@@ -11332,8 +11312,9 @@ a.o-button--simple:hover {
 }
 .as-homeDemo .as-searchInput:before {
   font-size: 1.5rem;
-  font-family: FontAwesome;
+  font-family: "Font Awesome 5 Free";
   content: "";
+  font-weight: 900;
   position: absolute;
   left: 1rem;
   color: rgba(0, 123, 255, 0.54);
