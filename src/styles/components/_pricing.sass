@@ -1,8 +1,13 @@
 .c-pricing
   margin-top: 6rem
+  &__col
+    &--extra
+      height: 250px
   &__option
     overflow: hidden
     min-height: 50rem
+    &--extra
+      min-height: 10em
     &:before
       content: ""
       width: 100%
@@ -13,23 +18,30 @@
       left: 0
       display: block
       z-index: 0
-      transform: skewY(-4deg)
     &:hover
       box-shadow: 0 5px 2rem 1px rgba(0, 0, 0, 0.15)
     &--community
-      margin-top: 2rem
       &:before
         +background-gradient(#0ee6a9,#00b0c3)
-    &--standard
+    &--medium
       &:before
         +background-gradient(#00b0c3,#159bff)
     &--pro
       &:before
         +background-gradient(#159bff,#0070ff)
     &--enterprise
-      margin-top: 2rem
       &:before
         +background-gradient(#0070ff,#0005c2)
+    &--extra
+      height: 300px
+      &:before
+        +background-gradient(#b0b0b0,#848484)
+
+      .c-pricing__optionHeader
+        margin-bottom: 1rem
+
+      .c-pricing__optionTitle
+        text-shadow: -1px 1px 1px #848484
 
   &__optionHeader
     border-radius: .8rem .8rem 0 0
@@ -54,7 +66,7 @@
     text-align: center
     margin-bottom: 2rem
   &__optionFeaturesList
-    margin-bottom: 2rem
+    margin-bottom: 1rem
     list-style: none
     padding: 0
   &__optionFeature
@@ -78,3 +90,6 @@
     box-shadow: 0 2px 7px rgba(0, 66, 119, 0.14)
     padding: .6rem
     border-radius: .2rem
+
+  .col-extra
+    display: none

@@ -8120,8 +8120,7 @@ a.text-dark:hover, a.text-dark:focus {
     right: 0;
     left: 0;
     display: block;
-    z-index: 0;
-    transform: skewY(-6deg); }
+    z-index: 0; }
   .c-employeesGrid__employeeImage {
     position: relative;
     z-index: 9;
@@ -8354,9 +8353,13 @@ a.text-dark:hover, a.text-dark:focus {
 
 .c-pricing {
   margin-top: 6rem; }
+  .c-pricing__col--extra {
+    height: 250px; }
   .c-pricing__option {
     overflow: hidden;
     min-height: 50rem; }
+    .c-pricing__option--extra {
+      min-height: 10em; }
     .c-pricing__option:before {
       content: "";
       width: 100%;
@@ -8366,19 +8369,16 @@ a.text-dark:hover, a.text-dark:focus {
       right: 0;
       left: 0;
       display: block;
-      z-index: 0;
-      transform: skewY(-4deg); }
+      z-index: 0; }
     .c-pricing__option:hover {
       box-shadow: 0 5px 2rem 1px rgba(0, 0, 0, 0.15); }
-    .c-pricing__option--community {
-      margin-top: 2rem; }
-      .c-pricing__option--community:before {
-        background-image: -webkit-linear-gradient(left, #0ee6a9, #00b0c3);
-        background-image: -moz-linear-gradient(left, #0ee6a9, #00b0c3);
-        background-image: -ms-linear-gradient(left, #0ee6a9, #00b0c3);
-        background-image: -o-linear-gradient(left, #0ee6a9, #00b0c3);
-        background-image: linear-gradient(to right, #0ee6a9, #00b0c3); }
-    .c-pricing__option--standard:before {
+    .c-pricing__option--community:before {
+      background-image: -webkit-linear-gradient(left, #0ee6a9, #00b0c3);
+      background-image: -moz-linear-gradient(left, #0ee6a9, #00b0c3);
+      background-image: -ms-linear-gradient(left, #0ee6a9, #00b0c3);
+      background-image: -o-linear-gradient(left, #0ee6a9, #00b0c3);
+      background-image: linear-gradient(to right, #0ee6a9, #00b0c3); }
+    .c-pricing__option--medium:before {
       background-image: -webkit-linear-gradient(left, #00b0c3, #159bff);
       background-image: -moz-linear-gradient(left, #00b0c3, #159bff);
       background-image: -ms-linear-gradient(left, #00b0c3, #159bff);
@@ -8390,14 +8390,24 @@ a.text-dark:hover, a.text-dark:focus {
       background-image: -ms-linear-gradient(left, #159bff, #0070ff);
       background-image: -o-linear-gradient(left, #159bff, #0070ff);
       background-image: linear-gradient(to right, #159bff, #0070ff); }
-    .c-pricing__option--enterprise {
-      margin-top: 2rem; }
-      .c-pricing__option--enterprise:before {
-        background-image: -webkit-linear-gradient(left, #0070ff, #0005c2);
-        background-image: -moz-linear-gradient(left, #0070ff, #0005c2);
-        background-image: -ms-linear-gradient(left, #0070ff, #0005c2);
-        background-image: -o-linear-gradient(left, #0070ff, #0005c2);
-        background-image: linear-gradient(to right, #0070ff, #0005c2); }
+    .c-pricing__option--enterprise:before {
+      background-image: -webkit-linear-gradient(left, #0070ff, #0005c2);
+      background-image: -moz-linear-gradient(left, #0070ff, #0005c2);
+      background-image: -ms-linear-gradient(left, #0070ff, #0005c2);
+      background-image: -o-linear-gradient(left, #0070ff, #0005c2);
+      background-image: linear-gradient(to right, #0070ff, #0005c2); }
+    .c-pricing__option--extra {
+      height: 300px; }
+      .c-pricing__option--extra:before {
+        background-image: -webkit-linear-gradient(left, #b0b0b0, #848484);
+        background-image: -moz-linear-gradient(left, #b0b0b0, #848484);
+        background-image: -ms-linear-gradient(left, #b0b0b0, #848484);
+        background-image: -o-linear-gradient(left, #b0b0b0, #848484);
+        background-image: linear-gradient(to right, #b0b0b0, #848484); }
+      .c-pricing__option--extra .c-pricing__optionHeader {
+        margin-bottom: 1rem; }
+      .c-pricing__option--extra .c-pricing__optionTitle {
+        text-shadow: -1px 1px 1px #848484; }
   .c-pricing__optionHeader {
     border-radius: 0.8rem 0.8rem 0 0;
     padding: 1.5rem;
@@ -8421,7 +8431,7 @@ a.text-dark:hover, a.text-dark:focus {
     text-align: center;
     margin-bottom: 2rem; }
   .c-pricing__optionFeaturesList {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     list-style: none;
     padding: 0; }
   .c-pricing__optionFeature {
@@ -8452,6 +8462,8 @@ a.text-dark:hover, a.text-dark:focus {
     box-shadow: 0 2px 7px rgba(0, 66, 119, 0.14);
     padding: 0.6rem;
     border-radius: 0.2rem; }
+  .c-pricing .col-extra {
+    display: none; }
 
 .c-detailedPricing__section {
   margin-bottom: 2.5rem; }
@@ -8492,6 +8504,8 @@ a.text-dark:hover, a.text-dark:focus {
     background-clip: text; }
   .c-detailedPricing__featureAvailability > .fa.fa-minus {
     color: rgba(0, 153, 255, 0.33); }
+  .c-detailedPricing__featureAvailability > .fa.fa-clock {
+    color: #ff6384; }
 .c-detailedPricing__header {
   margin-bottom: 2rem; }
 .c-detailedPricing__headerOption {
@@ -8517,7 +8531,7 @@ a.text-dark:hover, a.text-dark:focus {
     background-image: -ms-linear-gradient(left, #0ee6a9, #00b0c3);
     background-image: -o-linear-gradient(left, #0ee6a9, #00b0c3);
     background-image: linear-gradient(to right, #0ee6a9, #00b0c3); }
-  .c-detailedPricing__headerOption--standard:after {
+  .c-detailedPricing__headerOption--medium:after {
     background-image: -webkit-linear-gradient(left, #00b0c3, #159bff);
     background-image: -moz-linear-gradient(left, #00b0c3, #159bff);
     background-image: -ms-linear-gradient(left, #00b0c3, #159bff);
@@ -8530,6 +8544,12 @@ a.text-dark:hover, a.text-dark:focus {
     background-image: -o-linear-gradient(left, #159bff, #0070ff);
     background-image: linear-gradient(to right, #159bff, #0070ff); }
   .c-detailedPricing__headerOption--enterprise:after {
+    background-image: -webkit-linear-gradient(left, #0070ff, #0005c2);
+    background-image: -moz-linear-gradient(left, #0070ff, #0005c2);
+    background-image: -ms-linear-gradient(left, #0070ff, #0005c2);
+    background-image: -o-linear-gradient(left, #0070ff, #0005c2);
+    background-image: linear-gradient(to right, #0070ff, #0005c2); }
+  .c-detailedPricing__headerOption--extra:after {
     background-image: -webkit-linear-gradient(left, #0070ff, #0005c2);
     background-image: -moz-linear-gradient(left, #0070ff, #0005c2);
     background-image: -ms-linear-gradient(left, #0070ff, #0005c2);
@@ -8676,7 +8696,6 @@ a.text-dark:hover, a.text-dark:focus {
       content: "";
       width: 127%;
       left: -5rem;
-      height: 18rem;
       box-shadow: 0 -12px 4rem rgba(5, 0, 76, 0.07);
       position: absolute;
       bottom: -8rem;

@@ -24,6 +24,8 @@
       +text-gradient(#00c3b5,#1fdea6)
     & > .fa.fa-minus
       color: rgba(0, 153, 255, 0.33)
+    & > .fa.fa-clock
+      color: rgb(255, 99, 132)
   &__header
     margin-bottom: 2rem
   &__headerOption
@@ -46,12 +48,15 @@
     &--community
       &:after
         +background-gradient(#0ee6a9,#00b0c3)
-    &--standard
+    &--medium
       &:after
         +background-gradient(#00b0c3,#159bff)
     &--pro
       &:after
         +background-gradient(#159bff,#0070ff)
     &--enterprise
+      &:after
+        +background-gradient(#0070ff,#0005c2)
+    &--extra
       &:after
         +background-gradient(#0070ff,#0005c2)
