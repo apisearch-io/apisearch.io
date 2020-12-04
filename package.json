@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "apisearch-ui": "^0.2.18",
-    "highlight.js": "^9.18.3",
+    "highlight.js": "^10.4.1",
     "bootstrap": "^4.3.0"
   }
 }
