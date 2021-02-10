@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/tailwind/tailwind.min.css">
+    <script src="https://cdn.jsdelivr.net/combine/npm/apisearch-ui@0.2.10/dist/apisearch-ui.min.js"></script>
+</head>
+<body>
+
+        <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+            <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+                <div class="max-w-md mx-auto">
+                    <div style="position: relative">
+                        <svg width="20" height="20" fill="currentColor" class="absolute top-1/2 transform -translate-y-1/2 text-blue-500" style="top: 21px; left: 10px;">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
+                        </svg>
+                        <input id="search-input" class="border-blue-400 ring-1 ring-blue-400 outline-none w-full text-sm text-black placeholder-gray-500 border border-gray-200 rounded py-2 pl-10" type="text" aria-label="Filter projects" />
+
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                            <p>Search your favourite characters.</p>
+                            <ul class="list-disc space-y-2">
+                                <li class="flex items-start">
+                <span class="h-6 flex items-center sm:h-7">
+                  <svg class="flex-shrink-0 h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                                    <p class="ml-2">
+                                        Type a superhero name, like
+                                        <code class="text-sm font-bold text-gray-900">the joker</code>
+                                    </p>
+                                </li>
+                                <li class="flex items-start">
+                <span class="h-6 flex items-center sm:h-7">
+                  <svg class="flex-shrink-0 h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                                    <p class="ml-2">
+                                        Type a color, like
+                                        <code class="text-sm font-bold text-gray-900">red</code>
+                                    </p>
+                                </li>
+                                <li class="flex items-start">
+                <span class="h-6 flex items-center sm:h-7">
+                  <svg class="flex-shrink-0 h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                                    <p class="ml-2">Type a collection, like <code class="text-sm font-bold text-gray-900">avengers</code></p>
+                                </li>
+                            </ul>
+                            <p>
+
+                            </p>
+                        </div>
+                        <div id="search-results" style="border: none!important;"></div>
+                        <div class="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7" style="border: none!important;">
+                            <p>Want to see some other demos??</p>
+                            <p>
+                                <a href="demos.html" class="text-blue-600 hover:text-blue-700"> Check this chapter &rarr; </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <script type="text/template" id="result-search-tpl">
+        <div class="flex flex-row">
+            {{#items}}
+                <div class="hover:bg-light-blue-500 hover:border-transparent hover:shadow-lg group block rounded-lg p-1 border border-gray-200 mr-4">
+                    <img width="100" height="100" class="border-1 border-white"
+                         src="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}"
+                         title="{{metadata.title}}"
+                    />
+                </div>
+            {{/items}}
+        </div>
+        {{^items}}
+        <div class="notification">
+            Oops! We didn't find any results for <b>{{query}}</b> 🙉
+        </div>
+        {{/items}}
+    </script>
+
+    <script type="text/template" id="information-container-template">
+        <span class="tag is-primary">
+                <i class="fa fa-bolt"></i> &nbsp; Found {{total_hits}}!
+            </span>
+    </script>
+
+    <script type="text/javascript">
+        // UI Instance
+        const ui = apisearchUI.create({
+            app_id: 'as-29be77d7-2f64-4522',
+            index_id: 'loc-1-8f578f47-7610-491c',
+            token: 'loc-1-d8e48c90-3503-465a-827d-44f07c8f2fde',
+            options: {
+                endpoint: 'http://localhost:8400'
+            }
+        });
+
+        // Widgets setup
+        ui.addWidgets(
+            ui.widgets.searchInput({
+                target: '#search-input',
+                placeholder: 'Search your superhero!',
+                autofocus: true
+            }),
+            ui.widgets.result({
+                target: '#search-results',
+                itemsPerPage: 4,
+                highlightsEnabled: true,
+                template: {
+                    itemsList: document.getElementById('result-search-tpl').text,
+                },
+                fieldsConciliation: {
+                    'mapped_year': 'year',
+                    'img': 'image',
+                }
+            })
+        );
+
+        // Init the magic!
+        ui.init({firstQuery: true});
+    </script>
+</body>
+</html>

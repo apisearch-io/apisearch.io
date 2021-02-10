@@ -1,311 +1,410 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
+    <title>Page title</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Apisearch partners">
-    <meta name="author" content="Apisearch team <hello@apisearch.io>">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="css/tailwind/tailwind.min.css">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-tailwind.png">
+    <script src="js/main.js"></script>
+    <script src="https://apisearch-io.github.io/search-ui/dist/apisearch-ui.min.js"></script>
+    <script type="text/javascript">
+      // UI Instance
+      const uiFactory = apisearchUI.factory({
+        app_id: 'as-29be77d7-2f64-4522',
+        index_id: 'loc-1-8f578f47-7610-491c',
+        token: 'loc-1-d8e48c90-3503-465a-827d-44f07c8f2fde',
+        options: {
+          endpoint: 'http://localhost:8400'
+        }
+      });
+    </script>
+  </head>
+  <body class="antialiased bg-body text-body font-body">
+    <div class="">
 
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="57x57" href="./assets/favicons/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="./assets/favicons/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="./assets/favicons/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="./assets/favicons/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="./assets/favicons/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="./assets/favicons/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="./assets/favicons/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="./assets/favicons/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicons/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicons/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicons/favicon-16x16.png">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="./assets/favicons/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-
-    <title>Apisearch - Team & Partners</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
-
-    <!-- Custom styles for this template -->
-    <link href="assets/css/styles.css" rel="stylesheet">
-</head>
-
-<body class="product-page">
-
-<!-- Navbar -->
-<nav class="c-navbar navbar navbar-expand-md fixed-top" id="primaryNavbar">
-    <a class="c-navbar__brand navbar-brand" href="./index.html">
-        <img src="https://raw.githubusercontent.com/apisearch-io/apisearch.io/master/assets/media/apisearch-long-logo.png"
-             class="d-sm-inline-block"
-             height="15"
-             alt="Logo Apisearch"
-        >
-    </a>
-    <button class="c-navbar__burger navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarsExampleDefault"
-            aria-controls="navbarsExampleDefault"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-    >
-        <svg xmlns="http://www.w3.org/2000/svg"
-             id="burgerSidebarMenu"
-             viewBox="0 0 30 30"
-             width="30"
-             height="30"
-             focusable="false"
-        >
-            <title>Menu</title>
-            <path stroke="#54edc0"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-miterlimit="10"
-                  d="M4 7h22M4 15h22M4 23h22"
-            ></path>
-        </svg>
-    </button>
-
-    <div class="c-navbar__collapse collapse navbar-collapse" id="headerNavbar">
-        <ul class="c-navbar__nav navbar-nav mr-auto">
-            <li class="c-navbar__navItem nav-item">
-                <a class="nav-link" href="./product.html">Product</a>
-            </li>
-            <li class="c-navbar__navItem nav-item">
-                <a class="nav-link" href="./pricing.html">Pricing</a>
-            </li>
-            <li class="c-navbar__navItem nav-item">
-                <a class="nav-link" href="./partners.html"><strong>Partners</strong></a>
-            </li>
-            <li class="c-navbar__navItem nav-item">
-                <a class="nav-link" href="https://github.com/apisearch-io" target="_blank">Github</a>
-            </li>
-            <li class="c-navbar__navItem nav-item">
-                <a class="nav-link"
-                   target="_blank"
-                   href="http://docs.apisearch.io">
-                    Documentation
-                </a>
-            </li>
-        </ul>
-
-        <ul class="c-navbar__nav navbar-nav my-2 my-lg-0">
-            <li class="c-navbar__navItem nav-item">
-                <a class="o-button o-button--md o-button--capitalize o-button--gradientGreen o-button--animated nav-link" href="https://github.com/apisearch-io/search-server" target="_blank">
-                    Download Apisearch
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
-<!-- /Navbar -->
-
-<!-- Main -->
-<main role="main">
-
-    <!-- Hero -->
-    <section
-            class="o-section o-section--paddingTop-md o-section--inverted o-section--shadowDivision o-section--withBackgroundImage"
-            style="background-image: url('assets/media/meeting-image.jpeg')"
-    >
-        <div class="o-section__container container">
-            <h1 class="o-title o-title--h1 o-title--center o-title--inverted">
-                Team & Partners
-            </h1>
-            <p class="o-title__complement o-title__complement--center o-title__complement--inverted">
-                These are the members of the Apisearch company, and the associated companies that are currently working in Apisearch integrations.
-                If you want to make an integration with the support of the experts, you can pick one of our partners.
-            </p>
-
-            <div class="c-employeesGrid row mt-5">
-                <div class="col-12 col-md-4 ml-auto mr-auto">
-                    <div class="c-employeesGrid__employee o-card o-card--b-radius-lg mb-3 card">
-                        <div class="card-body">
-                            <img class="c-employeesGrid__employeeImage"
-                                 src="./assets/media/team/mmoreram.jpeg"
-                                 alt="Marc Morera"
-                            >
-                            <h4 class="c-employeesGrid__employeeName">Marc Morera</h4>
-                            <p class="c-employeesGrid__employeeJob">CEO & Founder</p>
-                            <p class="c-employeesGrid__employeeDescription">
-                                I mainly do things in PHP. Performance is a must. Interested in DeepLearning and Quantum mechanics.
-                            </p>
-                        </div>
-                        <div class="c-employeesGrid__employeeLinks row">
-                            <div class="c-employeesGrid__employeeLink col-6">
-                                <a href="https://github.com/mmoreram" target="_blank">
-                                    <i class="fab fa-github" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                            <div class="c-employeesGrid__employeeLink col-6">
-                                <a href="https://www.linkedin.com/in/mmoreram/" target="_blank">
-                                    <i class="fab fa-linkedin-in" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <section>
+        <div class="container px-4 mx-auto">
+          <nav class="flex justify-between items-center py-6"><a class="text-3xl font-semibold leading-none" href="index.html"><img src="images/apisearch-long-logo.png" alt="Apisearch" width="200"></a>
+            <div class="lg:hidden">
+              <button class="navbar-burger flex items-center py-2 px-3 text-green-600 hover:text-green-700 rounded border border-green-200 hover:border-green-300">
+                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Mobile menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path></svg></button>
             </div>
-        </div>
-    </section>
-    <!-- /Hero -->
-
-    <!-- More team -->
-    <div class="o-section__container container mt-5">
-        <div class="c-employeesGrid row">
-            <div class="col-12 col-md-4 ml-auto mr-auto mb-5">
-                <div class="c-employeesGrid__employee o-card o-card--b-radius-lg mb-3 card">
-                    <div class="card-body">
-                        <img class="c-employeesGrid__employeeImage"
-                             src="assets/media/sponsors/slowcode.jpg"
-                             alt="Javier Carranza"
-                        >
-                        <h4 class="c-employeesGrid__employeeName">Slowcode</h4>
-                        <p class="c-employeesGrid__employeeJob">Catalunya</p>
-                        <p class="c-employeesGrid__employeeDescription">
-                            Catalan company specialized in Apisearch implementations using Python and building from the scratch. They speak Catalan, Spanish and English.
-                        </p>
-                    </div>
-                    <div class="c-employeesGrid__employeeLinks row">
-                        <div class="c-employeesGrid__employeeLink col-6">
-                            <a href="https://slowcode.io" target="_blank">
-                                <i class="fa fa-link" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                        <div class="c-employeesGrid__employeeLink col-6">
-                            <a href="https://www.linkedin.com/company/slowcode/" target="_blank">
-                                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- More team -->
-</main>
-<!-- Main -->
-
-<!-- Footer -->
-<footer class="c-footer container-fluid">
-    <section class="row">
-        <div class="col-12 col-md-6 mb-3">
-            <h2 class="c-footer__title">Developer</h2>
-            <ul class="c-footer__sectionList">
-                <li class="c-footer__sectionListItem">
-                    <a href="http://docs.apisearch.io"
-                       target="_blank"
-                       class="c-footer__sectionListLink"
-                    >
-                        Getting started
-                    </a>
-                </li>
-                <li class="c-footer__sectionListItem">
-                    <a href="https://docs.apisearch.io/#/http-reference/application-reference"
-                       target="_blank"
-                       class="c-footer__sectionListLink"
-                    >
-                        API Reference
-                    </a>
-                </li>
-                <li class="c-footer__sectionListItem">
-                    <a href="https://docs.apisearch.io/#/ui/quickstart"
-                       target="_blank"
-                       class="c-footer__sectionListLink"
-                    >
-                        UI Client Reference
-                    </a>
-                </li>
+            <ul class="hidden lg:flex lg:items-center lg:w-auto lg:space-x-12">
+              <li><a class="text-sm text-blueGray-400 hover:text-blueGray-500" href="index.html">Product</a></li>
+              <li><a class="text-sm text-blueGray-400 hover:text-blueGray-500" href="cloud.html">Cloud</a></li>
+              <li><a class="text-sm text-blueGray-400 hover:text-blueGray-500" href="prices.html">Prices</a></li>
+              <li><a class="text-sm text-blueGray-600 hover:text-blueGray-600" href="partners.html">Partners</a></li>
+              <li><a class="text-sm text-blueGray-400 hover:text-blueGray-500" target="_blank" href="http://docs.apisearch.io/">Documentation</a></li>
             </ul>
-        </div>
-        <div class="col-12 col-md-6 mb-3">
-            <h2 class="c-footer__title">
-                <i class="fa fa-hand-peace-o" aria-hidden="true"></i>
-                Stay in touch
-            </h2>
-            <ul class="c-footer__sectionList">
-                <li class="c-footer__sectionListItem">
-                    <a href="mailto:info@apisearch.io" class="c-footer__sectionListLink">
-                        Support
-                    </a>
-                </li>
-                <li class="c-footer__sectionListItem">
-                    <a href="https://docs.apisearch.io/#/newsletter" class="c-footer__sectionListLink">
-                        Newsletter
-                    </a>
-                </li>
-                <li class="c-footer__sectionListItem">
-                    <a href="https://us3.list-manage.com/contact-form?u=c11fd3061a6f0d72f6464d2f4&form_id=e7cb3098210fd4462f089a66abb29a27"
-                       target="_blank"
-                       class="c-footer__sectionListLink">
-                        Contact
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </section>
-    <section class="row">
-        <div class="col-12 text-center mb-5 mt-3">
-            <img src="./assets/media/apisearch-logo.svg"
-                 class="c-footer__logo d-inline-block align-top"
-                 alt="Apisearch logo"
-                 height="42px"
-            >
-            <p class="c-footer__copyright">&gt;= 2018 Apisearch Development</p>
-        </div>
-    </section>
-    <section class="row">
-        <div class="h-background--darkLight col-12">
-            <div class="c-footer__social">
-                <a href="http://github.com/apisearch-io"
-                   class="c-footer__socialLink"
-                   target="_blank"
-                >
-                    <i class="fab fa-github" aria-hidden="true"></i>
-                </a>
-                <a href="https://apisearch.slack.com"
-                   class="c-footer__socialLink"
-                   target="_blank"
-                >
-                    <i class="fa fa-comments" aria-hidden="true"></i>
-                </a>
-                <a href="https://twitter.com/apisearch_io"
-                   class="c-footer__socialLink"
-                   target="_blank"
-                >
-                    <i class="fab fa-twitter" aria-hidden="true"></i>
-                </a>
-                <a href="https://www.linkedin.com/company/18418235"
-                   class="c-footer__socialLink"
-                   target="_blank"
-                >
-                    <i class="fab fa-linkedin-in" aria-hidden="true"></i>
-                </a>
-                <a href="https://www.youtube.com/channel/UCD9H_POyre6Wvahg-zaLzsA"
-                   class="c-footer__socialLink"
-                   target="_blank"
-                >
-                    <i class="fab fa-youtube" aria-hidden="true"></i>
-                </a>
+            <div class="hidden lg:block">
+              <a class="mr-2 inline-block px-4 py-3 text-xs text-green-600 hover:text-green-700 font-semibold leading-none border border-green-200 hover:border-green-300 rounded" href="https://github.com/apisearch-io/search-server">Download</a>
+              <a class="inline-block px-4 py-3 text-xs font-semibold leading-none bg-green-600 hover:bg-green-700 text-white rounded" href="https://admin.apisearch.io">Sign In</a>
             </div>
+          </nav>
         </div>
-    </section>
-</footer>
-<!-- /Footer -->
+        <div class="hidden navbar-menu relative z-50">
+          <div class="navbar-backdrop fixed inset-0 bg-blueGray-800 opacity-25"></div>
+          <nav class="fixed top-0 left-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 bg-white border-r overflow-y-auto">
+            <div class="flex items-center mb-8">
+              <a class="mr-auto text-3xl font-semibold leading-none" href="index.html"><img src="images/apisearch-long-logo.png" alt="" width="200"></a>
+              <button class="navbar-close">
+                <svg class="h-6 w-6 text-blueGray-400 cursor-pointer hover:text-blueGray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+            <div>
+              <ul>
+                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="index.html">Product</a></li>
+                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="cloud.html">Cloud</a></li>
+                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="prices.html">Prices</a></li>
+                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-700 hover:bg-green-50 hover:text-green-700" href="partners.html">Partners</a></li>
+                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="https://docs.apisearch.io" target="_blank">Documentation</a></li>
+              </ul><div class="mt-4 pt-6 border-t border-blueGray-100"><a class="block px-4 py-3 mb-3 text-xs text-center font-semibold leading-none bg-green-600 hover:bg-green-700 text-white rounded" href="https://admin.apisearch.io">Sign In</a><a class="block px-4 py-3 mb-2 text-xs text-center text-green-600 hover:text-green-700 font-semibold leading-none border border-green-200 hover:border-green-300 rounded" href="https://github.com/apisearch-io/search-server">Download</a></div>
+            </div>
+            <div class="mt-auto">
+              <p class="my-4 text-xs text-blueGray-400">
+                <span>Get in Touch</span>
+                <a class="text-green-600 hover:text-green-600 underline" href="#">info@apisearch.io</a>
+              </p>
+            </div>
+          </nav>
+        </div>
+      </section>
 
-<!-- Scripts -->
-<script src="./assets/js/app.js"></script>
+      <section class="py-20 bg-blueGray-50"><div class="container px-4 mx-auto">
+        <div class="max-w-lg mx-auto mb-12 text-center">
+          <span class="inline-block py-1 px-3 text-xs font-semibold bg-green-100 text-green-600 rounded-xl">Our partners</span>
+          <h2 class="text-3xl md:text-4xl mt-2 mb-4 font-bold font-heading">These are our journey team members</h2>
+          <p class="text-blueGray-400 leading-loose">These companies are actually working with Apisearch, building plugins, integrating websites and helping us with our roadmap.</p>
+        </div>
+        <div class="flex flex-wrap">
+          <div class="w-full md:w-1/2 py-5 md:px-5">
+            <div class="px-6 py-10 bg-white shadow rounded">
+              <div class="flex items-center mb-4">
+                <img class="h-16 w-16 rounded-full object-cover" src="images/ecomm360.png" alt=""><div class="pl-4">
+                <p class="text-xl">Ecomm360</p>
+                <p class="text-green-600">Catalonia - Prestashop</p>
+                </div>
+              </div>
+              <p class="leading-loose text-blueGray-400 mb-5">Te acompañamos en el proceso de digitalización de tu empresa, tanto en el área de marketing como en el soporte técnico. Partners oficiales de PrestaShop.</p>
+              <div class="flex text-blueGray-500">
+                <a href="https://www.ecomm360.es/" target="_blank">Visit website</a>&nbsp;-&nbsp;
+                <a href="mailto:info@ecomm360.es">Contact</a>
+              </div>
+            </div>
+          </div>
+          <div class="w-full md:w-1/2 py-5 md:px-5">
+            <div class="px-6 py-10 bg-white shadow rounded">
+              <div class="flex items-center mb-4">
+                <img class="h-16 w-16 rounded-full object-cover" src="images/slowcode.jpg" alt=""><div class="pl-4">
+                <p class="text-xl">Slowcode</p>
+                <p class="text-green-600">Catalonia - Custom</p>
+                </div>
+              </div>
+              <p class="leading-loose text-blueGray-400 mb-5">Catalan company specialized in Apisearch implementations using Python and building from the scratch. They speak Catalan, Spanish and English.</p>
+              <div class="flex text-blueGray-500">
+                <a href="https://slowcode.io/es/" target="_blank">Visit website</a>&nbsp;-&nbsp;
+                <a href="mailto:info@slowcode.io">Contact</a>
+              </div>
+            </div>
+          </div>
+          <div class="w-full md:w-1/2 py-5 md:px-5">
+            <div class="px-6 py-10 bg-white shadow rounded">
+              <div class="flex items-center mb-4">
+                <img class="h-16 w-16 rounded-full object-cover" src="images/bumon-web.jpeg" alt=""><div class="pl-4">
+                <p class="text-xl">Bumon-Web</p>
+                <p class="text-green-600">Catalonia - Magento</p>
+                </div>
+              </div>
+              <p class="leading-loose text-blueGray-400 mb-5">Expertos en desarrollo de tiendas online con Magento y creación de apps web con PHP. Trabajamos de forma totalmente personalizada.</p>
+              <div class="flex text-blueGray-500">
+                <a href="https://www.bumon-web.com/" target="_blank">Visit website</a>&nbsp;-&nbsp;
+                <a href="https://www.bumon-web.com/#contacto" target="_blank">Contact</a>&nbsp;-&nbsp;
+              </div>
+            </div>
+          </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110185459-1"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'UA-110185459-1');
-</script>
-<script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/c11fd3061a6f0d72f6464d2f4/4097b63269de7518b703326f7.js");</script>
-</body>
+          <div class="w-full md:w-1/2 py-5 md:px-5">
+            <div class="px-6 py-10 bg-white shadow rounded">
+              <div class="flex items-center mb-4">
+                <img class="h-16 w-16 rounded-full object-cover" src="images/digitalocean.svg" alt=""><div class="pl-4">
+                <p class="text-xl">DigitalOcean</p>
+                <p class="text-green-600">Cluster provider</p>
+              </div>
+              </div>
+              <p class="leading-loose text-blueGray-400 mb-5">Apisearch has built some of their cloud clusters on top of Digitalocean. They have a great management interface that made possible this project.</p>
+              <div class="flex text-blueGray-500">
+                <a href="https://www.digitalocean.com/" target="_blank">Visit website</a>&nbsp;-&nbsp;
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full md:w-1/2 py-5 md:px-5">
+            <div class="px-6 py-10 bg-white shadow rounded">
+              <div class="flex items-center mb-4">
+                <img class="h-16 w-16 rounded-full object-cover" src="images/fastly.png" alt=""><div class="pl-4">
+                <p class="text-xl">Fastly</p>
+                <p class="text-green-600">CDN provider</p>
+              </div>
+              </div>
+              <p class="leading-loose text-blueGray-400 mb-5">One of the secrets why Apisearch is that fast is because we're using the best CDN. Fastly helps us this extra response speeds for your users experience.</p>
+              <div class="flex text-blueGray-500">
+                <a href="https://www.fastly.com/" target="_blank">Visit website</a>&nbsp;-&nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </section>
+
+      <section class="py-20"><div class="container px-4 mx-auto">
+        <div class="flex flex-wrap -mx-8">
+          <div class="w-full lg:w-1/2 px-8">
+            <div class="mb-12 lg:mb-0 pb-12 lg:pb-0 border-b lg:border-b-0">
+              <h2 class="mb-4 text-3xl lg:text-4xl font-bold font-heading">Being a reseller</h2>
+              <p class="mb-8 leading-loose text-blueGray-400">Our resellers are part of our team. That means that they are closely in touch with us though several communication tools, and they are part of our roadmap process.</p>
+              <div class="w-full px-3 order-0 md:order-1 mb-12 md:mb-0"><img class="sm:max-w-sm lg:max-w-full mx-auto" src="images/svg/undraw_content_team_3epn.svg" alt=""></div>
+            </div>
+          </div>
+          <div class="w-full lg:w-1/2 px-8">
+            <ul class="space-y-12"><li class="flex -mx-4">
+              <div class="px-4">
+                <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">1</span>
+              </div>
+              <div class="px-4">
+                <h3 class="my-4 text-xl font-semibold">Learn how Apisearch work</h3>
+                <p class="text-blueGray-400 leading-loose">We help you to understand how Apisearch work in terms of technology, integration and administration. We update you about all new features before they are released. You are part of the team.</p>
+              </div>
+              </li>
+              <li class="flex -mx-4">
+                <div class="px-4">
+                  <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">2</span>
+                </div>
+                <div class="px-4">
+                  <h3 class="my-4 text-xl font-semibold">Integrate your clients or new ones</h3>
+                  <p class="text-blueGray-400 leading-loose">Once you know exactly how Apisearch work, it's time to integrate your clients platforms or to reach new clients. You can specialize to one country and technology, and we will refer you clients when interested.</p>
+                </div>
+              </li>
+              <li class="flex -mx-4">
+                <div class="px-4">
+                  <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">3</span>
+                </div>
+                <div class="px-4">
+                  <h3 class="my-4 text-xl font-semibold">¿Which is my revenue?</h3>
+                  <p class="text-blueGray-400 leading-loose">We see you as one of our clients, including all your clients requests in one simple invoice. That means that you can go from a 0% of revenue (having one client), to +60% (the more clients and usage, the higher is that percentage)</p>
+                </div>
+              </li>
+            </ul></div>
+        </div>
+        </div>
+      </section>
+
+      <section class="py-20"><div class="container px-4 mx-auto">
+          <div class="flex flex-wrap -mx-3">
+            <div class="w-full md:w-1/2 px-3 order-1 md:order-0">
+              <div class="max-w-md">
+                <h2 class="mb-4 text-3xl md:text-4xl font-bold font-heading">Being a commercial</h2>
+                <p class="mb-6 leading-loose text-blueGray-400">You can actively sell Apisearch as an external commercial. You will be trained and updated as our resellers do, but your revenue will be directly related to your closed clients.</p>
+                <ul><li class="py-4">
+                    <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">1</span>
+                    <span>30% revenue the first year</span>
+                  </li>
+                  <li class="py-4">
+                    <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">2</span>
+                    <span>20% revenue the second year</span>
+                  </li>
+                  <li class="py-4">
+                    <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">3</span>
+                    <span> 10% revenue the third year</span>
+                  </li>
+                </ul></div>
+            </div>
+            <div class="w-full md:w-1/2 px-3 order-0 md:order-1 mb-12 md:mb-0"><img class="sm:max-w-sm lg:max-w-full mx-auto" src="images/svg/undraw_Business_decisions_re_84ag.svg" alt=""></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-20"><div class="container px-4 mx-auto">
+          <div class="flex flex-wrap -mx-3">
+            <div class="w-full md:w-1/2 px-3 order-1 md:order-0">
+              <div class="max-w-md">
+                <h2 class="mb-4 text-3xl md:text-4xl font-bold font-heading">Being an evangelist</h2>
+                <p class="mb-6 leading-loose text-blueGray-400">Some of our partners are evangelists. You can talk about us, and you get paid for each lead referred by you and closed by us.</p>
+                <ul><li class="py-4">
+                    <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">1</span>
+                    <span>20% revenue the first year </span>
+                  </li>
+                  <li class="py-4">
+                    <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">2</span>
+                    <span> 15% revenue the second year</span>
+                  </li>
+                  <li class="py-4">
+                    <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">3</span>
+                    <span>10% revenue the third year</span>
+                  </li>
+                </ul></div>
+            </div>
+            <div class="w-full md:w-1/2 px-3 order-0 md:order-1 mb-12 md:mb-0"><img class="sm:max-w-sm lg:max-w-full mx-auto" src="images/svg/undraw_mobile_posts_tlwg.svg" alt=""></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-20">
+        <div class="container px-4 mx-auto">
+          <div class="flex flex-wrap -mx-8">
+            <div class="w-full lg:w-1/2 px-8">
+              <div class="mb-12 lg:mb-0 pb-12 lg:pb-0 border-b lg:border-b-0">
+                <h2 class="mb-4 text-3xl lg:text-4xl font-bold font-heading">Being an active Apisearch community member</h2>
+                <p class="mb-8 leading-loose text-blueGray-400">Apisearch is the result of hours and hours of hard work, so one of our maximum honor is that people like you download it for free and deploy and use in your own infrastructure. As you can see, both the server and the distributed set of libraries and integrations are using open source licenses, so feel free to use it for commercial uses. We only ask you 3 small things.</p>
+                <div class="w-full px-3 order-0 md:order-1 mb-12 md:mb-0"><img class="sm:max-w-sm lg:max-w-full mx-auto" src="images/svg/undraw_share_link_qtxe.svg" alt=""></div>
+              </div>
+            </div>
+            <div class="w-full lg:w-1/2 px-8">
+              <ul class="space-y-12">
+                <li class="flex -mx-4">
+                  <div class="px-4">
+                    <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">1</span>
+                  </div>
+                  <div class="px-4">
+                    <h3 class="my-4 text-xl font-semibold">Write us about your experience</h3>
+                    <p class="text-blueGray-400 leading-loose">We aim to improve the project as much as we can. In order to do that, we need your feedback, even if it's good or bad. Having good testimonials for the website is also something that we will appreciate.</p>
+                  </div>
+                </li>
+                <li class="flex -mx-4">
+                  <div class="px-4">
+                    <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">2</span>
+                  </div>
+                  <div class="px-4">
+                    <h3 class="my-4 text-xl font-semibold">Talk about us</h3>
+                    <p class="text-blueGray-400 leading-loose">The best gift you can send to us is a recommendation. Talk about us and we will be able to improve a bit more our project.</p>
+                  </div>
+                </li>
+                <li class="flex -mx-4">
+                  <div class="px-4">
+                    <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">3</span>
+                  </div>
+                  <div class="px-4">
+                    <h3 class="my-4 text-xl font-semibold">Be involved</h3>
+                    <p class="text-blueGray-400 leading-loose">Open source projects only work if there is a community around them. Create plugins, templates, open issues in Github and provide Pull Requests if it's necessary. We will happy to consider you a very important part of our community.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="relative">
+        <div class="hidden lg:block absolute inset-0 w-1/2 ml-auto bg-blueGray-50"></div>
+        <div class="container px-4 mx-auto">
+          <div class="relative flex flex-wrap -mx-4">
+            <div class="w-full lg:w-1/2 pt-20 px-4 max-w-lg lg:max-w-full mx-auto lg:mx-0 text-center lg:text-left">
+              <a class="inline-block mx-auto lg:ml-0 text-3xl font-semibold leading-none" href="#"><img src="images/apisearch-long-logo.png" alt="Apisearch" width="150"></a>
+            </div>
+            <div class="relative w-full lg:w-1/2 px-4 py-8 lg:py-20 lg:pl-12">
+              <div class="flex flex-row flex-wrap justify-around mb-12">
+                <div class="w-1/2 lg:w-auto mb-12">
+                  <h5 class="mb-6 text-lg font-bold font-heading">Website</h5>
+                  <ul class="space-y-3">
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" href="index.html">Product</a></li>
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" href="cloud.html">Cloud</a></li>
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" href="prices.html">Prices</a></li>
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" href="partners.html">Partners</a></li>
+                  </ul>
+                </div>
+                <div class="w-1/2 lg:w-auto mb-12">
+                  <h5 class="mb-6 text-lg font-bold font-heading">Resources</h5>
+                  <ul class="space-y-3">
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" target="_blank" href="https://github.com/apisearch-io">Github</a></li>
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" target="_blank" href="https://docs.apisearch.io">Documentation</a></li>
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" target="_blank" href="https://status.apisearch.io">Status</a></li>
+                  </ul>
+                </div>
+                <div class="w-full lg:w-auto mb-4">
+                  <h5 class="mb-6 text-lg font-bold font-heading">Company</h5>
+                  <ul class="space-y-3">
+                    <li><a class="text-green-400 hover:text-green-500" href="mailto:info@apisearch.io">info@apisearch.io</a></li>
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" href="#">About us</a></li>
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" href="#">Terms and Conditions</a></li>
+                    <li><a class="text-blueGray-400 hover:text-blueGray-500" href="#">Privacy Policy</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Javascript -->
+    <!-- Demo MAIN -->
+    <script type="text/template" id="result-search-tpl">
+      <div class="flex flex-row">
+        {{#items}}
+        <div class="hover:bg-light-green-500 hover:border-transparent hover:shadow-lg group block rounded-lg p-1 border border-gray-200 mr-4">
+          <img width="100" height="100" class="border-1 border-white"
+               src="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}"
+               title="{{metadata.title}}"
+          />
+        </div>
+        {{/items}}
+      </div>
+      {{^items}}
+      <div class="notification">
+        Oops! We didn't find any results for <b>{{query}}</b> 🙉
+      </div>
+      {{/items}}
+    </script>
+
+    <script type="text/template" id="information-container-template">
+      <span class="tag is-primary">
+                <i class="fa fa-bolt"></i> &nbsp; Found {{total_hits}}!
+            </span>
+    </script>
+
+    <script type="text/javascript">
+      // UI Instance
+      const mainUI = uiFactory.createUI();
+
+      // Widgets setup
+      ui.addWidgets(
+        ui.widgets.searchInput({
+          target: '#search-input',
+          placeholder: 'Search your superhero!',
+          autofocus: true,
+          autocomplete: false,
+          searchableFields: [
+            "searchable_metadata.title^3",
+            "searchable_metadata.color^2",
+            "searchable_metadata.collection^2",
+          ],
+          classNames: {
+            input: "border-green-400 ring-1 ring-green-400 outline-none w-full text-sm text-black placeholder-gray-500 border border-gray-200 rounded py-2 pl-10"
+          }
+        }),
+        ui.widgets.result({
+          target: '#search-results',
+          itemsPerPage: 6,
+          highlightsEnabled: true,
+          template: {
+            itemsList: document.getElementById('result-search-tpl').text,
+          },
+          fieldsConciliation: {
+            'mapped_year': 'year',
+            'img': 'image',
+          }
+        })
+      );
+
+      // Init the magic!
+      ui.init({firstQuery: true});
+    </script>
+  </body>
 </html>
+
