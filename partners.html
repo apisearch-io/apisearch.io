@@ -28,20 +28,7 @@
 
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="css/tailwind/tailwind.min.css">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-tailwind.png">
     <script src="js/main.js"></script>
-    <script src="https://apisearch-io.github.io/search-ui/dist/apisearch-ui.min.js"></script>
-    <script type="text/javascript">
-      // UI Instance
-      const uiFactory = apisearchUI.factory({
-        app_id: 'as-29be77d7-2f64-4522',
-        index_id: 'loc-1-8f578f47-7610-491c',
-        token: 'loc-1-d8e48c90-3503-465a-827d-44f07c8f2fde',
-        options: {
-          endpoint: 'http://localhost:8400'
-        }
-      });
-    </script>
   </head>
   <body class="antialiased bg-body text-body font-body">
     <div class="">
@@ -320,12 +307,13 @@
       </section>
 
 
-      <section class="relative">
-        <div class="hidden lg:block absolute inset-0 w-1/2 ml-auto bg-blueGray-50"></div>
+      <section class="relative bg-blueGray-50">
+        <div class="hidden lg:block absolute inset-0 w-1/2 ml-auto"></div>
         <div class="container px-4 mx-auto">
           <div class="relative flex flex-wrap -mx-4">
             <div class="w-full lg:w-1/2 pt-20 px-4 max-w-lg lg:max-w-full mx-auto lg:mx-0 text-center lg:text-left">
-              <a class="inline-block mx-auto lg:ml-0 text-3xl font-semibold leading-none" href="index.html"><img src="images/apisearch-long-logo.png" alt="Apisearch" width="150"></a>
+              <a class="inline-block mx-auto lg:ml-0 text-3xl font-semibold leading-none mb-2" href="index.html"><img src="images/apisearch-long-logo.png" alt="Apisearch" width="200"></a>
+              <p class="text-xs text-blueGray-400">© 2021. All rights reserved.</p>
             </div>
             <div class="relative w-full lg:w-1/2 px-4 py-8 lg:py-20 lg:pl-12">
               <div class="flex flex-row flex-wrap justify-around mb-12">
@@ -361,70 +349,6 @@
         </div>
       </section>
     </div>
-
-    <!-- Javascript -->
-    <!-- Demo MAIN -->
-    <script type="text/template" id="result-search-tpl">
-      <div class="flex flex-row">
-        {{#items}}
-        <div class="hover:bg-light-green-500 hover:border-transparent hover:shadow-lg group block rounded-lg p-1 border border-gray-200 mr-4">
-          <img width="100" height="100" class="border-1 border-white"
-               src="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}"
-               title="{{metadata.title}}"
-          />
-        </div>
-        {{/items}}
-      </div>
-      {{^items}}
-      <div class="notification">
-        Oops! We didn't find any results for <b>{{query}}</b> 🙉
-      </div>
-      {{/items}}
-    </script>
-
-    <script type="text/template" id="information-container-template">
-      <span class="tag is-primary">
-                <i class="fa fa-bolt"></i> &nbsp; Found {{total_hits}}!
-            </span>
-    </script>
-
-    <script type="text/javascript">
-      // UI Instance
-      const mainUI = uiFactory.createUI();
-
-      // Widgets setup
-      ui.addWidgets(
-        ui.widgets.searchInput({
-          target: '#search-input',
-          placeholder: 'Search your superhero!',
-          autofocus: true,
-          autocomplete: false,
-          searchableFields: [
-            "searchable_metadata.title^3",
-            "searchable_metadata.color^2",
-            "searchable_metadata.collection^2",
-          ],
-          classNames: {
-            input: "border-green-400 ring-1 ring-green-400 outline-none w-full text-sm text-black placeholder-gray-500 border border-gray-200 rounded py-2 pl-10"
-          }
-        }),
-        ui.widgets.result({
-          target: '#search-results',
-          itemsPerPage: 6,
-          highlightsEnabled: true,
-          template: {
-            itemsList: document.getElementById('result-search-tpl').text,
-          },
-          fieldsConciliation: {
-            'mapped_year': 'year',
-            'img': 'image',
-          }
-        })
-      );
-
-      // Init the magic!
-      ui.init({firstQuery: true});
-    </script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110185459-1"></script>
