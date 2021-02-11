@@ -1,0 +1,19 @@
+index:
+  title: Apisearch - Principal
+  header:
+    title1: Benvingut a la
+    title2: nova generació
+    title3: de cercadors com a servei
+    desc: Cerca entre milions de documents, y proveeix als teus usuaris d'experiències úniques, increïbles y inoblidables.
+    button1: Utilitza el nostre cloud
+    button2: Descarrega
+
+  demo1:
+    placeholder: Cerca el teu superheroi!
+    title: Cerca els teus personatges preferits.
+    tip1: Escriu un nom d'un superheroi, com
+    tip2: Escriu un color, com
+    example2: vermell
+    tip3: Escriu una col·lecció, com
+    more_text: Vols veure més?
+    more_button: Descobreix els nostres partners

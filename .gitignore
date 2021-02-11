@@ -1,2 +1,2 @@
-/node_modules/
-/src/styles/.sass-cache
+composer.lock
+vendor

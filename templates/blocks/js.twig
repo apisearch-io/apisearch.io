@@ -1,0 +1,19 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/highlight.min.js" integrity="sha512-zol3kFQ5tnYhL7PzGt0LnllHHVWRGt2bTCIywDiScVvLIlaDOVJ6sPdJTVi0m3rA660RT+yZxkkRzMbb1L8Zkw==" crossorigin="anonymous"></script>
+<script>hljs.highlightAll();</script>
+<script src="{{ assets_path }}/js/main.js"></script>
+<script src="https://apisearch-io.github.io/search-ui/dist/apisearch-ui.min.js"></script>
+<script type="text/javascript">
+    // UI Instance
+    const uiFactory = apisearchUI.factory({
+        app_id: '{{ config.apisearch.app_id }}',
+        index_id: '{{ config.apisearch.index_id }}',
+        token: '{{ config.apisearch.token }}',
+        options: {
+            endpoint: '{{ config.apisearch.endpoint }}'
+        }
+    });
+</script>
+
+{% include "integrations/ga.twig" %}
+{% include "integrations/mailchimp.twig" %}
+{% include "integrations/crisp.twig" %}

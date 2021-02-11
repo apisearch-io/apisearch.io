@@ -1,0 +1,246 @@
+{% extends "layout.twig" %}
+
+
+{% block content %}
+
+    <section>
+        <div class="container px-4 mx-auto">
+            {% include "blocks/nav.twig" %}
+        </div>
+        {% include "blocks/nav_mobile.twig" %}
+    </section>
+
+    <section class="py-20 bg-blueGray-50"><div class="container px-4 mx-auto">
+            <div class="max-w-lg mx-auto mb-12 text-center">
+                <h2 class="text-3xl md:text-4xl mt-2 mb-4 font-bold font-heading">
+                    {{ t.title|raw }}
+                </h2>
+                <p class="text-blueGray-400 leading-loose">{{ t.txt|raw }}</p>
+            </div>
+            <div class="flex flex-wrap">
+                <div class="w-full md:w-1/2 py-5 md:px-5">
+                    <div class="px-6 py-10 bg-white shadow rounded">
+                        <div class="flex items-center mb-4">
+                            <img class="h-16 w-16 rounded-full object-cover" src="{{ assets_path }}/images/ecomm360.png" alt=""><div class="pl-4">
+                                <p class="text-xl">{{ t.ecomm.title }}</p>
+                                <p class="text-green-600">{{ t.ecomm.subtitle }}</p>
+                            </div>
+                        </div>
+                        <p class="leading-loose text-blueGray-400 mb-5">{{ t.ecomm.text }}</p>
+                        <div class="flex text-blueGray-500">
+                            <a href="https://www.ecomm360.es/" target="_blank">{{ t.visit_website }}</a>&nbsp;-&nbsp;
+                            <a href="mailto:info@ecomm360.es">{{ t.contact }}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 py-5 md:px-5">
+                    <div class="px-6 py-10 bg-white shadow rounded">
+                        <div class="flex items-center mb-4">
+                            <img class="h-16 w-16 rounded-full object-cover" src="{{ assets_path }}/images/slowcode.jpg" alt=""><div class="pl-4">
+                                <p class="text-xl">{{ t.slowcode.title }}</p>
+                                <p class="text-green-600">{{ t.slowcode.subtitle }}</p>
+                            </div>
+                        </div>
+                        <p class="leading-loose text-blueGray-400 mb-5">{{ t.slowcode.text }}</p>
+                        <div class="flex text-blueGray-500">
+                            <a href="https://slowcode.io/es/" target="_blank">{{ t.visit_website }}</a>&nbsp;-&nbsp;
+                            <a href="mailto:info@slowcode.io">{{ t.contact }}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 py-5 md:px-5">
+                    <div class="px-6 py-10 bg-white shadow rounded">
+                        <div class="flex items-center mb-4">
+                            <img class="h-16 w-16 rounded-full object-cover" src="{{ assets_path }}/images/bumon-web.jpeg" alt=""><div class="pl-4">
+                                <p class="text-xl">{{ t.bumon.title }}</p>
+                                <p class="text-green-600">{{ t.bumon.subtitle }}</p>
+                            </div>
+                        </div>
+                        <p class="leading-loose text-blueGray-400 mb-5">{{ t.bumon.text }}</p>
+                        <div class="flex text-blueGray-500">
+                            <a href="https://www.bumon-web.com/" target="_blank">{{ t.visit_website }}</a>&nbsp;-&nbsp;
+                            <a href="https://www.bumon-web.com/#contacto" target="_blank">{{ t.contact }}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2 py-5 md:px-5">
+                    <div class="px-6 py-10 bg-white shadow rounded">
+                        <div class="flex items-center mb-4">
+                            <img class="h-16 w-16 rounded-full object-cover" src="{{ assets_path }}/images/digitalocean.svg" alt=""><div class="pl-4">
+                                <p class="text-xl">{{ t.digitalocean.title }}</p>
+                                <p class="text-green-600">{{ t.digitalocean.subtitle }}</p>
+                            </div>
+                        </div>
+                        <p class="leading-loose text-blueGray-400 mb-5">{{ t.digitalocean.text }}</p>
+                        <div class="flex text-blueGray-500">
+                            <a href="https://www.digitalocean.com/" target="_blank">{{ t.visit_website }}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2 py-5 md:px-5">
+                    <div class="px-6 py-10 bg-white shadow rounded">
+                        <div class="flex items-center mb-4">
+                            <img class="h-16 w-16 rounded-full object-cover" src="{{ assets_path }}/images/fastly.png" alt=""><div class="pl-4">
+                                <p class="text-xl">{{ t.fastly.title }}</p>
+                                <p class="text-green-600">{{ t.fastly.subtitle }}</p>
+                            </div>
+                        </div>
+                        <p class="leading-loose text-blueGray-400 mb-5">{{ t.fastly.text }}</p>
+                        <div class="flex text-blueGray-500">
+                            <a href="https://www.fastly.com/" target="_blank">{{ t.visit_website }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20"><div class="container px-4 mx-auto">
+            <div class="flex flex-wrap -mx-8">
+                <div class="w-full lg:w-1/2 px-8">
+                    <div class="mb-12 lg:mb-0 pb-12 lg:pb-0 border-b lg:border-b-0">
+                        <h2 class="mb-4 text-3xl lg:text-4xl font-bold font-heading">{{ t.being_reseller.title }}</h2>
+                        <p class="mb-8 leading-loose text-blueGray-400">{{ t.being_reseller.text }}</p>
+                        <div class="w-full px-3 order-0 md:order-1 mb-12 md:mb-0">
+                            <img class="sm:max-w-sm lg:max-w-full mx-auto p-20" src="{{ assets_path }}/images/svg/undraw_content_team_3epn.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/2 px-8">
+                    <ul class="space-y-12"><li class="flex -mx-4">
+                            <div class="px-4">
+                                <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">1</span>
+                            </div>
+                            <div class="px-4">
+                                <h3 class="my-4 text-xl font-semibold">{{ t.being_reseller.block1_title }}</h3>
+                                <p class="text-blueGray-400 leading-loose">{{ t.being_reseller.block1_text }}</p>
+                            </div>
+                        </li>
+                        <li class="flex -mx-4">
+                            <div class="px-4">
+                                <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">2</span>
+                            </div>
+                            <div class="px-4">
+                                <h3 class="my-4 text-xl font-semibold">{{ t.being_reseller.block2_title }}</h3>
+                                <p class="text-blueGray-400 leading-loose">{{ t.being_reseller.block2_text }}</p>
+                            </div>
+                        </li>
+                        <li class="flex -mx-4">
+                            <div class="px-4">
+                                <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">3</span>
+                            </div>
+                            <div class="px-4">
+                                <h3 class="my-4 text-xl font-semibold">{{ t.being_reseller.block3_title }}</h3>
+                                <p class="text-blueGray-400 leading-loose">{{ t.being_reseller.block3_text }}</p>
+                            </div>
+                        </li>
+                    </ul></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20"><div class="container px-4 mx-auto">
+            <div class="flex flex-wrap -mx-3">
+                <div class="w-full md:w-1/2 px-3 order-1 md:order-0">
+                    <div class="max-w-md">
+                        <h2 class="mb-4 text-3xl md:text-4xl font-bold font-heading">{{ t.being_commercial.title }}</h2>
+                        <p class="mb-6 leading-loose text-blueGray-400">{{ t.being_commercial.text }}</p>
+                        <ul><li class="py-4">
+                                <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">1</span>
+                                <span>30% {{ t.revenue1 }}</span>
+                            </li>
+                            <li class="py-4">
+                                <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">2</span>
+                                <span>20% {{ t.revenue2 }}</span>
+                            </li>
+                            <li class="py-4">
+                                <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">3</span>
+                                <span>10% {{ t.revenue3 }}</span>
+                            </li>
+                        </ul></div>
+                </div>
+                <div class="w-full md:w-1/2 px-3 order-0 md:order-1 mb-12 md:mb-0">
+                    <img class="sm:max-w-sm lg:max-w-full mx-auto p-20" src="{{ assets_path }}/images/svg/undraw_Business_decisions_re_84ag.svg" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20"><div class="container px-4 mx-auto">
+            <div class="flex flex-wrap -mx-3">
+                <div class="w-full md:w-1/2 px-3 order-1 md:order-0">
+                    <div class="max-w-md">
+                        <h2 class="mb-4 text-3xl md:text-4xl font-bold font-heading">{{ t.being_evangelist.title }}</h2>
+                        <p class="mb-6 leading-loose text-blueGray-400">{{ t.being_evangelist.text }}</p>
+                        <ul><li class="py-4">
+                                <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">1</span>
+                                <span>20% {{ t.revenue1 }}</span>
+                            </li>
+                            <li class="py-4">
+                                <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">2</span>
+                                <span>15% {{ t.revenue2 }}</span>
+                            </li>
+                            <li class="py-4">
+                                <span class="inline-block py-2 px-3 mr-4 text-xs font-semibold bg-green-50 text-green-600 rounded">3</span>
+                                <span>10% {{ t.revenue3 }}</span>
+                            </li>
+                        </ul></div>
+                </div>
+                <div class="w-full md:w-1/2 px-3 order-0 md:order-1 mb-12 md:mb-0">
+                    <img class="sm:max-w-sm lg:max-w-full mx-auto p-20" src="{{ assets_path }}/images/svg/undraw_mobile_posts_tlwg.svg" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20">
+        <div class="container px-4 mx-auto">
+            <div class="flex flex-wrap -mx-8">
+                <div class="w-full lg:w-1/2 px-8">
+                    <div class="mb-12 lg:mb-0 pb-12 lg:pb-0 border-b lg:border-b-0">
+                        <h2 class="mb-4 text-3xl lg:text-4xl font-bold font-heading">{{ t.being_active.title }}</h2>
+                        <p class="mb-8 leading-loose text-blueGray-400">{{ t.being_active.text }}</p>
+                        <div class="w-full px-3 order-0 md:order-1 mb-12 md:mb-0">
+                            <img class="sm:max-w-sm lg:max-w-full mx-auto p-20" src="{{ assets_path }}/images/svg/undraw_share_link_qtxe.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/2 px-8">
+                    <ul class="space-y-12">
+                        <li class="flex -mx-4">
+                            <div class="px-4">
+                                <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">1</span>
+                            </div>
+                            <div class="px-4">
+                                <h3 class="my-4 text-xl font-semibold">{{ t.being_active.block1_title }}</h3>
+                                <p class="text-blueGray-400 leading-loose">{{ t.being_active.block1_text }}</p>
+                            </div>
+                        </li>
+                        <li class="flex -mx-4">
+                            <div class="px-4">
+                                <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">2</span>
+                            </div>
+                            <div class="px-4">
+                                <h3 class="my-4 text-xl font-semibold">{{ t.being_active.block2_title }}</h3>
+                                <p class="text-blueGray-400 leading-loose">{{ t.being_active.block2_text }}</p>
+                            </div>
+                        </li>
+                        <li class="flex -mx-4">
+                            <div class="px-4">
+                                <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold font-heading rounded-full bg-green-50 text-green-600">3</span>
+                            </div>
+                            <div class="px-4">
+                                <h3 class="my-4 text-xl font-semibold">{{ t.being_active.block3_title }}</h3>
+                                <p class="text-blueGray-400 leading-loose">{{ t.being_active.block3_text }}</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include "blocks/footer.twig" %}
+{% endblock content %}
