@@ -9,4 +9,5 @@ languages: [en, ca, es]
 root_language: en
 pages: [index, cloud, prices, partners]
 assets: assets
+files: [CNAME, robots.txt]
 target: docs

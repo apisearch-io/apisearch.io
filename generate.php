@@ -14,6 +14,7 @@ $config = Yaml::parse(file_get_contents(__DIR__ . '/config.yml'));
 $config['assets'] = trim($config['assets'] ?? 'assets', '/');
 $config['target'] = trim($config['target'] ?? 'public', '/');
 $config['languages'] = $config['languages'] ?? 'en';
+$config['files'] = $config['files'] ?? [];
 
 
 $target = trim($config['target'], '/');
@@ -84,4 +85,10 @@ function copyResources(array $config)
     $sourcePath = __DIR__ . "/$assets";
     $targetPath = __DIR__ . "/$target/$assets";
     exec("cp -R $sourcePath $targetPath");
+
+    foreach ($config['files'] as $file) {
+        $sourcePath = __DIR__ . "/$file";
+        $targetPath = __DIR__ . "/$target/$file";
+        exec("cp $sourcePath $targetPath");
+    }
 }
