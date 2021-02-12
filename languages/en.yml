@@ -1,3 +1,8 @@
+global:
+  meta:
+    link: https://apisearch.io
+    description: Welcome to the next generation Search As A Service. Search over millions of documents, and give to your users unique, amazing and unforgettable experiences.
+
 index:
   title: Apisearch - Home
   header:
@@ -114,6 +119,7 @@ cloud:
 
 prices:
 
+  title: Apisearch - Prices
   per_month: monthly
   requests: requests
   items: items
@@ -217,14 +223,17 @@ prices:
     block3_text: If you think that we can both share this journey, don't hesitate to contact us. We can adapt our prices depending on how far we can go together.
 
 partners:
-  title: These are our journey team members
-  text: These companies are actually working with Apisearch, building plugins, integrating websites and helping us with our roadmap.
+  title: Apisearch - Prices
 
   visit_website: Visit website
   contact: Contact
   revenue1: revenue the first year
   revenue2: revenue the second year
   revenue3: revenue the third year
+
+  block1:
+    title: These are our journey team members
+    text: These companies are actually working with Apisearch, building plugins, integrating websites and helping us with our roadmap.
 
   ecomm:
     title: Ecomm360

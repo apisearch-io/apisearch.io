@@ -2,7 +2,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Apisearch official website.">
 <meta name="author" content="Apisearch team <info@apisearch.io>">
-<title>{{ t.title }}</title>
 
 <!-- Favicons -->
 <link rel="apple-touch-icon" sizes="57x57" href="{{ assets_path }}/images/favicons/apple-icon-57x57.png">
@@ -21,3 +20,23 @@
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="{{ assets_path }}/images/favicons/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
+
+<!-- Primary Meta Tags -->
+<title>{{ t.title }}</title>
+<meta name="title" content="{{ t.title }}">
+<meta name="description" content="{{ t.meta.description }}">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ t.meta.url }}">
+<meta property="og:title" content="{{ t.title }}">
+<meta property="og:description" content="{{ t.meta.description }}">
+<meta property="og:image" content="{{ assets_path }}/apisearch-panel.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ t.meta.url }}">
+<meta property="twitter:title" content="{{ t.title }}">
+<meta property="twitter:description" content="{{ t.meta.description }}">
+<meta property="twitter:image" content="{{ assets_path }}/apisearch-panel.png">
+

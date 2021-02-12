@@ -34,7 +34,10 @@ foreach ($languages as $language) {
             $twig,
             $page,
             $language,
-            $languageTranslations[$page] ?? [],
+            array_merge(
+                $languageTranslations[$page] ?? [],
+                $languageTranslations['global'] ?? []
+            ),
             $config
         );
     }

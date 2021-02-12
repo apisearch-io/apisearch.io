@@ -5,7 +5,7 @@ apisearch:
   endpoint: 'https://eu1.apisearch.io'
 
 
-languages: [en, ca, es]
+languages: [en]
 root_language: en
 pages: [index, cloud, prices, partners]
 assets: assets
