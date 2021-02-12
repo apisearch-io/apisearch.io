@@ -117,6 +117,22 @@ cloud:
     block3_title: No extra cost
     block3_text: Prices are standard, even by using one of our partners. No extra costs will be applied by using Apisearch through them. Check our <a href="{{ assets_path }}/prices.html">our prices</a> or contact us to know a bit more our conditions.
 
+  contact:
+    title: Any question?
+    text: Contact us if you need it. We will help you as soon as we can. You can use this contact form or write us directly at <span class="text-green-600">info@apisearch.io</span>
+    input_name_placeholder: Name
+    input_email_placeholder: Email
+    input_website_placeholder: Website
+    input_message_placeholder: Message ...
+    gdpr_text1: Marketing Permissions. By default, you will not be subscribed to any mode of communication. If you want us to be able to respond to you, please select <strong>Direct Mail</strong>
+    gdpr_text2: Please select all the ways you would like to hear from
+    gdpr_email: Email
+    gdpr_direct: Direct Mail
+    gdpr_custom: Customized Online Advertising
+    gdpr_text3: You can unsubscribe at any time by clicking the link in the footer of our emails. For information about our privacy practices, please visit our website.
+    gdpr_text4: We use Mailchimp as our marketing platform. By clicking below to subscribe, you acknowledge that your information will be transferred to Mailchimp for processing. <a class="text-green-600" href="https://mailchimp.com/legal/" target="_blank">Learn more about Mailchimp's privacy practices here.</a>
+    gdpr_submit: Submit
+
 prices:
 
   title: Apisearch - Prices
