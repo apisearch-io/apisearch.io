@@ -180,7 +180,7 @@ prices:
     plan8_title: Pro
     plan8_text: And voilà!, here we are, working with 7 digits already! What a long road in out backs! You are now a big company!
     plan9_title: Enterprise
-    plan9_text: Ok. You just become a premium customer, so let's talk about possible discounts and special prices.
+    plan9_text: Ok. You just become a premium customer. What a great business you have. Up to 1M requests, you pay in packs of 100K requests.
 
   features:
     title: What special <span class="text-green-600">features</span> can I expect in each plan?
@@ -284,7 +284,7 @@ partners:
     block2_title: Integrate your clients or new ones
     block2_text: Once you know exactly how Apisearch work, it's time to integrate your clients platforms or to reach new clients. You can specialize to one country and technology, and we will refer you clients when interested.
     block3_title: Which is my revenue?
-    block3_text: We see you as one of our clients, including all your clients requests in one simple invoice. That means that you can go from a 0% of revenue (having one client), to +60% (the more clients and usage, the higher is that percentage)
+    block3_text: We get the 50% of your clients revenue for the service, and you get the other 50%. If this client came from another partner or external commercial, her commission will be deducted from your percentage.
 
   being_commercial:
     title: Being a commercial
