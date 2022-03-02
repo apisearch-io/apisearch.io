@@ -8,8 +8,7 @@ index:
   header:
     title: Welcome to the <span class="text-green-600">next gen</span> Search As A Service
     desc: Search over millions of documents, and give to your users unique, amazing and unforgettable experiences.
-    button1: Use our cloud
-    button2: Download
+    button1: Start now!
 
   demo1:
     placeholder: Search your superhero!
