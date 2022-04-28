@@ -16,7 +16,7 @@ This is the Apisearch item structure.
     "i": "Image",
     "wv": "Product has variants (boolean)",
     "iv": "Product is a variant (boolean)",
-    "tg": "Tags",
+    "tg": ["tag1", "tag2", "tag3"],
     "c": "Category",
     "c1": "Category level 1",
     "c2": "Category level 2",
@@ -102,4 +102,4 @@ sizes.
 ```
 
 The feed will be served in [`JSONL`](https://jsonlines.org) format. As simple as
-a file when you write a json representation of an item.
+a file when you write a json representation of an item. Important. Each line must represent one item. This means that break lines must be encoded.
