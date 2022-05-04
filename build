@@ -1,0 +1,4 @@
+#!/bin/sh
+
+sass assets/scss:assets/css
+php generate.php

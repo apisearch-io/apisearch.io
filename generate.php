@@ -29,7 +29,10 @@ foreach ($languages as $language) {
     if ($language !== $config['root_language']) {
         mkdir(__DIR__ . "/$target/$language");
     }
+
+    $numberOfPages = 0;
     foreach ($pages as $page) {
+        $numberOfPages++;
         generatePageInLanguage(
             $twig,
             $page,
@@ -41,6 +44,8 @@ foreach ($languages as $language) {
             $config
         );
     }
+
+    echo "Generated $numberOfPages pages for language $language" . PHP_EOL;
 }
 
 copyResources($config);
@@ -73,6 +78,7 @@ function generatePageInLanguage(
         't' => $translations,
         'root_path' => $rootPath,
         'assets_path' => $rootPath . '/' . $assets,
+        'language' => $language
     ]);
 
     file_put_contents(__DIR__ . "/{$target}{$languagePath}/$page.html", $content);

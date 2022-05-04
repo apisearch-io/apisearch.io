@@ -1,19 +1,90 @@
+global:
+  menu:
+    link1: All-in-one
+    link2: Preus
+    link3: Clients
+    sign_in: Entrar
+    get_in_touch: Escriu-nos a
+
 index:
   title: Apisearch - Principal
   header:
-    title1: Benvingut a la
-    title2: nova generació
-    title3: de cercadors com a servei
-    desc: Cerca entre milions de documents, y proveeix als teus usuaris d'experiències úniques, increïbles y inoblidables.
-    button1: Utilitza el nostre cloud
-    button2: Descarrega
+    title_1: Escriu el que vulguis
+    title_2: per a trobar el que busques
+    desc: El cercador intel·ligent per el teu eCommerce, que enten tant el que els teus clients volen trobar, com el que t'interessa vendre, gràcies a la intel·ligència artificial.
+    button1: Sol·licita ja la teva demo
 
-  demo1:
-    placeholder: Cerca el teu superheroi!
-    title: Cerca els teus personatges preferits.
-    tip1: Escriu un nom d'un superheroi, com
-    tip2: Escriu un color, com
-    example2: vermell
-    tip3: Escriu una col·lecció, com
-    more_text: Vols veure més?
-    more_button: Descobreix els nostres partners
+  all_in_one:
+    title: Producte All-in #1
+    customization:
+      title: Personalització
+      description: La majoria de cercadors es veuen iguals, neutres, el que fa massa evident que el cercador no està plenament integrat. Amb Apisearch pots editar tot el cercador amb plantilles, i manipular amb estils propis els elements que vols mostrar.
+    ai:
+      title: Intel·ligència artificial
+      description: La nostra intel·ligència artificial recull els events dels teus usuaris i n'apren d'ells per a oferir resultats més rellevants.
+    funnel:
+      title: Funnel de ventes
+      description: La forma més senzilla de visualitzar les ventes que està generant el cercador. Pots visualitzar per data i per tipus de dispositiu els usuaris únics que han entrar a la web, que han usat el cercador, que han generat un event i que han acabat comprant.
+    plug_play:
+      title: Solució Plug & Play
+      description: Només necessitem 10 minuts del teu temps per a que instal·lem el cercador a la teva botiga online. T'el deixem integrat en menys d'un dia i ens encarreguem de tota la configuració.
+    rules:
+      title: Regles de negoci
+      description: Dóna prioritat a aquells productes als que vols donar més importància segons les paraules amb les que cerquen els teus usuaris. Amb el nostre editor de regles pots ordenar amb detall els productes que vols mostrar o promocionar certes marques y categories.
+    multi_device:
+      title: Multi dispositiu
+      description: Apisearch funciona de la mateixa forma en tots els dispositius, inclús amb poca cobertura, i sempre d'una forma eficient i eficaç. No hauràs de configurar res, doncs els teus usuaris podran disfrutar de la mateixa experiència desde qualsevol dispositiu.
+
+  prices:
+    title: Preus i condicions
+    description_1: Volem posar't-ho fàcil i donar-te tot el potencial d'un cercador professional, sense restriccions i tinguis el tràfic que tinguis. No pagues res fins que no arribes a les 10.000 peticions.
+    description_2: A Apisearch mai parem el servei peque no hi ha packs de consum obligat. Es paga només per l'us que s'en fa.
+
+    get_a_demo: Sol·licita ja la teva demo
+    starter:
+      title: Comença per
+      no_credit_card: No es requereix tarjeta
+      line1: Totes les funcionalitats All-in #1
+      line2: Sense parada de servei
+      line3: Fins a 10.000 peticions úniques
+      line4: Fins a 5.000 productes
+
+    regular:
+      title: Paquet 10.000 peticions
+      price_per_query: 0.0007 €/petició
+      line1: Totes les funcionalitats All-in #1
+      line2: Sense parada de servei
+      line3: Peticions úniques i productes il·limitats
+      line4: Personalització i seguiment
+
+  clients:
+    title: Els nostres clients
+    description: Aquests son alguns dels nostres clients que ja confien en nosaltres. Cada un d'ells ha configurat Apisearch de formes diferents, adaptant el disseny a la seva pròpia marca.
+    1:
+      img: miscota.png
+      name: Miscota
+      url: https://miscota.es
+    2:
+      img: holaprincesa.png
+      name: Holaprincesa
+      url: https://holaprincesa.es
+
+    3:
+      img: pampling.jpg
+      name: Pampling
+      url: https://pampling.com
+
+    4:
+      img: belletica.png
+      name: Belletica
+      url: https://belletica.es
+
+    5:
+      img: siroko.jpg
+      name: Siroko
+      url: https://siroko.es
+
+    6:
+      img: muroexe.png
+      name: Muroexe
+      url: https://muroexe.es

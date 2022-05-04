@@ -1,0 +1,71 @@
+@import '_constants';
+@import '_responsive';
+
+#video {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#video-wrapper {
+  width: 100%;
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  margin: 0 auto;
+}
+
+.logo-white {
+  filter: brightness(0) invert(1);
+}
+
+#video-wrapper-top {
+
+  top: 9%;
+  left: 5%;
+  width: 90%;
+  height: 80%;
+  margin: 0 auto;
+
+  @include phablet {
+    top: 9%;
+    left: 14%;
+    width: 72%;
+    height: 66%;
+    margin: 0 auto;
+  }
+}
+
+#video-block {
+
+  @include phablet {
+    padding-bottom: 80px;
+  }
+
+  #video-wrapper-width-limitation {
+
+    width: 100%;
+    max-width: 500px;
+
+    @include phablet {
+      max-width: 620px;
+    }
+
+    @include desktop {
+      max-width: 1000px;
+    }
+  }
+}
+
+#top-header {
+  input {
+    color: white;
+    caret-color: white;
+    background-color: transparent;
+    &::placeholder {
+      color: white;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+$blue: #4fdeb4;
+$green: #24dead;
+$white: white;
+
+.as-blue {
+  color: $blue;
+}
+
+.as-green {
+  color: $green;
+}
+
+.as-bg-green {
+  background-color: $green;
+}
+
+.as-border-green {
+  border: $green 1px solid;
+}
+
+.as-button-green {
+  background-color: $green;
+  color: white;
+}
+
+.white {
+  color: white;
+}

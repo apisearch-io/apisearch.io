@@ -1,9 +1,91 @@
+global:
+  menu:
+    link1: All-in-one
+    link2: Precios
+    link3: Clientes
+    sign_in: Entrar
+    get_in_touch: Escribenos en
+
 index:
   title: Apisearch - Principal
   header:
-    title1: Bienvenido a la
-    title2: nueva generación
-    title3: de buscadores como servicio
-    desc: Busca entre millones de documentos, y provee a tus usuarios de experiencias únicas, increibles y inolvidables.
-    button1: Utiliza nuestra nube
-    button2: Descarga
+    title_1: Escribe lo que quieras
+    title_2: para encontrar lo que buscas
+    desc: El buscador inteligente para tu eCommerce, que entiende tanto lo que tus clientes quieren encontrar, como lo que te interesa vender, gracias a la inteligencia artificial.
+    button1: Solicita ya tu demo
+
+  all_in_one:
+    title: Producto All-in #1
+    customization:
+      title: Personalización
+      description: La mayoría de buscadores se ven iguales, neutros, lo que hace demasiado evidente que el buscador no está plenamente integrado con el eCommerce. Con Apisearch puedes editar todo el buscador con plantillas y manipular con estilos propios los elementos que quieres mostrar.
+    ai:
+      title: Inteligencia artificial
+      description: Nuestra inteligencia artificial recoge los eventos de tus usuarios y aprende de ellos para ofrecer resultados más relevantes.
+    funnel:
+      title: Funnel de ventas
+      description: La manera mas sencilla de visualizar las ventas que esta generando el buscador. Puedes ver por fecha y por tipo de dispositivo los usuarios únicos que han entrado en la web, que han usado el buscador, que han generado un evento, y que han acabado comprando.
+    plug_play:
+      title: Solución Plug & Play
+      description: Sólo necesitamos 10 minutos de tu tiempo para que instalemos el buscador en tu eCommerce. Te lo dejamos integrado en menos de un dia y nos encargamos de toda la configuración.
+    rules:
+      title: Reglas de negocio
+      description: Da prioridad a aquellos productos a los que quieras dar más importancia según las palabras con las que buscan tus usuarios. Con nuestro editor de reglas puedes ordenar al detalle los productos que quieres mostrar o promocionar ciertas marcas y categorías.
+    multi_device:
+      title: Multi dispositivo
+      description: Apisearch funciona de la misma forma en todos los dispositivos, inclusive con poca cobertura, i siempre de una forma eficiente y eficaz. No tendrás que configurar nada, pues tus usuarios podrán disfrutar de la misma experiencia de usuario tanto en PC, tableta o móvil.
+
+  prices:
+    title: Precios y condiciones
+    description_1: Queremos ponértelo fácil y darte todo el potencial de un buscador profesional, sin restricciones i tengas el tráfico que tengas. No pagues nada hasta las 10.000 peticiones.
+    description_2: En Apisearch nunca paramos el servicio porque no hay packs de consumo obligado. Sólo se paga por el uso que se da.
+
+    get_a_demo: Solicita ya tu demo
+    starter:
+      title: Empieza por
+      no_credit_card: No se requiere tarjeta
+      line1: Todas las funcionalidades All-in #1
+      line2: Sin parada de servicio
+      line3: Hasta 10.000 peticiones únicas
+      line4: Hasta 5.000 productos
+
+    regular:
+      title: Paquete 10.000 peticiones
+      price_per_query: 0.0007 €/petición
+      line1: Todas las funcionalidades All-in #1
+      line2: Sin parada de servicio
+      line3: Peticiones únicas y productos ilimitadas
+      line4: Personalización y seguimiento
+
+  clients:
+    title: Nuestros clientes
+    description: Estos son algunos de nuestros clientes que ya confían en nosotros. Cada uno de ellos ha configurado Apisearch de formas distintas, adaptando el diseño a su propia marca.
+    1:
+      img: miscota.png
+      name: Miscota
+      url: https://miscota.es
+    2:
+      img: holaprincesa.png
+      name: Holaprincesa
+      url: https://holaprincesa.es
+
+    3:
+      img: pampling.jpg
+      name: Pampling
+      url: https://pampling.com
+
+    4:
+      img: belletica.png
+      name: Belletica
+      url: https://belletica.es
+
+    5:
+      img: siroko.jpg
+      name: Siroko
+      description: Siroko bla bla bla
+      url: https://siroko.es
+
+    6:
+      img: muroexe.png
+      name: Muroexe
+      url: https://muroexe.es

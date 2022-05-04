@@ -4,10 +4,13 @@ apisearch:
   token: 'eu1-bb44c262-49a5-495e-9a5f-0d4185ae0469'
   endpoint: 'https://eu1.apisearch.cloud'
 
+cluster_url: https://apisearch.cloud
+demo_form_url: https://rpform.typeform.com/to/rQar8BYE
+survey_form_url: https://rpform.typeform.com/to/MrqwPhXS
 
-languages: [en]
-root_language: en
-pages: [index, cloud, prices, partners]
+languages: [es, ca]
+root_language: es
+pages: [index]
 assets: assets
 files: [CNAME, robots.txt]
 target: docs
