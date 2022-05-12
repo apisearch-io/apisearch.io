@@ -68,24 +68,16 @@ index:
       img: holaprincesa.png
       name: Holaprincesa
       url: https://holaprincesa.es
-
     3:
       img: pampling.jpg
       name: Pampling
       url: https://pampling.com
-
     4:
       img: belletica.png
       name: Belletica
       url: https://belletica.es
-
     5:
       img: siroko.jpg
       name: Siroko
-      description: Siroko bla bla bla
       url: https://siroko.es
 
-    6:
-      img: muroexe.png
-      name: Muroexe
-      url: https://muroexe.es
