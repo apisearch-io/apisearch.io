@@ -4,7 +4,7 @@ global:
     link2: Precios
     link3: Clientes
     sign_in: Entrar
-    get_in_touch: Escribenos en
+    get_in_touch: Escríbenos en
 
 index:
   title: Apisearch - Principal
@@ -24,20 +24,20 @@ index:
       description: Nuestra inteligencia artificial recoge los eventos de tus usuarios y aprende de ellos para ofrecer resultados más relevantes.
     funnel:
       title: Funnel de ventas
-      description: La manera mas sencilla de visualizar las ventas que esta generando el buscador. Puedes ver por fecha y por tipo de dispositivo los usuarios únicos que han entrado en la web, que han usado el buscador, que han generado un evento, y que han acabado comprando.
+      description: La manera mas sencilla de visualizar las ventas que está generando el buscador. Puedes ver por fecha y por tipo de dispositivo los usuarios únicos que han entrado en la web, que han usado el buscador, que han generado un evento, y que han acabado comprando.
     plug_play:
       title: Solución Plug & Play
-      description: Sólo necesitamos 10 minutos de tu tiempo para que instalemos el buscador en tu eCommerce. Te lo dejamos integrado en menos de un dia y nos encargamos de toda la configuración.
+      description: Sólo necesitamos 10 minutos de tu tiempo para que instalemos el buscador en tu eCommerce. Te lo dejamos integrado en menos de un día y nos encargamos de toda la configuración.
     rules:
       title: Reglas de negocio
       description: Da prioridad a aquellos productos a los que quieras dar más importancia según las palabras con las que buscan tus usuarios. Con nuestro editor de reglas puedes ordenar al detalle los productos que quieres mostrar o promocionar ciertas marcas y categorías.
     multi_device:
       title: Multi dispositivo
-      description: Apisearch funciona de la misma forma en todos los dispositivos, inclusive con poca cobertura, i siempre de una forma eficiente y eficaz. No tendrás que configurar nada, pues tus usuarios podrán disfrutar de la misma experiencia de usuario tanto en PC, tableta o móvil.
+      description: Apisearch funciona de la misma forma en todos los dispositivos, inclusive con poca cobertura, y siempre de una forma eficiente y eficaz. No tendrás que configurar nada, pues tus usuarios podrán disfrutar de la misma experiencia de usuario tanto en PC, tableta o móvil.
 
   prices:
     title: Precios y condiciones
-    description_1: Queremos ponértelo fácil y darte todo el potencial de un buscador profesional, sin restricciones i tengas el tráfico que tengas. No pagues nada hasta las 10.000 peticiones.
+    description_1: Queremos ponértelo fácil y darte todo el potencial de un buscador profesional, sin restricciones y tengas el tráfico que tengas. No pagues nada hasta las 10.000 peticiones.
     description_2: En Apisearch nunca paramos el servicio porque no hay packs de consumo obligado. Sólo se paga por el uso que se da.
 
     get_a_demo: Solicita ya tu demo
@@ -75,9 +75,12 @@ index:
     4:
       img: belletica.png
       name: Belletica
-      url: https://belletica.es
+      url: https://belletica.com
     5:
       img: siroko.jpg
       name: Siroko
       url: https://siroko.es
-
+    6:
+      img: platanomelon.png
+      name: Platanomelon
+      url: https://platanomelon.es
