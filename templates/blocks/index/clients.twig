@@ -8,14 +8,13 @@
         </div>
         <div class="flex flex-wrap" style="justify-content: center">
 
-            {% for index in range(1, 6)%}
+            {% for element in t.clients.elements %}
 
-                {% set translation = attribute(t.clients, index) %}
                 <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 py-5 sm:px-2 md:px-5">
                     <div class="px-6 py-10 bg-white shadow rounded">
                         <div class="flex items-center mb-4 justify-center">
-                            <a href="{{ translation.url }}" target="_blank">
-                                <img class="h-32 w-32 object-contain" src="{{ assets_path }}/images/clients/{{ translation.img }}" alt="">
+                            <a href="{{ element.url }}" target="_blank">
+                                <img class="h-32 w-32 object-contain" src="{{ assets_path }}/images/clients/{{ element.img }}" alt="">
                             </a>
                         </div>
                     </div>

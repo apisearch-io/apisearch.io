@@ -60,27 +60,44 @@ index:
   clients:
     title: Els nostres clients
     description: Aquests son alguns dels nostres clients que ja confien en nosaltres. Cada un d'ells ha configurat Apisearch de formes diferents, adaptant el disseny a la seva pròpia marca.
-    1:
-      img: miscota.png
-      name: Miscota
-      url: https://miscota.es
-    2:
-      img: holaprincesa.png
-      name: Holaprincesa
-      url: https://holaprincesa.es
-    3:
-      img: pampling.jpg
-      name: Pampling
-      url: https://pampling.com
-    4:
-      img: belletica.png
-      name: Belletica
-      url: https://belletica.com
-    5:
-      img: siroko.jpg
-      name: Siroko
-      url: https://siroko.es
-    6:
-      img: platanomelon.png
-      name: Platanomelon
-      url: https://platanomelon.es
+    elements:
+      1:
+        img: miscota.png
+        name: Miscota
+        url: https://miscota.es
+      2:
+        img: holaprincesa.png
+        name: Holaprincesa
+        url: https://holaprincesa.es
+      3:
+        img: pampling.jpg
+        name: Pampling
+        url: https://pampling.com
+      4:
+        img: belletica.png
+        name: Belletica
+        url: https://belletica.com
+      5:
+        img: siroko.jpg
+        name: Siroko
+        url: https://siroko.es
+      6:
+        img: platanomelon.png
+        name: Platanomelon
+        url: https://platanomelon.es
+      7:
+        img: maquilleo.png
+        name: Maquilleo
+        url: https://maquilleo.com
+      8:
+        img: jane.png
+        name: Jané
+        url: https://janeworld.com
+      9:
+        img: lavalenciana.png
+        name: La Valenciana Calzados
+        url: https://lavalencianacalzados.com
+      10:
+        img: vittorio.png
+        name: Vittorio Uniformes
+        url: https://www.vittorio.es
