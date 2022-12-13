@@ -3,7 +3,7 @@ global:
     link1: All-in-one
     link2: Precios
     link3: Clientes
-    sign_in: Entrar
+    sign_in: Accedir
     get_in_touch: Escríbenos en
 
 index:
@@ -101,3 +101,7 @@ index:
         img: vittorio.png
         name: Vittorio Uniformes
         url: https://www.vittorio.es
+      11:
+        img: bassols.jpeg
+        name: Bassols
+        url: https://www.bassols.es
