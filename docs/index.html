@@ -51,28 +51,30 @@
     </head>
 
     <body class="antialiased bg-body text-body font-body">
-        <section class="bg-cover 2xl:bg-contain bg-top bg-no-repeat" style="background-image: url('./assets/metis-assets/backgrounds/intersect2.svg');">
+        <section id="main-nav-section" class="bg-cover 2xl:bg-contain bg-top bg-no-repeat">
+    <nav id="main-nav" class="container px-4 mx-auto flex justify-between items-center py-6"><a class="text-3xl font-semibold leading-none" href="./index.html">
+            <img class="logo-white" src="./assets/images/apisearch-long-logo.png" alt="Apisearch" width="200">
+        </a>
+        <div class="lg:hidden">
+            <button class="navbar-burger flex items-center py-2 px-3 text-white hover:text-indigo-500 hover:bg-white border border-white rounded">
+                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Mobile menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path></svg></button>
+        </div>
+        <ul class="hidden lg:flex lg:items-center lg:w-auto lg:space-x-12">
+            <li><a class="text-sm text-white" href="#all-in-one">All-in-one</a></li>
+            <li><a class="text-sm text-white" href="#prices">Precios</a></li>
+            <li><a class="text-sm text-white" href="#clients">Clientes</a></li>
+            <li class="text-sm text-white" >
+                <a class="mr-1" href="./ca/index.html">ca</a>|<a class="ml-1 mr-1" href="./index.html">es</a>|<a class="ml-1" href="./en/index.html">en</a>
+            </li>
+        </ul>
+        <div class="hidden lg:block">
+            <a class="inline-block px-4 py-3 text-xs font-semibold leading-none text-white hover:text-indigo-500 hover:bg-white border-2 border-white rounded" href="https://apisearch.cloud">Acceder</a>
+        </div>
+    </nav>
+</section>
+        
+<section class="bg-cover 2xl:bg-contain bg-top bg-no-repeat" style="background-image: url('./assets/metis-assets/backgrounds/intersect2.svg');">
     <div class="container px-4 mx-auto">
-
-        <nav class="flex justify-between items-center py-6"><a class="text-3xl font-semibold leading-none" href="./index.html">
-        <img class="logo-white" src="./assets/images/apisearch-long-logo.png" alt="Apisearch" width="200">
-    </a>
-    <div class="lg:hidden">
-        <button class="navbar-burger flex items-center py-2 px-3 text-white hover:text-indigo-500 hover:bg-white border border-white rounded">
-            <svg class="fill-current h-4 w-4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Mobile menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path></svg></button>
-    </div>
-    <ul class="hidden lg:flex lg:items-center lg:w-auto lg:space-x-12">
-        <li><a class="text-sm text-white" href="#all-in-one">All-in-one</a></li>
-        <li><a class="text-sm text-white" href="#prices">Precios</a></li>
-        <li><a class="text-sm text-white" href="#clients">Clientes</a></li>
-        <li class="text-sm text-white" >
-            <a class="mr-1" href="./ca/index.html">ca</a>|<a class="ml-1 mr-1" href="./index.html">es</a>|<a class="ml-1" href="./en/index.html">en</a>
-        </li>
-    </ul>
-    <div class="hidden lg:block">
-        <a class="inline-block px-4 py-3 text-xs font-semibold leading-none text-white hover:text-indigo-500 hover:bg-white border-2 border-white rounded" href="https://apisearch.cloud">Acceder</a>
-    </div>
-</nav>
 
         <div id="top-header" class="pt-12 text-center">
             <div id="demo" class="max-w-lg md:max-w-2xl xl:max-w-3xl mx-auto mb-8 as-green text-left">
@@ -122,12 +124,15 @@
                 <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="#all-in-one">All-in-one</a></li>
                 <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="#prices">Precios</a></li>
                 <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="#clients">Clientes</a></li>
+                <li class="mb-1 text-sm p-4 text-blueGray-500" >
+                    <a class="mr-1 hover:bg-green-50 hover:text-green-600" href="./ca/index.html">ca</a>|<a class="ml-1 mr-1 hover:bg-green-50 hover:text-green-600" href="./index.html">es</a>|<a class="ml-1 hover:bg-green-50 hover:text-green-600" href="./en/index.html">en</a>
+                </li>
             </ul><div class="mt-4 pt-6 border-t border-blueGray-100"><a class="block px-4 py-3 mb-3 text-xs text-center font-semibold leading-none bg-green-600 hover:bg-green-700 text-white rounded" href="https://apisearch.cloud">Acceder</a></div>
         </div>
         <div class="mt-auto">
             <p class="my-4 text-xs text-blueGray-400">
                 <span>Escríbenos en</span>
-                <a class="text-green-600 hover:text-green-600 underline" href="mailto:info@apisearch.io"><span class="email">oi.hcraesipa@ofni</span></a>
+                <a class="text-green-600 hover:text-green-600 underline"><span class="email">oi.hcraesipa@ofni</span></a>
             </p>
         </div>
     </nav></div>
@@ -144,7 +149,7 @@
         <div class="flex flex-wrap -mx-3 -mb-6">
             <div class="flex flex-col w-full md:w-1/2 lg:w-1/3 px-3 mb-6">
                 <div class="flex-1 pt-8 px-6 pb-6 bg-white text-center rounded shadow">
-                    <i class="w-10 h-10 fa-solid fa-pen-to-square as-green" style="font-size: 26px;"></i>
+                    <i class="w-10 h-10 fa-solid fa-pen-to-square as-blue" style="font-size: 26px;"></i>
                     <h3 class="mb-2 font-bold font-heading">Personalización</h3>
                     <p class="text-sm text-blueGray-400">La mayoría de buscadores se ven iguales, neutros, lo que hace demasiado evidente que el buscador no está plenamente integrado con el e-commerce. Con Apisearch puedes editar todo el buscador con plantillas y manipular con estilos propios los elementos que quieres mostrar.</p>
                 </div>
@@ -152,7 +157,7 @@
 
             <div class="flex flex-col w-full md:w-1/2 lg:w-1/3 px-3 mb-6">
                 <div class="flex-1 pt-8 px-6 pb-6 bg-white text-center rounded shadow">
-                    <i class="w-10 h-10 fa-solid fa-brain as-green" style="font-size: 26px;"></i>
+                    <i class="w-10 h-10 fa-solid fa-brain as-blue" style="font-size: 26px;"></i>
                     <h3 class="mb-2 font-bold font-heading">Inteligencia artificial</h3>
                     <p class="text-sm text-blueGray-400">Nuestra inteligencia artificial recoge los eventos de tus usuarios y aprende de ellos para ofrecer resultados más relevantes.</p>
                 </div>
@@ -160,7 +165,7 @@
 
             <div class="flex flex-col w-full md:w-1/2 lg:w-1/3 px-3 mb-6">
                 <div class="flex-1 pt-8 px-6 pb-6 bg-white text-center rounded shadow">
-                    <i class="w-10 h-10 fa-solid fa-filter-circle-dollar as-green" style="font-size: 26px;"></i>
+                    <i class="w-10 h-10 fa-solid fa-filter-circle-dollar as-blue" style="font-size: 26px;"></i>
                     <h3 class="mb-2 font-bold font-heading">Funnel de ventas</h3>
                     <p class="text-sm text-blueGray-400">La manera mas sencilla de visualizar las ventas que está generando el buscador. Puedes ver por fecha y por tipo de dispositivo los usuarios únicos que han entrado en la web, que han usado el buscador, que han generado un evento, y que han acabado comprando.</p>
                 </div>
@@ -168,7 +173,7 @@
 
             <div class="flex flex-col w-full md:w-1/2 lg:w-1/3 px-3 mb-6">
                 <div class="flex-1 pt-8 px-6 pb-6 bg-white text-center rounded shadow">
-                    <i class="w-10 h-10 fa-solid fa-plug-circle-bolt as-green" style="font-size: 26px;"></i>
+                    <i class="w-10 h-10 fa-solid fa-plug-circle-bolt as-blue" style="font-size: 26px;"></i>
                     <h3 class="mb-2 font-bold font-heading">Solución Plug &amp; Play</h3>
                     <p class="text-sm text-blueGray-400">Sólo necesitamos 10 minutos de tu tiempo para que instalemos el buscador en tu e-commerce. Te lo dejamos integrado en menos de un día y nos encargamos de toda la configuración.</p>
                 </div>
@@ -176,7 +181,7 @@
 
             <div class="flex flex-col w-full md:w-1/2 lg:w-1/3 px-3 mb-6">
                 <div class="flex-1 pt-8 px-6 pb-6 bg-white text-center rounded shadow">
-                    <i class="w-10 h-10 fa-solid fa-ruler as-green" style="font-size: 26px;"></i>
+                    <i class="w-10 h-10 fa-solid fa-ruler as-blue" style="font-size: 26px;"></i>
                     <h3 class="mb-2 font-bold font-heading">Reglas de negocio</h3>
                     <p class="text-sm text-blueGray-400">Da prioridad a aquellos productos a los que quieras dar más importancia según las palabras con las que buscan tus usuarios. Con nuestro editor de reglas puedes ordenar al detalle los productos que quieres mostrar o promocionar ciertas marcas y categorías.</p>
                 </div>
@@ -184,7 +189,7 @@
 
             <div class="flex flex-col w-full md:w-1/2 lg:w-1/3 px-3 mb-6">
                 <div class="flex-1 pt-8 px-6 pb-6 bg-white text-center rounded shadow">
-                    <i class="w-10 h-10 fa-solid fa-mobile-screen-button as-green" style="font-size: 26px;"></i>
+                    <i class="w-10 h-10 fa-solid fa-mobile-screen-button as-blue" style="font-size: 26px;"></i>
                     <h3 class="mb-2 font-bold font-heading">Multi dispositivo</h3>
                     <p class="text-sm text-blueGray-400">Apisearch funciona de la misma forma en todos los dispositivos, inclusive con poca cobertura, y siempre de una forma eficiente y eficaz. No tendrás que configurar nada, pues tus usuarios podrán disfrutar de la misma experiencia de usuario tanto en PC, tableta o móvil.</p>
                 </div>
@@ -404,9 +409,9 @@
                     <div class="w-1/2 lg:w-auto mb-4">
                         <h5 class="mb-6 text-lg font-bold font-heading">Company</h5>
                         <ul class="space-y-3">
-                            <li><a class="text-green-400 hover:text-green-500" href="mailto:info@apisearch.io"><span class="email">oi.hcraesipa@ofni</span></a></li>
-                            <li><a class="text-blueGray-400 hover:text-blueGray-500"><a href="terminos-y-condiciones.html">Terms and Conditions</a></li>
-                            <li><a class="text-blueGray-400 hover:text-blueGray-500"><a href="politica-de-privacidad.html">Privacy Policy</a></a></li>
+                            <li><a class="text-green-400 hover:text-green-500"><span class="email">oi.hcraesipa@ofni</span></a></li>
+                            <li><a class="text-blueGray-400 hover:text-blueGray-500"><a href="terminos-y-condiciones.html">Términos y condiciones</a></li>
+                            <li><a class="text-blueGray-400 hover:text-blueGray-500"><a href="politica-de-privacidad.html">Política de privacidad</a></a></li>
                         </ul>
                     </div>
                 </div>

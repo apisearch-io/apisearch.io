@@ -32,7 +32,11 @@ foreach ($languages as $language) {
     ]));
 
     $twig->addFunction(new \Twig\TwigFunction('url', function($url) use ($urls) {
-        return $urls[$url] . '.html';
+        return $urls[$url][1] . '.html';
+    }));
+
+    $twig->addFunction(new \Twig\TwigFunction('urlname', function($url) use ($urls) {
+        return $urls[$url][0];
     }));
 
     $twig->addFunction(new \Twig\TwigFunction('email', function($email) use ($urls) {
@@ -109,7 +113,7 @@ function generatePageInLanguage(
         'language' => $language,
     ]);
 
-    $url = $urls[$page] ?? $page;
+    $url = isset($urls[$page]) ? $urls[$page][1] : $page;
 
     file_put_contents(__DIR__ . "/{$target}{$languagePath}/$url.html", $content);
 }

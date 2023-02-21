@@ -1,5 +1,5 @@
 .as-blue {
-  color: #4fdeb4;
+  color: #485DFF;
 }
 
 .as-green {
@@ -21,6 +21,18 @@
 
 .white {
   color: white;
+}
+
+#main-nav-section {
+  background-color: #485DFF;
+  top: 0;
+  position: -webkit-sticky;
+  /* for safari */
+  position: sticky;
+  z-index: 10000;
+}
+#main-nav-section.scrolled {
+  box-shadow: rgba(50, 50, 93, 0.25) 0 3px 6px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 #video {
@@ -101,6 +113,7 @@
 }
 .content p {
   margin-bottom: 20px;
+  text-align: justify;
 }
 .content ul.list {
   list-style: initial;

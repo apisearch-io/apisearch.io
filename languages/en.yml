@@ -7,8 +7,8 @@ global:
     get_in_touch: Contact us
 
 urls:
-  privacy_policy: privacy-policy
-  terms_and_conditions: terms-and-conditions
+  privacy_policy: [Privacy policy, privacy-policy]
+  terms_and_conditions: [Terms and conditions, terms-and-conditions]
 
 index:
   title: Apisearch - Home

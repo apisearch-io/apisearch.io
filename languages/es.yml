@@ -7,8 +7,8 @@ global:
     get_in_touch: Escríbenos en
 
 urls:
-  privacy_policy: politica-de-privacidad
-  terms_and_conditions: terminos-y-condiciones
+  privacy_policy: [Política de privacidad, politica-de-privacidad]
+  terms_and_conditions: [Términos y condiciones, terminos-y-condiciones]
 
 index:
   title: Apisearch - Principal

@@ -9,6 +9,7 @@
 
 {% block body %}
     <body class="antialiased bg-body text-body font-body">
+        {% include "blocks/nav.twig" %}
         {% block content %}{% endblock content %}
         {% include "blocks/js.twig" %}
         {% block js_widgets %}{% endblock js_widgets %}
