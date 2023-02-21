@@ -10,7 +10,7 @@ survey_form_url: https://rpform.typeform.com/to/MrqwPhXS
 
 languages: [es, ca, en]
 root_language: es
-pages: [index]
+pages: [index, terms_and_conditions, privacy_policy]
 assets: assets
 files: [CNAME, robots.txt]
 target: docs

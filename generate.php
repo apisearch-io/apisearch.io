@@ -6,10 +6,6 @@ use Twig\Loader\FilesystemLoader;
 
 require "vendor/autoload.php";
 
-$twig = new Environment(new FilesystemLoader([
-    __DIR__ . '/templates'
-]));
-
 $config = Yaml::parse(file_get_contents(__DIR__ . '/config.yml'));
 $config['assets'] = trim($config['assets'] ?? 'assets', '/');
 $config['target'] = trim($config['target'] ?? 'public', '/');
@@ -30,6 +26,19 @@ foreach ($languages as $language) {
         mkdir(__DIR__ . "/$target/$language");
     }
 
+    $urls = $languageTranslations['urls'] ?? [];
+    $twig = new Environment(new FilesystemLoader([
+        __DIR__ . '/templates'
+    ]));
+
+    $twig->addFunction(new \Twig\TwigFunction('url', function($url) use ($urls) {
+        return $urls[$url] . '.html';
+    }));
+
+    $twig->addFunction(new \Twig\TwigFunction('email', function($email) use ($urls) {
+        return '<span class="email">' . strrev($email) . '</span>';
+    }));
+
     $numberOfPages = 0;
     foreach ($pages as $page) {
         $numberOfPages++;
@@ -41,7 +50,8 @@ foreach ($languages as $language) {
                 $languageTranslations[$page] ?? [],
                 $languageTranslations['global'] ?? []
             ),
-            $config
+            $config,
+            $languageTranslations['urls'] ?? []
         );
     }
 
@@ -50,19 +60,35 @@ foreach ($languages as $language) {
 
 copyResources($config);
 
+function compileTranslations(
+    Environment $twig,
+    &$translations
+)
+{
+    foreach ($translations as &$translation) {
+        if (is_array($translation)) {
+            compileTranslations($twig, $translation);
+        } else {
+            $translation = $twig->render($twig->createTemplate($translation));
+        }
+    }
+}
+
 /**
  * @param Environment $twig
  * @param string      $page
  * @param string      $language
  * @param array       $translations
  * @param array       $config
+ * @param array       $urls
  */
 function generatePageInLanguage(
     Environment $twig,
     string $page,
     string $language,
     array $translations,
-    array $config
+    array $config,
+    array $urls
 )
 {
     $target = $config['target'];
@@ -73,15 +99,19 @@ function generatePageInLanguage(
         ? ''
         : "/$language";
 
+    compileTranslations($twig, $translations);
+
     $content = $twig->render("$page.twig", [
         'config' => $config,
         't' => $translations,
         'root_path' => $rootPath,
         'assets_path' => $rootPath . '/' . $assets,
-        'language' => $language
+        'language' => $language,
     ]);
 
-    file_put_contents(__DIR__ . "/{$target}{$languagePath}/$page.html", $content);
+    $url = $urls[$page] ?? $page;
+
+    file_put_contents(__DIR__ . "/{$target}{$languagePath}/$url.html", $content);
 }
 
 /**
