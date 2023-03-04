@@ -5,12 +5,11 @@ apisearch:
   endpoint: 'https://eu1.apisearch.cloud'
 
 cluster_url: https://apisearch.cloud
-demo_form_url: https://rpform.typeform.com/to/rQar8BYE
-survey_form_url: https://rpform.typeform.com/to/MrqwPhXS
+demo_form_url: https://rpform.typeform.com/apisearch
 
 languages: [es, ca, en]
 root_language: es
-pages: [index, terms_and_conditions, privacy_policy]
+pages: [index, terms_and_conditions, privacy_policy, discover]
 assets: assets
 files: [CNAME, robots.txt]
 target: docs

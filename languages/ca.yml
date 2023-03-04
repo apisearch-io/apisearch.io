@@ -5,18 +5,19 @@ global:
     link3: Clients
     sign_in: Accedir
     get_in_touch: Escriu-nos a
+    ask_a_demo: Demana'ns ja la teva demo!
 
 urls:
   privacy_policy: [Política de privacitat, politica-de-privacitat]
   terms_and_conditions: [Termes i condicions, termes-i-condicions]
+  discover: [Descubreix Apisearch, descubreix]
 
 index:
   title: Apisearch - Principal
   header:
     title_1: Escriu el que vulguis
     title_2: per a trobar el que busques
-    desc: El cercador intel·ligent per el teu e-commerce, que enten tant el que els teus clients volen trobar, com el que t'interessa vendre, gràcies a la intel·ligència artificial.
-    button1: Sol·licita ja la teva demo
+    desc: Apisearch és, sense cap mena de dubte, el cercador que la teva botiga en línia es mereix. Amb Apisearch, podràs vendre fins a un 30% més i descobriràs què i com cerquen els teus clients, per generar noves oportunitats de venda.
 
   all_in_one:
     title: Producte All-in #1

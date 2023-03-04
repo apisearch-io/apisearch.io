@@ -5,18 +5,19 @@ global:
     link3: Customers
     sign_in: Sign in
     get_in_touch: Contact us
+    ask_a_demo: Ask now for your demo!
 
 urls:
   privacy_policy: [Privacy policy, privacy-policy]
   terms_and_conditions: [Terms and conditions, terms-and-conditions]
+  discover: [Discover Apisearch, discover]
 
 index:
   title: Apisearch - Home
   header:
     title_1: Write what you want
     title_2: to find what you're looking for
-    desc: The intelligent search engine for your e-commerce, which understands both what your customers want to find, and what you want to sell, thanks to artificial intelligence.
-    button1: Request your demo now
+    desc: Apisearch is the search engine that your online shop deserves. With Apisearch, you can increase your sales by up to 30% and gain insights into what your users are searching for, allowing you to generate new selling opportunities.
 
   all_in_one:
     title: All-in-One Product #1

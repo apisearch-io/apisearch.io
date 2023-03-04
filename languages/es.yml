@@ -5,18 +5,19 @@ global:
     link3: Clientes
     sign_in: Acceder
     get_in_touch: Escríbenos en
+    ask_a_demo: Pídenos ya una demo!
 
 urls:
   privacy_policy: [Política de privacidad, politica-de-privacidad]
   terms_and_conditions: [Términos y condiciones, terminos-y-condiciones]
+  discover: [Descubre Apisearch, descubre]
 
 index:
   title: Apisearch - Principal
   header:
     title_1: Escribe lo que quieras
     title_2: para encontrar lo que buscas
-    desc: El buscador inteligente para tu e-commerce, que entiende tanto lo que tus clientes quieren encontrar, como lo que te interesa vender, gracias a la inteligencia artificial.
-    button1: Solicita ya tu demo
+    desc: Apisearch es el buscador que tu tienda online sin duda merece. Con Apisearch venderás hasta un 30% más y descubrirás qué y cómo buscan tus clientes para generar nuevas oportunidades de venta.
 
   all_in_one:
     title: Producto All-in #1
@@ -325,3 +326,60 @@ privacy_policy:
     proteger los derechos y libertades de los Usuarios y les ha comunicado la información
     adecuada para que puedan ejercerlos.
     </p>
+
+
+discover:
+  title: Descubre Apisearch
+  content: |
+    <h3>¿Qué es Apisearch?</h3>
+
+    <p>Apisearch es un motor de búsqueda para tiendas online. Accediendo a tus productos mediante un plugin o un feed, te proporcionamos una capa de búsqueda basada en inteligencia artificial sin que tengas que hacer absolutamente nada. Brindamos una experiencia de usuario amigable y efectiva para que tus usuarios encuentren rápidamente lo que están buscando. ¿Sencillo, verdad?</p>
+
+    <h3>¿Cuales son las ventajas de Apisearch?</h3>
+
+    <p>En Apisearch trabajamos con tres pilares imprescindibles: Conversión, Confianza y Personalización. El esfuerzo de la empresa se centra exclusivamente en fomentar y desarrollar cada uno de estos tres puntos. Desde el primer contacto, nuestra misión no es solo brindar una pieza tecnológica excepcional, sino una experiencia colectiva en la configuración, puesta en producción y posterior análisis de la herramienta y su rendimiento.</p>
+
+    <p>Aquí te brindamos algunas razones de peso para probar Apisearch:</p>
+    <ul class="list">
+    <li>Te ayudamos desde el primer momento a diseñar, maquetar, configurar y subir a producción el buscador.</li>
+    <li>Una vez en producción, nuestra puerta está siempre abierta y nuestra atención al cliente siempre disponible. Cuéntanos qué necesitas y te ayudaremos en ello.</li>
+    <li>Pagarás solo por lo que utilices. Sin bloques de peticiones. Sin paradas de servicio. Nuestra relación se basa en la confianza.</li>
+    <li>Cuando quieras irte, ten por seguro que no te haremos ninguna contraoferta. Es nuestra forma de mostrar nuestro respeto. Pagarás lo justo desde el primer momento.</li>
+    <li>Nuestros precios incluyen toda nuestra tecnología y prestaciones. Tus usuarios podrán disfrutar de tu buscador en tu móvil y nuestros módulos de inteligencia artificial sin que tengas que pagar más.</li>
+    <li>Este año será un año de expansión tecnológica. Estamos explorando diferentes estrategias como integraciones con ChatGPT o modelos de búsqueda semántica para reducir al máximo las búsquedas sin resultados.</li>
+    </ul>
+
+    <h3>¿Puedo probarlo antes?</h3>
+
+    <p>Por supuesto. Si te interesa utilizar Apisearch, solo tienes que contactar con nosotros y te ayudaremos a hacer la puesta a punto. Te ayudaremos a configurarlo, a instalar los plugins si es necesario y hasta a diseñar el buscador con tus colores corporativos y el diseño que más te guste. Y todo esto lo podrás probar en tu tienda online durante 30 días sin ningún compromiso. Queremos asegurarnos de que ofrecemos valor y creemos que esta es una buena forma. ¿Te animas? Ponte en contacto con nosotros mandando un email a {{ email("info@apisearch.io")|raw }} o entrando en nuestro <a href="{{ config.demo_form_url }}">formulario de contacto</a> para que sepamos de ti.</p>
+
+    <h3>Me gustaría ver algún ejemplo del buscador<h3>
+
+    <p>
+    Claro. Aqui un pequeño listado de nuestros clientes.
+    <ul class="list">
+    <li><a href="https://pampling.com" target="_blank">Pampling.com</a></li>
+    <li><a href="https://miscota.es" target="_blank">Miscota.es</a></li>
+    <li><a href="https://platanomelon.es" target="_blank">Platanomelon.es</a></li>
+    <li><a href="https://lavalencianacalzados" target="_blank">Lavalencianacalzados.es</a></li>
+    <li><a href="https://siroko.com" target="_blank">Siroko.com</a></li>
+    </ul>
+    </p>
+
+
+    <h3>¿Cuánto cuesta Apisearch?</h3>
+    <p>En Apisearch facturamos por consumo, específicamente por el número exacto de consultas que consumes cada mes. Puedes hacer un cálculo aproximado contando 7€ por cada 10.000 solicitudes. También ofrecemos pagos fijos con contratos de 1 año, por lo que sabrás exactamente cuánto pagarás cada mes, independientemente del tráfico. Si estás interesado en Apisearch, estamos seguros de que podremos encontrar un buen trato para ti.</p>
+
+
+    <h3>Ya tengo un buscador. ¿Cómo puedo cambiarlo?</h3>
+    <p>Verás que cambiarlo será rápido y sencillo. Ponlo en nuestras manos. Ponte en contacto con nosotros mandando un correo electrónico a {{ email("info@apisearch.io")|raw }} o ingresando en nuestro <a href="{{ config.demo_form_url }}">formulario de contacto</a> y cuéntanos qué buscador estás utilizando.</p>
+
+
+    <h3>¿Cuánto tiempo lleva la implementación de Apisearch?</h3>
+    <p>	La implementación de Apisearch es muy rápida y sencilla. En cuestión de horas podrás tener todo el sistema funcionando y personalizado para tu tienda online. Además, nuestro equipo de soporte estará siempre disponible para ayudarte en cualquier duda o problema que puedas tener.</p>
+
+    <h3>¿Qué tipos de tiendas online pueden utilizar Apisearch?</h3>
+    <p>Apisearch está diseñado para adaptarse a cualquier tipo de tienda online, desde pequeñas tiendas con unos pocos productos hasta grandes marketplaces con cientos de miles de productos. Además, nuestro sistema es escalable y flexible, lo que significa que puede crecer y adaptarse a medida que tu negocio crece.</p>
+
+    <h3>¿Cómo puedo empezar a utilizar Apisearch?</h3>
+    <p>Si estás interesado en utilizar Apisearch en tu tienda online, solo tienes que ponerte en contacto con nosotros. Nuestro equipo de soporte estará encantado de ayudarte en la configuración e implementación de la herramienta, y podrás probarla durante 30 días sin ningún tipo de compromiso. ¿A qué estás esperando? ¡Ponte en contacto con nosotros y descubre todo lo que Apisearch puede hacer por tu negocio!</p>

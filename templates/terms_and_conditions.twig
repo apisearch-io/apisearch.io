@@ -1,18 +1,16 @@
 {% extends "layout.twig" %}
 
+
 {% block content %}
+    <section class="py-20 xl:bg-contain bg-top bg-no-repeat bg-blueGray-50 content">
+        <div class="container px-4 mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="max-w-xl mx-auto mb-4 text-4xl font-bold font-heading">
+                    {{ t.title|raw }}
+                </h2>
+            </div>
 
-<section class="py-20 xl:bg-contain bg-top bg-no-repeat bg-blueGray-50 content">
-    <div class="container px-4 mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="max-w-xl mx-auto mb-4 text-4xl font-bold font-heading">
-                {{ t.title|raw }}
-            </h2>
+            {{ t.content|raw }}
         </div>
-
-        {{ t.content|raw }}
-    </div>
-</section>
-
-{% include "blocks/footer.twig" %}
+    </section>
 {% endblock %}

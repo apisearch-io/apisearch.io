@@ -1,6 +1,6 @@
 <div class="hidden navbar-menu relative z-50">
     <div class="navbar-backdrop fixed inset-0 bg-blueGray-800 opacity-25"></div>
-    <nav class="fixed top-0 left-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 bg-white border-r overflow-y-auto" style="padding-top: 110px">
+    <nav class="fixed top-0 left-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 bg-white border-r overflow-y-auto">
         <div class="flex items-center mb-8">
             <a class="mr-auto text-3xl font-semibold leading-none" href="{{ root_path }}/index.html"><img src="{{ assets_path }}/images/apisearch-long-logo.png" alt="" width="200"></a>
             <button class="navbar-close">
@@ -17,7 +17,7 @@
                 <li class="mb-1 text-sm p-4 text-blueGray-500" >
                     <a class="mr-1 hover:bg-green-50 hover:text-green-600" href="{{ root_path }}/ca/index.html">ca</a>|<a class="ml-1 mr-1 hover:bg-green-50 hover:text-green-600" href="{{ root_path }}/index.html">es</a>|<a class="ml-1 hover:bg-green-50 hover:text-green-600" href="{{ root_path }}/en/index.html">en</a>
                 </li>
-            </ul><div class="mt-4 pt-6 border-t border-blueGray-100"><a class="block px-4 py-3 mb-3 text-xs text-center font-semibold leading-none bg-green-600 hover:bg-green-700 text-white rounded" href="{{ config.demo_form_url }}" target="_blank">{{ t.menu.ask_a_demo }}</a></div>
+            </ul><div class="mt-4 pt-6 border-t border-blueGray-100"><a class="block px-4 py-3 mb-3 text-xs text-center font-semibold leading-none bg-green-600 hover:bg-green-700 text-white rounded" href="{{ config.cluster_url }}">{{ t.menu.sign_in }}</a></div>
         </div>
         <div class="mt-auto">
             <p class="my-4 text-xs text-blueGray-400">
@@ -25,5 +25,4 @@
                 <a class="text-green-600 hover:text-green-600 underline">{{ email("info@apisearch.io")|raw }}</a>
             </p>
         </div>
-    </nav>
-</div>
+    </nav></div>
