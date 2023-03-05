@@ -5,7 +5,7 @@ global:
     link3: Clients
     sign_in: Accedir
     get_in_touch: Escriu-nos a
-    ask_a_demo: Demana'ns ja la teva demo!
+    ask_a_demo: Demo gratis!
 
 urls:
   privacy_policy: [Política de privacitat, politica-de-privacitat]
@@ -20,7 +20,8 @@ index:
     desc: Apisearch és, sense cap mena de dubte, el cercador que la teva botiga en línia es mereix. Amb Apisearch, podràs vendre fins a un 30% més i descobriràs què i com cerquen els teus clients, per generar noves oportunitats de venda.
 
   all_in_one:
-    title: Producte All-in #1
+    title: El cercador
+    description: Apisearch ve amb totes les prestacions que un bon cercador pot ofertir-te de sèrie. No pagaràs més per a ninguna de elles.
     customization:
       title: Personalització
       description: La majoria de cercadors es veuen iguals, neutres, el que fa massa evident que el cercador no està plenament integrat. Amb Apisearch pots editar tot el cercador amb plantilles, i manipular amb estils propis els elements que vols mostrar.

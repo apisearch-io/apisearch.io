@@ -5,7 +5,7 @@ global:
     link3: Clientes
     sign_in: Acceder
     get_in_touch: Escríbenos en
-    ask_a_demo: Pídenos ya una demo!
+    ask_a_demo: ¡Demo gratis!
 
 urls:
   privacy_policy: [Política de privacidad, politica-de-privacidad]
@@ -20,7 +20,8 @@ index:
     desc: Apisearch es el buscador que tu tienda online sin duda merece. Con Apisearch venderás hasta un 30% más y descubrirás qué y cómo buscan tus clientes para generar nuevas oportunidades de venta.
 
   all_in_one:
-    title: Producto All-in #1
+    title: El buscador
+    description: Apisearch viene con todas las prestaciones que un buen buscador puede ofrecerte de serie. No pagarás más por ninguna de ellas.
     customization:
       title: Personalización
       description: La mayoría de buscadores se ven iguales, neutros, lo que hace demasiado evidente que el buscador no está plenamente integrado con el e-commerce. Con Apisearch puedes editar todo el buscador con plantillas y manipular con estilos propios los elementos que quieres mostrar.
@@ -361,7 +362,7 @@ discover:
     <li><a href="https://pampling.com" target="_blank">Pampling.com</a></li>
     <li><a href="https://miscota.es" target="_blank">Miscota.es</a></li>
     <li><a href="https://platanomelon.es" target="_blank">Platanomelon.es</a></li>
-    <li><a href="https://lavalencianacalzados" target="_blank">Lavalencianacalzados.es</a></li>
+    <li><a href="https://lavalencianacalzados.es" target="_blank">Lavalencianacalzados.es</a></li>
     <li><a href="https://siroko.com" target="_blank">Siroko.com</a></li>
     </ul>
     </p>

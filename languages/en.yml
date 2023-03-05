@@ -5,7 +5,7 @@ global:
     link3: Customers
     sign_in: Sign in
     get_in_touch: Contact us
-    ask_a_demo: Ask now for your demo!
+    ask_a_demo: Free demo!
 
 urls:
   privacy_policy: [Privacy policy, privacy-policy]
@@ -20,7 +20,8 @@ index:
     desc: Apisearch is the search engine that your online shop deserves. With Apisearch, you can increase your sales by up to 30% and gain insights into what your users are searching for, allowing you to generate new selling opportunities.
 
   all_in_one:
-    title: All-in-One Product #1
+    title: The search engine
+    description: Apisearch comes with all features a good search engine could offer you. You won't pay more for none of them.
     customization:
       title: Customization
       description: Most search engines look the same, neutral, making it too obvious that the search engine is not fully integrated with e-commerce. With Apisearch, you can edit the entire search engine with templates and manipulate elements you want to show with your own styles.

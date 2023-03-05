@@ -89,7 +89,6 @@ function showNextFrame(
 }
 
 document.addEventListener('scroll', function() {
-  console.log(document.documentElement.scrollTop);
   if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
       document.getElementById('main-nav-section').classList.add('scrolled');
   } else {
