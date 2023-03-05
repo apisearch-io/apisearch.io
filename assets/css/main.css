@@ -108,6 +108,18 @@
   font-weight: bold;
 }
 
+.bg-as-blue {
+  background-color: #485DFF;
+}
+
+.color-as-blue {
+  color: #485DFF;
+}
+
+.border-as-blue {
+  border-color: #485DFF;
+}
+
 .content .email {
   color: #485DFF;
 }
