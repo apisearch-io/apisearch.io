@@ -1,8 +1,12 @@
 @import '_constants';
 @import '_responsive';
 
+*:not(.fa, .fas, .fa-solid) {
+  font-family: Sora,Arial,sans-serif;
+}
+
 #main-nav-section {
-  background-color: #485DFF;
+  background-color: $primary-color;
   top: 0;
   position: -webkit-sticky;  /* for safari */
   position: sticky;
@@ -12,21 +16,34 @@
     box-shadow: rgba(50, 50, 93, 0.25) 0 3px 6px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   }
 }
-
-#video {
+.stack-slider {
+  height: 600px;
+  z-index: 0;
+}
+.stack-slide {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  height: 100%;
-  width: 100%;
+  border-radius: 20px;
+  transition: all 1s linear;
+  -webkit-transition: all .3s linear, opacity .2s;
+  width: auto;
 }
 
-#video-wrapper {
-  width: 100%;
+.stack-slider.mobile {
+  height: 600px;
+  width: 300px;
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
-  height: 0;
-  margin: 0 auto;
+}
+
+.with-shadow {
+  box-shadow: 0 16px 32px rgba(55,58,80,.1), 0 8px 16px rgba(55,58,80,.1), 0 4px 8px rgba(55,58,80,.1), 0 2px 4px rgba(55,58,80,.1), 0 1px 2px rgba(55,58,80,.1);
+}
+
+.with-soft-shadow {
+  box-shadow: 0 16px 32px rgba(55,58,80,.05), 0 8px 16px rgba(55,58,80,.05), 0 4px 8px rgba(55,58,80,.05), 0 2px 4px rgba(55,58,80,.05), 0 1px 2px rgba(55,58,80,.05);
+}
+
+.with-shinny-shadow {
+  box-shadow: 0 16px 32px rgba(255,255,255,.05), 0 8px 16px rgba(255,255,255,.05), 0 4px 8px rgba(255,255,255,.05), 0 2px 4px rgba(255,255,255,.05), 0 1px 2px rgba(255,255,255,.05);
 }
 
 .logo-white {
@@ -102,5 +119,30 @@
     list-style: initial;
     margin-left: 20px;
     margin-bottom: 20px;
+  }
+}
+
+.horizontal-display {
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+  img {
+    top: 120px;
+    filter: contrast(0.5);
+    width: 40%;
+    background-color: white;
+    position: absolute;
+    transform: perspective(300px) rotateY(15deg);
+    border-radius: 30px;
+    @extend .with-soft-shadow;
+    cursor: pointer;
+    -webkit-transition: all .2s linear;
+
+
+    &:hover {
+      top: 60px;
+      filter: unset;
+      @extend .with-shadow;
+    }
   }
 }

@@ -1,28 +1,28 @@
 <div class="hidden navbar-menu relative z-50">
-    <div class="navbar-backdrop fixed inset-0 bg-blueGray-800 opacity-25"></div>
+    <div class="navbar-backdrop fixed inset-0 opacity-25"></div>
     <nav class="fixed top-0 left-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 bg-white border-r overflow-y-auto">
         <div class="flex items-center mb-8">
             <a class="mr-auto text-3xl font-semibold leading-none" href="{{ root_path }}/index.html"><img src="{{ assets_path }}/images/apisearch-long-logo.png" alt="" width="200"></a>
             <button class="navbar-close">
-                <svg class="h-6 w-6 text-blueGray-400 cursor-pointer hover:text-blueGray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-6 w-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
         <div>
             <ul>
-                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="#all-in-one">{{ t.menu.link1 }}</a></li>
-                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="#prices">{{ t.menu.link2 }}</a></li>
-                <li class="mb-1"><a class="block p-4 text-sm text-blueGray-500 hover:bg-green-50 hover:text-green-600" href="#clients">{{ t.menu.link3 }}</a></li>
-                <li class="mb-1 text-sm p-4 text-blueGray-500" >
-                    <a class="mr-1 hover:bg-green-50 hover:text-green-600" href="{{ root_path }}/ca/index.html">ca</a>|<a class="ml-1 mr-1 hover:bg-green-50 hover:text-green-600" href="{{ root_path }}/index.html">es</a>|<a class="ml-1 hover:bg-green-50 hover:text-green-600" href="{{ root_path }}/en/index.html">en</a>
+                <li class="mb-1"><a class="block p-4 text-sm" href="#all-in-one">{{ t.menu.link1 }}</a></li>
+                <li class="mb-1"><a class="block p-4 text-sm" href="#prices">{{ t.menu.link2 }}</a></li>
+                <li class="mb-1"><a class="block p-4 text-sm" href="#clients">{{ t.menu.link3 }}</a></li>
+                <li class="mb-1 text-sm p-4" >
+                    <a class="mr-1" href="{{ root_path }}/ca/index.html">ca</a>|<a class="ml-1 mr-1 hover:bg-green-50 hover:text-green-600" href="{{ root_path }}/index.html">es</a>|<a class="ml-1 hover:bg-green-50 hover:text-green-600" href="{{ root_path }}/en/index.html">en</a>
                 </li>
-            </ul><div class="mt-4 pt-6 border-t border-blueGray-100"><a class="block px-4 py-3 mb-3 text-xs text-center font-semibold leading-none bg-green-600 hover:bg-green-700 text-white rounded" href="{{ config.cluster_url }}">{{ t.menu.sign_in }}</a></div>
+            </ul><div class="mt-4 pt-6 border-t"><a class="block px-4 py-3 mb-3 text-xs text-center font-semibold leading-none text-white rounded" href="{{ config.cluster_url }}">{{ t.menu.sign_in }}</a></div>
         </div>
         <div class="mt-auto">
-            <p class="my-4 text-xs text-blueGray-400">
+            <p class="my-4 text-xs">
                 <span>{{ t.menu.get_in_touch }}</span>
-                <a class="text-green-600 hover:text-green-600 underline">{{ email("info@apisearch.io")|raw }}</a>
+                <a class="underline">{{ email("info@apisearch.io")|raw }}</a>
             </p>
         </div>
     </nav></div>

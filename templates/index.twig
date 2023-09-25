@@ -2,21 +2,21 @@
 
 {% block content %}
 
-<section class="bg-cover 2xl:bg-contain bg-top bg-no-repeat" style="background-image: url('{{ assets_path }}/metis-assets/backgrounds/intersect2.svg');">
+<section class="bg-cover 2xl:bg-contain bg-top bg-no-repeat bg-as-primary-color">
     <div class="container px-4 mx-auto">
 
         <div id="top-header" class="pt-12 text-center">
-            <div id="demo" class="max-w-lg md:max-w-2xl xl:max-w-3xl mx-auto mb-8 as-green text-left">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl mb-3 font-bold font-heading">{{ t.header.title_1|raw }}</h2>
-                <div id="input-search" class="flex cursor-pointer">
-                    <i class="fas fa-search text-2xl text-2xl sm:text-3xl md:text-4xl xl:text-5xl mr-4 mt-1 sm:mt-3 lg:mt-3 lg:mt-4 xl:mt-4"></i>
-                    <input class="cursor-pointer leading-tight bg-blue-50 block w-full md:mb-0 focus:bg-blue-50 focus:outline-none text-3xl text-3xl sm:text-4xl md:text-5xl xl:text-6xl" type="text" data-run="1" placeholder="" autocomplete="off">
+            <div id="demo" class="max-w-lg md:max-w-2xl xl:max-w-4xl mx-auto mb-8 as-secondary-color text-center" style="display: flex; flex-direction: column; align-items: center">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-300">Apisearch es el buscador que tu tienda merece</h2>
+                <p class="text-xl sm:text-2xl md:text:3xl leading-relaxed as-secondary-color font-thin" style="max-width: 500px;">Vende hasta un 30% más y descubre nuevas oportunidades de venta</p>
+                <!-- TrustBox widget - Micro Review Count -->
+                <div class="trustpilot-widget mt-3" data-locale="es-ES" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="631f1da65cd25aa13a819181" data-style-height="24px" data-style-width="100%" data-theme="dark" data-min-review-count="0" data-style-alignment="center">
+                    <a href="https://es.trustpilot.com/review/apisearch.io" target="_blank" rel="noopener">Trustpilot</a>
                 </div>
-                <h2 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl mb-4 mt-3 font-bold font-heading">{{ t.header.title_2|raw }}</h2>
-                <p class="text-xl sm:text-2xl md:text:3xl text-blueGray-400 leading-relaxed as-green">{{ t.header.desc }}</p>
+                <!-- End TrustBox widget -->
             </div>
             <div>
-                <a class="block sm:inline-block py-4 px-8 mb-4 sm:mb-0 sm:mr-3 text-lg text-white text-center font-semibold leading-none as-button-green rounded" href="{{ config.demo_form_url }}" target="_blank">
+                <a class="block sm:inline-block py-4 px-8 mb-4 sm:mb-0 sm:mr-3 text-lg text-white text-center font-semibold leading-none as-button-secondary-color rounded" href="{{ config.demo_form_url }}" target="_blank">
                     {{ t.menu.ask_a_demo }}
                 </a>
             </div>
@@ -24,23 +24,26 @@
     </div>
 
 
-    <div class="relative max-w-6xl mt-16 md:mt-8 mb-8 mx-auto">
+    <div class="relative mt-16 md:mt-8 mb-8 mx-auto">
 
         <div id="video-wrapper-top" class="py-3 lg:max-w-5xl lg:mx-auto">
-            <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-10">
-                <div class="max-w-2xl mx-auto">
-                    <div id="video-wrapper">
-                        <iframe id="video" src="https://player.vimeo.com/video/705937945?h=909154b505" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
+            <div class="relative stack-slider" style="z-index: 0">
+                <img class="stack-slide with-shadow" src="assets/images/previews/carethy.jpeg" />
+                <img class="stack-slide with-shadow" src="assets/images/previews/siroko.jpeg" />
+                <img class="stack-slide with-shadow" src="assets/images/previews/bassols.jpeg" />
+                <img class="stack-slide with-shadow" src="assets/images/previews/corbetos.jpeg" />
             </div>
         </div>
     </div>
 </section>
 
-{% include "blocks/index/all-in-one.twig" %}
 
+{% include "blocks/index/all-in-one.twig" %}
+{% include "blocks/index/mobile-first.twig" %}
+
+{% include "blocks/index/testimonials.twig" %}
 {% include "blocks/index/prices.twig" %}
+{% include "blocks/index/integrations.twig" %}
 
 {% include "blocks/index/clients.twig" %}
 

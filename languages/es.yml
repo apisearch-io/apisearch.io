@@ -5,7 +5,7 @@ global:
     link3: Clientes
     sign_in: Acceder
     get_in_touch: Escríbenos en
-    ask_a_demo: ¡Demo gratis!
+    ask_a_demo: Pruébalo 30 días
 
 urls:
   privacy_policy: [Política de privacidad, politica-de-privacidad]
@@ -67,47 +67,23 @@ index:
     title: Nuestros clientes
     description: Estos son algunos de nuestros clientes que ya confían en nosotros. Cada uno de ellos ha configurado Apisearch de formas distintas, adaptando el diseño a su propia marca.
     elements:
-      1:
-        img: miscota.png
-        name: Miscota
-        url: https://miscota.es
-      2:
-        img: holaprincesa.png
-        name: Holaprincesa
-        url: https://holaprincesa.es
-      3:
-        img: pampling.jpg
-        name: Pampling
-        url: https://pampling.com
-      4:
-        img: belletica.png
-        name: Belletica
-        url: https://belletica.com
-      5:
+      -
+        img: carethy.png
+        name: Carethy
+        url: https://carethy.es
+      -
         img: siroko.jpg
         name: Siroko
         url: https://siroko.es
-      6:
+      -
         img: platanomelon.png
         name: Platanomelon
         url: https://platanomelon.es
-      7:
-        img: maquilleo.png
-        name: Maquilleo
-        url: https://maquilleo.com
-      8:
+      -
         img: jane.png
         name: Jané
         url: https://janeworld.com
-      9:
-        img: lavalenciana.png
-        name: La Valenciana Calzados
-        url: https://lavalencianacalzados.com
-      10:
-        img: vittorio.png
-        name: Vittorio Uniformes
-        url: https://www.vittorio.es
-      11:
+      -
         img: bassols.jpeg
         name: Bassols
         url: https://www.bassols.es

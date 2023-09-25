@@ -1,28 +1,51 @@
-$blue: #485DFF;
-$green: #24dead;
-$white: white;
+$primary-color: #683257;
+$secondary-color: #F51AA4;
+$light-color: #C2C1C2;
+$white-color: white;
+$black-color: #1a1a1a;
+$gray-color: #616161;
 
-.as-blue {
-  color: $blue;
+.as-primary-color {
+  color: $primary-color;
 }
 
-.as-green {
-  color: $green;
+.bg-as-primary-color {
+  background-color: $primary-color;
 }
 
-.as-bg-green {
-  background-color: $green;
+.as-secondary-color {
+  color: $secondary-color;
 }
 
-.as-border-green {
-  border: $green 1px solid;
-}
-
-.as-button-green {
-  background-color: $green;
+.as-button-secondary-color {
+  background-color: $secondary-color;
   color: white;
+}
+
+.as-black {
+  color: $black-color;
+}
+
+.as-background-black {
+  background-color: $black-color;
+}
+
+.as-light {
+  color: $light-color;
+}
+
+.as-gray {
+  color: $gray-color;
 }
 
 .white {
   color: white;
+}
+
+.font-300 {
+  font-weight: 300;
+}
+
+.font-100 {
+  font-weight: 100;
 }

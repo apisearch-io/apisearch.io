@@ -1,6 +1,7 @@
 $(document).ready(function() {
   buildMagicSearch();
   buildBurger();
+  buildStackSlider();
 });
 
 function buildMagicSearch()
@@ -134,4 +135,56 @@ function buildBurger() {
       });
     }
   }
+}
+
+function buildStackSlider() {
+
+  $('.stack-slider').each(function() {
+    const $slider = $(this);
+    const lateral = $slider.attr('data-slider-lateral') === '1';
+    positionStackSlider($slider.find('img'), 4, lateral);
+    let initialPosition = 3;
+    setInterval(function() {
+      const $images = $slider.find('img');
+      initialPosition = (initialPosition) % $images.length;
+      positionStackSlider($images, initialPosition, lateral);
+      initialPosition--;
+    }, 5000);
+  });
+}
+
+function positionStackSlider($slides, initialPosition, lateral)
+{
+  let i = 3;
+  $slides.each(function() {
+    const $this = $(this);
+    const position = (i + initialPosition) % $slides.length
+    $this.attr('data-position', position);
+    if (position===0) {
+      $this.css('top', "0px");
+      $this.css('width', '100%');
+      $this.css('left', '0%');
+      $this.css('z-index', 0);
+      $this.css('filter', 'unset');
+      $this.css('display', 'unset');
+      i++;
+      return;
+    }
+
+    if (position===$slides.length-1) {
+      $this.css('opacity', '0');
+    } else {
+      $this.css('opacity', '1');
+    }
+
+    const multiplier = position;
+    const left = lateral ? (-5*multiplier) : (5*multiplier)/2;
+    $this.css('top', "-" + 10*multiplier + "px");
+    $this.css('width', 100-(5*multiplier) + '%');
+    $this.css('left', left + '%');
+    $this.css('z-index', -1 * position);
+    $this.css('filter', 'contrast(0.5)');
+    $this.css('display', 'unset');
+    i++;
+  })
 }
