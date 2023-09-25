@@ -5,7 +5,7 @@ apisearch:
   endpoint: 'https://eu1.apisearch.cloud'
 
 cluster_url: https://apisearch.cloud
-demo_form_url: https://rpform.typeform.com/apisearch
+demo_form_url: https://www.apisearch.cloud/es/signup
 
 languages: [es, ca, en]
 root_language: es
