@@ -5,7 +5,7 @@ global:
     link3: Clientes
     sign_in: Acceder
     get_in_touch: Escríbenos en
-    ask_a_demo: Pruébalo 30 días
+    ask_a_demo: Pruébalo gratis 60 días
 
 urls:
   privacy_policy: [Política de privacidad, politica-de-privacidad]
@@ -328,7 +328,7 @@ discover:
 
     <h3>¿Puedo probarlo antes?</h3>
 
-    <p>Por supuesto. Si te interesa utilizar Apisearch, solo tienes que contactar con nosotros y te ayudaremos a hacer la puesta a punto. Te ayudaremos a configurarlo, a instalar los plugins si es necesario y hasta a diseñar el buscador con tus colores corporativos y el diseño que más te guste. Y todo esto lo podrás probar en tu tienda online durante 30 días sin ningún compromiso. Queremos asegurarnos de que ofrecemos valor y creemos que esta es una buena forma. ¿Te animas? Ponte en contacto con nosotros mandando un email a {{ email("info@apisearch.io")|raw }} o entrando en nuestro <a href="{{ config.demo_form_url }}">formulario de contacto</a> para que sepamos de ti.</p>
+    <p>Por supuesto. Si te interesa utilizar Apisearch, solo tienes que contactar con nosotros y te ayudaremos a hacer la puesta a punto. Te ayudaremos a configurarlo, a instalar los plugins si es necesario y hasta a diseñar el buscador con tus colores corporativos y el diseño que más te guste. Y todo esto lo podrás probar en tu tienda online durante 60 días sin ningún compromiso. Queremos asegurarnos de que ofrecemos valor y creemos que esta es una buena forma. ¿Te animas? Ponte en contacto con nosotros mandando un email a {{ email("info@apisearch.io")|raw }} o entrando en nuestro <a href="{{ config.demo_form_url }}">formulario de contacto</a> para que sepamos de ti.</p>
 
     <h3>Me gustaría ver algún ejemplo del buscador<h3>
 
@@ -359,4 +359,4 @@ discover:
     <p>Apisearch está diseñado para adaptarse a cualquier tipo de tienda online, desde pequeñas tiendas con unos pocos productos hasta grandes marketplaces con cientos de miles de productos. Además, nuestro sistema es escalable y flexible, lo que significa que puede crecer y adaptarse a medida que tu negocio crece.</p>
 
     <h3>¿Cómo puedo empezar a utilizar Apisearch?</h3>
-    <p>Si estás interesado en utilizar Apisearch en tu tienda online, solo tienes que ponerte en contacto con nosotros. Nuestro equipo de soporte estará encantado de ayudarte en la configuración e implementación de la herramienta, y podrás probarla durante 30 días sin ningún tipo de compromiso. ¿A qué estás esperando? ¡Ponte en contacto con nosotros y descubre todo lo que Apisearch puede hacer por tu negocio!</p>
+    <p>Si estás interesado en utilizar Apisearch en tu tienda online, solo tienes que ponerte en contacto con nosotros. Nuestro equipo de soporte estará encantado de ayudarte en la configuración e implementación de la herramienta, y podrás probarla durante 60 días sin ningún tipo de compromiso. ¿A qué estás esperando? ¡Ponte en contacto con nosotros y descubre todo lo que Apisearch puede hacer por tu negocio!</p>

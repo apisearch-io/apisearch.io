@@ -1,0 +1,28 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+    <section class="bg-cover 2xl:bg-contain bg-top bg-no-repeat bg-as-primary-color">
+        <div class="container px-4 mx-auto">
+
+            <div id="top-header" class="pt-12 text-center">
+                <div id="demo" class="max-w-lg md:max-w-2xl xl:max-w-4xl mx-auto mb-8 as-secondary-color text-center" style="display: flex; flex-direction: column; align-items: center">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-300">Buscador para Prestashop</h2>
+                    <p class="text-xl sm:text-2xl md:text:3xl leading-relaxed as-secondary-color font-thin" style="max-width: 500px;">Vende hasta un 30% más y descubre nuevas oportunidades de venta con nuestro módulo avanzado para Prestashop</p>
+                    <!-- TrustBox widget - Micro Review Count -->
+                    <div class="trustpilot-widget mt-3" data-locale="es-ES" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="631f1da65cd25aa13a819181" data-style-height="24px" data-style-width="100%" data-theme="dark" data-min-review-count="0" data-style-alignment="center">
+                        <a href="https://es.trustpilot.com/review/apisearch.io" target="_blank" rel="noopener">Trustpilot</a>
+                    </div>
+                    <!-- End TrustBox widget -->
+                </div>
+                <div>
+                    <a class="block sm:inline-block py-4 px-8 mb-4 sm:mb-0 sm:mr-3 text-lg text-white text-center font-semibold leading-none as-button-secondary-color rounded" href="{{ config.demo_form_url }}" target="_blank">
+                        {{ t.menu.ask_a_demo }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}
+
