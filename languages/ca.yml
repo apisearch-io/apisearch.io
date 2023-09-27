@@ -13,7 +13,6 @@ urls:
   discover: [Descubreix Apisearch, descubreix]
 
 index:
-  title: Apisearch - Principal
   header:
     title_1: Escriu el que vulguis
     title_2: per a trobar el que busques

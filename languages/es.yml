@@ -7,13 +7,20 @@ global:
     get_in_touch: Escríbenos en
     ask_a_demo: Pruébalo gratis 60 días
 
+  meta:
+    title: Apisearch, búsqueda en tiempo real para impulsar tus ventas
+    description: Aprovecha la búsqueda en tiempo real para tomar decisiones de compra más informadas. Nuestra tecnología te brinda resultados al instante para impulsar tus ventas.
+    keywords: Apisearch, buscador, prestashop, wordpress, shopify, google merchant, e-commerce, inteligencia artificial, tienda online
+    author: Equipo de Apisearch
+    url: https://apisearch.io
+
 urls:
   privacy_policy: [Política de privacidad, politica-de-privacidad]
   terms_and_conditions: [Términos y condiciones, terminos-y-condiciones]
   discover: [Descubre Apisearch, descubre]
 
+
 index:
-  title: Apisearch - Principal
   header:
     title_1: Escribe lo que quieras
     title_2: para encontrar lo que buscas
