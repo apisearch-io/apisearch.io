@@ -59,7 +59,7 @@
 }
 
 .stack-slider {
-  height: 600px;
+  height: min(29vw, 500px);
   z-index: 0;
 }
 
@@ -69,6 +69,10 @@
   transition: all 1s linear;
   -webkit-transition: all 0.3s linear, opacity 0.2s;
   width: auto;
+  filter: contrast(0.5);
+}
+.stack-slide.first {
+  filter: unset;
 }
 
 .stack-slider.mobile {
@@ -77,8 +81,12 @@
   position: relative;
 }
 
-.with-shadow, .horizontal-display img:hover {
+.with-shadow, .horizontal-display img:hover, .stack-slide {
   box-shadow: 0 16px 32px rgba(55, 58, 80, 0.1), 0 8px 16px rgba(55, 58, 80, 0.1), 0 4px 8px rgba(55, 58, 80, 0.1), 0 2px 4px rgba(55, 58, 80, 0.1), 0 1px 2px rgba(55, 58, 80, 0.1);
+}
+
+.with-strong-shadow, .stack-slide.first {
+  box-shadow: 0 16px 32px rgba(55, 58, 80, 0.2), 0 8px 16px rgba(55, 58, 80, 0.2), 0 4px 8px rgba(55, 58, 80, 0.2), 0 2px 4px rgba(55, 58, 80, 0.2), 0 1px 2px rgba(55, 58, 80, 0.2);
 }
 
 .with-soft-shadow, .horizontal-display img {
@@ -93,40 +101,19 @@
   filter: brightness(0) invert(1);
 }
 
-#video-wrapper-top {
+#stack-slider-wrapper {
   top: 9%;
   left: 5%;
   width: 90%;
   height: 80%;
-  margin: 0 auto;
+  margin: 0 auto 150px;
 }
 @media only screen and (min-width: 640px) {
-  #video-wrapper-top {
+  #stack-slider-wrapper {
     top: 9%;
     left: 14%;
     width: 72%;
     height: 66%;
-    margin: 0 auto;
-  }
-}
-
-@media only screen and (min-width: 640px) {
-  #video-block {
-    padding-bottom: 80px;
-  }
-}
-#video-block #video-wrapper-width-limitation {
-  width: 100%;
-  max-width: 500px;
-}
-@media only screen and (min-width: 640px) {
-  #video-block #video-wrapper-width-limitation {
-    max-width: 620px;
-  }
-}
-@media only screen and (min-width: 1024px) {
-  #video-block #video-wrapper-width-limitation {
-    max-width: 1000px;
   }
 }
 
@@ -169,7 +156,7 @@
   width: 40%;
   background-color: white;
   position: absolute;
-  transform: perspective(300px) rotateY(15deg);
+  transform: perspective(950px) rotateY(15deg);
   border-radius: 30px;
   cursor: pointer;
   -webkit-transition: all 0.2s linear;
@@ -178,6 +165,7 @@
 .horizontal-display img:hover {
   top: 60px;
   filter: unset;
+  transform: perspective(950px) rotateY(0deg);
 }
 
 .stars {

@@ -165,8 +165,7 @@ function positionStackSlider($slides, initialPosition, lateral)
       $this.css('width', '100%');
       $this.css('left', '0%');
       $this.css('z-index', 0);
-      $this.css('filter', 'unset');
-      $this.css('display', 'unset');
+      $this.addClass('first');
       i++;
       return;
     }
@@ -179,12 +178,11 @@ function positionStackSlider($slides, initialPosition, lateral)
 
     const multiplier = position;
     const left = lateral ? (-5*multiplier) : (5*multiplier)/2;
-    $this.css('top', "-" + 10*multiplier + "px");
+    $this.css('top', "-" + 20*multiplier + "px");
     $this.css('width', 100-(5*multiplier) + '%');
     $this.css('left', left + '%');
     $this.css('z-index', -1 * position);
-    $this.css('filter', 'contrast(0.5)');
-    $this.css('display', 'unset');
+    $this.removeClass('first');
     i++;
   })
 }
