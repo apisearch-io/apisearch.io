@@ -13,6 +13,7 @@ global:
     keywords: Apisearch, buscador, prestashop, wordpress, shopify, google merchant, e-commerce, inteligencia artificial, tienda online
     author: Equipo de Apisearch
     url: https://apisearch.io
+    image: assets/images/banner.png
 
 urls:
   privacy_policy: [Política de privacidad, politica-de-privacidad]
