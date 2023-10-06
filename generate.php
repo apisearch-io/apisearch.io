@@ -105,15 +105,15 @@ function generatePageInLanguage(
 
     compileTranslations($twig, $translations);
 
+    $url = isset($urls[$page]) ? $urls[$page][1] : $page;
     $content = $twig->render("$page.twig", [
         'config' => $config,
         't' => $translations,
         'root_path' => $rootPath,
         'assets_path' => $rootPath . '/' . $assets,
         'language' => $language,
+        'absolute_path' => str_replace(['/index.html', '/docs'], ['', ''], "$rootPath/{$target}{$languagePath}/$url.html")
     ]);
-
-    $url = isset($urls[$page]) ? $urls[$page][1] : $page;
 
     file_put_contents(__DIR__ . "/{$target}{$languagePath}/$url.html", $content);
 }
