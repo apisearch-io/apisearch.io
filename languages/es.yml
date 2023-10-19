@@ -24,6 +24,7 @@ urls:
   woocommerce: [Integración con Woocommerce, woocommerce]
   google_shopping: [Integración con Google Shopping, google-shopping]
   mabisy: [Integración con Mabisy, mabisy]
+  success_carethy: [Caso de éxito con Carethy, caso-exito-carethy]
 
 
 index:

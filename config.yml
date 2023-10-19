@@ -9,7 +9,7 @@ demo_form_url: https://www.apisearch.cloud/es/signup
 
 languages: [es]
 root_language: es
-pages: [index, terms_and_conditions, privacy_policy, prestashop, shopify, woocommerce, google-shopping, mabisy]
+pages: [index, terms_and_conditions, privacy_policy, prestashop, shopify, woocommerce, google_shopping, mabisy, success_carethy]
 assets: assets
 files: [robots.txt]
 target: docs

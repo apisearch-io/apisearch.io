@@ -1,0 +1,113 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+    <section class="bg-cover 2xl:bg-contain bg-top bg-no-repeat bg-as-primary-color">
+        <div class="container px-4 mx-auto">
+
+            <div id="top-header" class="pt-12 text-center">
+                <div id="demo" class="max-w-lg md:max-w-2xl xl:max-w-4xl mx-auto mb-8 as-secondary-color text-center" style="display: flex; flex-direction: column; align-items: center">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-300">Carethy + Apisearch</h2>
+                    <p class="text-xl sm:text-2xl md:text:3xl leading-relaxed as-secondary-color font-thin" style="max-width: 500px;">Carethy está presente en más de 100 países y 12 idiomas en todo el mundo.</p>
+                    <!-- TrustBox widget - Micro Review Count -->
+                    <div class="trustpilot-widget mt-3" data-locale="es-ES" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="631f1da65cd25aa13a819181" data-style-height="24px" data-style-width="100%" data-theme="dark" data-min-review-count="0" data-style-alignment="center">
+                        <a href="https://es.trustpilot.com/review/apisearch.io" target="_blank" rel="noopener">Trustpilot</a>
+                    </div>
+                    <!-- End TrustBox widget -->
+                </div>
+                <div>
+                    <a class="block sm:inline-block py-4 px-8 mb-4 sm:mb-0 sm:mr-3 text-lg text-white text-center font-semibold leading-none as-button-secondary-color rounded" href="{{ config.demo_form_url }}" target="_blank">
+                        {{ t.menu.ask_a_demo }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% include "blocks/banner_devices.html.twig" with { shop: "carethy" } %}
+    </section>
+
+    <section class="pt-32 pb-36 bg-gradient-gray2 overflow-hidden mb-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap -m-6">
+                <div class="w-full md:w-1/2 p-6 md:pb-0">
+                    <div class="h-full md:max-w-md">
+                        <div class="flex flex-wrap h-full -m-6">
+                            <div class="w-full p-6">
+                                <h2 class="mb-5 font-heading font-semibold text-6xl sm:text-7xl text-gray-900 font-100">Setup</h2>
+                                <p class="text-lg as-black">Apisearch consiguió cubrir todos los requerimientos de una empresa de las dimensiones de Carethy, utilizando nuestro sistema Multisite.</p>
+                                <img src="{{ assets_path }}/images/clients/carethy.png" style="filter: invert(1)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 p-6">
+                    <div class="flex flex-wrap justify-center md:max-w-lg md:mx-auto">
+                        <div class="w-full lg:w-auto">
+                            <div class="pb-7">
+                                <h3 class="mb-4 font-heading font-medium text-2xl text-gray-900">Servicio a más de 120 países</h3>
+                                <p class="mt-3 as-black">Cada uno de los paises, con precios y moneda propios. Productos solo disponible exclusivamente en alguno de estos paises.</p>
+                            </div>
+                        </div>
+                        <div class="w-full lg:w-auto mt-6">
+                            <div class="pb-7">
+                                <h3 class="mb-4 font-heading font-medium text-2xl text-gray-900">13 idiomas disponbles en toda la plataforma</h3>
+                                <p class="mt-3 as-black">Cada producto tiene definidas las traducciones para 13 idiomas, incluyendo título, descripción y marca.</p>
+                            </div>
+                        </div>
+                        <div class="w-full lg:w-auto mt-6">
+                            <div>
+                                <h3 class="mb-4 font-heading font-medium text-2xl text-gray-900">Diseño propio</h3>
+                                <p class="mt-3 as-black">Carethy ha invertido recursos en hacer que su buscador sea completamente único. Combinando nuestro motor y su excelente diseño, hemos conseguido un buscador de 10.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pt-32 pb-36 bg-gradient-gray2 overflow-hidden mb-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap -m-6">
+                <div class="w-full md:w-1/2 p-6 md:pb-0">
+                    <div class="h-full md:max-w-md">
+                        <div class="flex flex-wrap h-full -m-6">
+                            <div class="w-full p-6">
+                                <h2 class="mb-5 font-heading font-semibold text-6xl sm:text-7xl text-gray-900 font-100">Métricas</h2>
+                                <p class="text-lg as-black">Carethy ha mejorado algunas métricas relacionadas con el buscador y con sus procesos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 p-6">
+                    <div class="flex flex-wrap justify-center md:max-w-lg md:mx-auto">
+                        <div class="w-full lg:w-auto">
+                            <div class="pb-7">
+                                <h3 class="mb-4 font-heading font-medium text-2xl text-gray-900">+40% CTR</h3>
+                                <p class="mt-3 as-black">Con más de un 40% de CTR agregado en todos los dominios, Carethy se situa en una magnífica conversión teniendo en cuenta que es multimarca y multicategoría. Esta tipología de tiendas online suelen tener valores más bajos dado a que es más habitual encontrar páginas sin resultados.</p>
+                            </div>
+                        </div>
+                        <div class="w-full lg:w-auto mt-6">
+                            <div class="pb-7">
+                                <h3 class="mb-4 font-heading font-medium text-2xl text-gray-900">95% de páginas con resultados</h3>
+                                <p class="mt-3 as-black">Carethy tiene aproximadamente un 70% de las búsquedas con resultados orgánico. Del otro 30%, un 25% ofrecemos resultados relevantes y con opción de conversión.</p>
+                            </div>
+                        </div>
+                        <div class="w-full lg:w-auto mt-6">
+                            <div>
+                                <h3 class="mb-4 font-heading font-medium text-2xl text-gray-900">Incremento del 10% en la conversión</h3>
+                                <p class="mt-3 as-black">Tras la implementación de Apisearch por parte de Carethy, hemos aumentado la conversión un 10% proviniente del buscador</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {% include "blocks/google_shopping/start-now.twig" %}
+    {% include "blocks/google_shopping/faqs.twig" %}
+
+{% endblock content %}
+
