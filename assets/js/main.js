@@ -186,3 +186,23 @@ function positionStackSlider($slides, initialPosition, lateral)
     i++;
   })
 }
+
+function openSubMenu(event, id) {
+  event.stopPropagation();
+  const element = document.getElementById(id)
+  element.style.display = 'flex';
+  const clickInsideFunction = function(event) {
+    event.stopPropagation();
+  }
+  const clickFunction = function() {
+    console.log('SI');
+    element.style.display = 'none';
+    document.removeEventListener('click', clickFunction);
+    element.removeEventListener('click', clickInsideFunction);
+  }
+
+  document.addEventListener('click', clickFunction);
+  element.addEventListener('click', clickInsideFunction);
+  console.log('LOL');
+
+}

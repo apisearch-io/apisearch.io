@@ -19,6 +19,11 @@ urls:
   privacy_policy: [Política de privacidad, politica-de-privacidad]
   terms_and_conditions: [Términos y condiciones, terminos-y-condiciones]
   discover: [Descubre Apisearch, descubre]
+  prestashop: [Integración con Prestashop, prestashop]
+  shopify: [Integración con Shopify, shopify]
+  woocommerce: [Integración con Woocommerce, woocommerce]
+  google_shopping: [Integración con Google Shopping, google-shopping]
+  mabisy: [Integración con Mabisy, mabisy]
 
 
 index:

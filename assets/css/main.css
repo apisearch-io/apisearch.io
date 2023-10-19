@@ -57,6 +57,47 @@
 #main-nav-section.scrolled {
   box-shadow: rgba(50, 50, 93, 0.25) 0 3px 6px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
+#main-nav-section a {
+  cursor: pointer;
+}
+
+.main-subnav {
+  background-color: #F51AA4;
+  z-index: 10000;
+}
+.main-subnav .integrations {
+  display: grid;
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(auto-fill, minmax(13.5em, 1fr));
+  width: 100%;
+  padding: 0 50px;
+}
+.main-subnav .integrations .integration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+.main-subnav .integrations .integration > a {
+  justify-content: center;
+  display: flex;
+}
+.main-subnav .integrations .integration img {
+  width: 60%;
+  margin-bottom: 20px;
+}
+.main-subnav .integrations .integration div {
+  color: white;
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+}
+.main-subnav .integrations .integration a {
+  margin-top: 10px;
+  color: white;
+  font-size: 0.9em;
+}
 
 .stack-slider {
   height: min(29vw, 500px);
@@ -85,7 +126,7 @@
   box-shadow: 0 16px 32px rgba(55, 58, 80, 0.1), 0 8px 16px rgba(55, 58, 80, 0.1), 0 4px 8px rgba(55, 58, 80, 0.1), 0 2px 4px rgba(55, 58, 80, 0.1), 0 1px 2px rgba(55, 58, 80, 0.1);
 }
 
-.with-strong-shadow, .stack-slide.first {
+.with-strong-shadow, .main-subnav, .stack-slide.first {
   box-shadow: 0 16px 32px rgba(55, 58, 80, 0.2), 0 8px 16px rgba(55, 58, 80, 0.2), 0 4px 8px rgba(55, 58, 80, 0.2), 0 2px 4px rgba(55, 58, 80, 0.2), 0 1px 2px rgba(55, 58, 80, 0.2);
 }
 

@@ -15,7 +15,57 @@
   &.scrolled {
     box-shadow: rgba(50, 50, 93, 0.25) 0 3px 6px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   }
+
+  a {
+    cursor: pointer;
+  }
 }
+
+.main-subnav {
+  background-color: $secondary-color;
+  z-index: 10000;
+  @extend .with-strong-shadow;
+
+  .integrations {
+    display: grid;
+    grid-auto-flow: dense;
+    grid-template-columns: repeat(auto-fill,minmax(13.5em,1fr));
+    width: 100%;
+    padding: 0 50px;
+
+    .integration {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+
+      > a {
+        justify-content: center;
+        display: flex;
+      }
+
+      img {
+        width: 60%;
+        margin-bottom: 20px;
+      }
+
+      div {
+        color: white;
+        display: flex;
+        flex: 1;
+        align-items: flex-end;
+      }
+
+      a {
+        margin-top: 10px;
+        color: white;
+        font-size: 0.9em;
+      }
+    }
+  }
+}
+
 .stack-slider {
   height: min(29vw, 500px);
   z-index: 0;
