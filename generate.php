@@ -44,9 +44,10 @@ foreach ($languages as $language) {
     }));
 
     $numberOfPages = 0;
+    $urls = [];
     foreach ($pages as $page) {
         $numberOfPages++;
-        generatePageInLanguage(
+        $urls[] = generatePageInLanguage(
             $twig,
             $page,
             $language,
@@ -58,6 +59,8 @@ foreach ($languages as $language) {
             $languageTranslations['urls'] ?? []
         );
     }
+
+    generateSitemap($config, $urls);
 
     echo "Generated $numberOfPages pages for language $language" . PHP_EOL;
 }
@@ -98,6 +101,7 @@ function generatePageInLanguage(
     $target = $config['target'];
     $assets = $config['assets'];
     $isRootLanguage = $language === $config['root_language'];
+    // $rootPath = 'file:///var/www/apisearch/apisearch.io/docs';
     $rootPath = 'https://apisearch.io';
     $languagePath = $isRootLanguage
         ? ''
@@ -106,16 +110,23 @@ function generatePageInLanguage(
     compileTranslations($twig, $translations);
 
     $url = isset($urls[$page]) ? $urls[$page][1] : $page;
+    $canonical = $rootPath . $languagePath . ($url === 'index'
+        ? ''
+        : "/$url");
+
     $content = $twig->render("$page.twig", [
         'config' => $config,
         't' => $translations,
         'root_path' => $rootPath,
         'assets_path' => $rootPath . '/' . $assets,
         'language' => $language,
-        'absolute_path' => str_replace(['/index.html', '/docs'], ['', ''], "$rootPath/{$target}{$languagePath}/$url.html")
+        'absolute_path' => str_replace(['/index.html', '/docs'], ['', ''], "$rootPath/{$target}{$languagePath}/$url.html"),
+        'canonical' => $canonical
     ]);
 
     file_put_contents(__DIR__ . "/{$target}{$languagePath}/$url.html", $content);
+
+    return $canonical;
 }
 
 /**
@@ -134,4 +145,27 @@ function copyResources(array $config)
         $targetPath = __DIR__ . "/$target/$file";
         exec("cp $sourcePath $targetPath");
     }
+}
+
+function generateSitemap(
+    array $config,
+    array $urls
+)
+{
+    $target = $config['target'];
+    $lastMod = (new DateTime())->format('Y-m-d');
+    $content = '<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+    foreach ($urls as $url) {
+        $content .= "
+<url>
+    <loc>$url</loc>
+    <lastmod>$lastMod</lastmod>
+</url>";
+    }
+    $content .= '
+</urlset>';
+
+    file_put_contents(__DIR__ . "/{$target}/sitemap.xml", $content);
 }
