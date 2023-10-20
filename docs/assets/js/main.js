@@ -2,6 +2,7 @@ $(document).ready(function() {
   buildMagicSearch();
   buildBurger();
   buildStackSlider();
+  generateReferrerLinks();
 });
 
 function buildMagicSearch()
@@ -205,4 +206,25 @@ function openSubMenu(event, id) {
   element.addEventListener('click', clickInsideFunction);
   console.log('LOL');
 
+}
+
+function generateReferrerLinks() {
+  console.log('ARA');
+  const urlParams = new URLSearchParams(window.location.search);
+  let referrer = urlParams.get('referrer');
+
+  if (referrer) {
+    window.localStorage.setItem('referrer', referrer);
+  }
+
+  if (!referrer) {
+    referrer = window.localStorage.getItem('referrer');
+  }
+  console.log(referrer);
+  if (referrer) {
+    $('.to-cloud').each(function(_, link) {
+      link.href = link.href + '?referrer=' + referrer;
+      console.log(link);
+    });
+  }
 }
