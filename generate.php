@@ -117,6 +117,7 @@ function generatePageInLanguage(
     $content = $twig->render("$page.twig", [
         'config' => $config,
         't' => $translations,
+        'meta' => $urls[$page][2] ?? $translations['meta'],
         'root_path' => $rootPath,
         'assets_path' => $rootPath . '/' . $assets,
         'language' => $language,

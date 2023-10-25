@@ -10,21 +10,68 @@ global:
   meta:
     title: Apisearch, búsqueda en tiempo real para impulsar tus ventas
     description: Aprovecha la búsqueda en tiempo real para tomar decisiones de compra más informadas. Nuestra tecnología te brinda resultados al instante para impulsar tus ventas.
-    keywords: Apisearch, buscador, prestashop, wordpress, shopify, google merchant, e-commerce, inteligencia artificial, tienda online
+    keywords: Apisearch, buscador, e-commerce, inteligencia artificial, tienda online
     author: Equipo de Apisearch
     url: https://apisearch.io
     image: /images/banner.png
 
 urls:
-  privacy_policy: [Política de privacidad, politica-de-privacidad]
-  terms_and_conditions: [Términos y condiciones, terminos-y-condiciones]
-  discover: [Descubre Apisearch, descubre]
-  prestashop: [Integración con Prestashop, prestashop]
-  shopify: [Integración con Shopify, shopify]
-  woocommerce: [Integración con Woocommerce, woocommerce]
-  google_shopping: [Integración con Google Shopping, google-shopping]
-  mabisy: [Integración con Mabisy, mabisy]
-  success_carethy: [Caso de éxito con Carethy, caso-exito-carethy]
+  privacy_policy:
+    - Política de privacidad
+    - politica-de-privacidad
+    -
+
+  terms_and_conditions:
+    - Términos y condiciones
+    - terminos-y-condiciones
+    -
+
+  prestashop:
+    - Integración con Prestashop
+    - prestashop
+    -
+      title: Apisearch, búsqueda en tiempo real para impulsar tus ventas en tu tienda Prestashop
+      description: Aprovecha la búsqueda en tiempo real para tomar decisiones de compra más informadas en tu tienda Prestashop. Nuestra tecnología te brinda resultados al instante para impulsar tus ventas
+      keywords: Apisearch, buscador, prestashop, ecommerce, tienda online
+
+
+
+  shopify:
+    - Integración con Shopify
+    - shopify
+    -
+      title: Apisearch, búsqueda en tiempo real para impulsar tus ventas en tu tienda Shopify
+      description: Aprovecha la búsqueda en tiempo real para tomar decisiones de compra más informadas en tu tienda Shopify. Nuestra tecnología te brinda resultados al instante para impulsar tus ventas
+      keywords: Apisearch, buscador, shopify, ecommerce, tienda online
+
+  woocommerce:
+    - Integración con Woocommerce
+    - woocommerce
+    -
+      title: Apisearch, búsqueda en tiempo real para impulsar tus ventas en tu tienda Woocommerce
+      description: Aprovecha la búsqueda en tiempo real para tomar decisiones de compra más informadas en tu tienda Woocommerce. Nuestra tecnología te brinda resultados al instante para impulsar tus ventas
+      keywords: Apisearch, buscador, Woocommerce, ecommerce, tienda online
+
+  google_shopping:
+    - Integración con Google Shopping
+    - google-shopping
+    -
+      title: Apisearch, búsqueda en tiempo real para impulsar tus ventas en tu tienda online
+      description: Aprovecha la búsqueda en tiempo real para tomar decisiones de compra más informadas en tu tienda online. Nuestra tecnología te brinda resultados al instante para impulsar tus ventas
+      keywords: Apisearch, buscador, ecommerce, tienda online
+
+  mabisy:
+    - Integración con Mabisy
+    - mabisy
+    -
+      title: Apisearch, búsqueda en tiempo real para impulsar tus ventas en tu tienda Mabisy
+      description: Aprovecha la búsqueda en tiempo real para tomar decisiones de compra más informadas en tu tienda Mabisy. Nuestra tecnología te brinda resultados al instante para impulsar tus ventas
+      keywords: Apisearch, buscador, mabisy, ecommerce, tienda online
+
+  success_carethy:
+    - Caso de éxito con Carethy
+    - caso-exito-carethy
+    -
 
 
 index:
