@@ -32,7 +32,7 @@ foreach ($languages as $language) {
     ]));
 
     $twig->addFunction(new \Twig\TwigFunction('url', function($url) use ($urls) {
-        return $urls[$url][1] . '.html';
+        return $urls[$url][1];
     }));
 
     $twig->addFunction(new \Twig\TwigFunction('urlname', function($url) use ($urls) {
@@ -121,7 +121,7 @@ function generatePageInLanguage(
         'root_path' => $rootPath,
         'assets_path' => $rootPath . '/' . $assets,
         'language' => $language,
-        'absolute_path' => str_replace(['/index.html', '/docs'], ['', ''], "$rootPath/{$target}{$languagePath}/$url.html"),
+        'absolute_path' => str_replace(['/index.html', '/docs'], ['', ''], "$rootPath/{$target}{$languagePath}/$url"),
         'canonical' => $canonical
     ]);
 
