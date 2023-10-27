@@ -113,7 +113,7 @@ function generatePageInLanguage(
     $canonical = $rootPath . $languagePath . ($url === 'index'
         ? ''
         : "/$url");
-
+    echo '> ' . $canonical . PHP_EOL;
     $content = $twig->render("$page.twig", [
         'config' => $config,
         't' => $translations,
@@ -121,7 +121,7 @@ function generatePageInLanguage(
         'root_path' => $rootPath,
         'assets_path' => $rootPath . '/' . $assets,
         'language' => $language,
-        'absolute_path' => str_replace(['/index.html', '/docs', '/index'], ['', ''], "$rootPath/{$target}{$languagePath}/$url"),
+        'absolute_path' => str_replace(['/index.html', '/docs'], ['', ''], "$rootPath/{$target}{$languagePath}/$url"),
         'canonical' => $canonical,
         'hash' => (new DateTime())->format('U'),
     ]);
