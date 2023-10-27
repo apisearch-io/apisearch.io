@@ -101,8 +101,8 @@ function generatePageInLanguage(
     $target = $config['target'];
     $assets = $config['assets'];
     $isRootLanguage = $language === $config['root_language'];
-    $rootPath = 'file:///var/www/apisearch/apisearch.io/docs';
-    // $rootPath = 'https://apisearch.io';
+    // $rootPath = 'file:///var/www/apisearch/apisearch.io/docs';
+    $rootPath = 'https://apisearch.io';
     $languagePath = $isRootLanguage
         ? ''
         : "/$language";
