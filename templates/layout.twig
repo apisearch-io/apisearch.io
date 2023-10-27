@@ -4,7 +4,6 @@
     <head>
         {% include "blocks/meta.twig" %}
         {% include "blocks/css.twig" %}
-        {% include "blocks/js.twig" %}
     </head>
 {% endblock head %}
 
@@ -14,6 +13,8 @@
         {% block content %}{% endblock content %}
         {% include "blocks/footer.twig" %}
         {% block js_widgets %}{% endblock js_widgets %}
+
+        {% include "blocks/js.twig" %}
     </body>
 {% endblock body %}
 </html>
