@@ -196,7 +196,6 @@ function openSubMenu(event, id) {
     event.stopPropagation();
   }
   const clickFunction = function() {
-    console.log('SI');
     element.style.display = 'none';
     document.removeEventListener('click', clickFunction);
     element.removeEventListener('click', clickInsideFunction);
@@ -204,7 +203,6 @@ function openSubMenu(event, id) {
 
   document.addEventListener('click', clickFunction);
   element.addEventListener('click', clickInsideFunction);
-  console.log('LOL');
 
 }
 
