@@ -122,7 +122,8 @@ function generatePageInLanguage(
         'assets_path' => $rootPath . '/' . $assets,
         'language' => $language,
         'absolute_path' => str_replace(['/index.html', '/docs'], ['', ''], "$rootPath/{$target}{$languagePath}/$url"),
-        'canonical' => $canonical
+        'canonical' => $canonical,
+        'hash' => (new DateTime())->format('U'),
     ]);
 
     file_put_contents(__DIR__ . "/{$target}{$languagePath}/$url.html", $content);
