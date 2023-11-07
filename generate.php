@@ -61,6 +61,7 @@ foreach ($languages as $language) {
     }
 
     generateSitemap($config, $urls);
+    generateCNAME();
 
     echo "Generated $numberOfPages pages for language $language" . PHP_EOL;
 }
@@ -129,6 +130,11 @@ function generatePageInLanguage(
     file_put_contents(__DIR__ . "/{$target}{$languagePath}/$url.html", $content);
 
     return $canonical;
+}
+
+function generateCNAME()
+{
+    file_put_contents(__DIR__ . '/docs/CNAME', 'apisearch.io');
 }
 
 /**

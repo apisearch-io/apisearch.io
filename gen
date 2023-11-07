@@ -1,0 +1,6 @@
+#!/bin/sh
+
+php generate.php
+cd blog-gen && jekyll build
+cd ..
+cd blog-gen && php generate.php

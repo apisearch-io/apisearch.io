@@ -1,6 +1,7 @@
 {
   "require": {
     "symfony/yaml": "*",
+    "symfony/finder": "*",
     "twig/twig": "*"
   }
 }
