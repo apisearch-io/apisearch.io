@@ -62,6 +62,7 @@ foreach ($languages as $language) {
 
     generateSitemap($config, $urls);
     generateCNAME();
+    generateBusinessPlan($twig);
 
     echo "Generated $numberOfPages pages for language $language" . PHP_EOL;
 }
@@ -152,6 +153,31 @@ function copyResources(array $config)
         $sourcePath = __DIR__ . "/$file";
         $targetPath = __DIR__ . "/$target/$file";
         exec("cp $sourcePath $targetPath");
+    }
+}
+
+function generateBusinessPlan(Environment $twig)
+{
+    mkdir(__DIR__ . '/docs/bp');
+    foreach ([
+        'index',
+            'overview',
+                'mission-and-vision',
+                'viability-analysis',
+                'business-models',
+                'swot-analysis',
+            'product-and-services',
+                'core-offerings',
+                'secondary-offerings',
+                'customer-service',
+                'industry-overview',
+            'market-research',
+                'target-audience',
+                'market-size-and-trends',
+                'competitor-analysis',
+    ] as $page) {
+        $content = $twig->render("bp/$page.twig");
+        file_put_contents(__DIR__ . "/docs/bp/$page.html", $content);
     }
 }
 

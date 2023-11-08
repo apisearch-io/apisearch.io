@@ -1,0 +1,30 @@
+{% macro feature(data) %}
+    <div class="card feature-card">
+        <div class="card-header">
+            <div class="tag tag-{{ data.color }}">{{ data.tag }}</div>
+            <h4>{{ data.title }}</h4>
+            <h5>{{ data.description }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="feature-grid">
+                {% for feature in data.features %}
+                    <div class="feature">
+                        <div class="feature-header">
+                            <i class="fa fa-{{ feature.icon }}"></i> {{ feature.title }}
+                        </div>
+                        <ul class="feature-list">
+                            {% for item_list in feature.list %}
+                                <li>{{ item_list }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro lol() %}
+    HAHA
+{% endmacro %}

@@ -1,0 +1,29 @@
+{% extends "bp/layout.twig" %}
+
+
+
+{% block content %}
+
+    <div class="grid">
+        {% for card in tree %}
+            <div class="card">
+                <div class="card-header">
+                    <a href="{{ card.link }}.html">
+                        <i class="fa fa-{{ card.icon }}"></i> {{ card.title }}
+                    </a>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        {% for child in card.children %}
+                        <li><a href="{{ child[2] }}">
+                                <span>{{ "%02d"|format(loop.index) }}</span>
+                                <span>{{ child[0] }}</span>
+                                <i class="fa-regular fa-circle-check"></i>
+                        </a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

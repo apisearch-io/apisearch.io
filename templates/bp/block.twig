@@ -1,0 +1,17 @@
+{% extends "bp/layout.twig" %}
+
+
+
+{% block content %}
+    <div id="page">
+        <div class="family">
+            <i class="fa fa-{{ icon }}"></i>
+            {{ block }}
+        </div>
+        <h1>{{ title }}</h1>
+        <h2>{{ subtitle }}</h2>
+        <div id="page-content">
+            {{ content }}
+        </div>
+    </div>
+{% endblock content %}

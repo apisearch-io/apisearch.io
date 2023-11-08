@@ -1,0 +1,325 @@
+{% extends "bp/page.twig" %}
+
+{% set section = "market" %}
+{% set page = 1 %}
+{% set content %}
+    <p>As an expert business consultant, I have identified five target audiences for Apisearch. These target audiences include:</p>
+
+    {% import "bp/macros.twig" as macros %}
+
+    {{ macros.feature({
+        tag: "B2B",
+        color: "blue",
+        title: "Small Business Owners",
+        description: "Small business owners are an important target audience for Apisearch. They often have limited resources and need a search engine solution that is affordable and easy to implement.",
+        features: [
+            {
+                icon: "user-circle",
+                title: "Profile",
+                list: [
+                "Owns a small online business",
+                "Has limited technical knowledge",
+                "Wants a search engine that is cost-effective"
+            ]
+            },
+            {
+                icon: "heart",
+                title: "Preferences",
+                list: [
+                "Affordable pricing plans",
+                "Simple and intuitive user interface",
+                "Integration with popular e-commerce platforms"
+            ]
+            },
+            {
+                icon: "regular fa-face-angry",
+                title: "Frustrations",
+                list: [
+                "Difficulty in finding a search engine solution within their budget",
+                "Lack of technical expertise to implement complex search functionality",
+                "Inability to provide their customers with an efficient search experience"
+            ]
+            },
+            {
+                icon: "asterisk",
+                title: "Behavioural Considerations",
+                list: [
+                "Limited budget",
+                "Limited technical knowledge",
+                "Focus on cost-effectiveness"
+            ]
+            },
+            {
+                icon: "bullseye-pointer",
+                title: "Goals",
+                list: [
+                "Improve the search functionality on their e-commerce website",
+                "Increase customer satisfaction and conversions",
+                "Find an affordable and easy-to-use search engine solution"
+            ]
+            },
+            {
+                icon: "regular fa-location-dot",
+                title: "Where To Find",
+                list: [
+                "Small business forums and communities",
+                "E-commerce events and conferences",
+                "Online marketing platforms"
+            ]
+            }
+        ]
+    }) }}
+
+    {{ macros.feature({
+        tag: "B2B",
+        color: "blue",
+        title: "Enterprise E-Commerce Companies",
+        description: "Large e-commerce companies with complex search requirements are another target audience for Apisearch. They have a high volume of products and need a powerful search engine that can handle large datasets and provide advanced filtering options.",
+        features: [
+            {
+                icon: "user-circle",
+                title: "Profile",
+                list: [
+                "Operates a large-scale e-commerce business",
+                "Has a wide range of products",
+                "Requires advanced search and filtering capabilities"
+            ]
+            },
+            {
+                icon: "heart",
+                title: "Preferences",
+                list: [
+                "Scalable search engine solution",
+                "Advanced filtering and customization options",
+                "Integration with AI for personalization"
+            ]
+            },
+            {
+                icon: "regular fa-face-angry",
+                title: "Frustrations",
+                list: [
+                "Difficulty in finding a search engine that can handle large datasets",
+                "Limited customization options",
+                "Inability to provide a personalized search experience"
+            ]
+            },
+            {
+                icon: "asterisk",
+                title: "Behavioural Considerations",
+                list: [
+                "Focus on performance and scalability",
+                "Need for advanced search features",
+                "Emphasis on customization"
+            ]
+            },
+            {
+                icon: "bullseye-pointer",
+                title: "Goals",
+                list: [
+                "Enhance the search functionality on their e-commerce websites",
+                "Improve customer experience and engagement",
+                "Increase conversions and revenue"
+            ]
+            },
+            {
+                icon: "regular fa-location-dot",
+                title: "Where To Find",
+                list: [
+                "E-commerce industry conferences and trade shows",
+                "Enterprise software marketplace",
+                "Industry-specific publications"
+            ]
+            }
+        ]
+    }) }}
+
+    {{ macros.feature({
+        tag: "B2B",
+        color: "blue",
+        title: "E-commerce Developers",
+        description: "E-commerce developers are a key target audience for Apisearch. They are responsible for integrating search functionality into e-commerce websites and need a search engine solution that is easy to implement and highly customizable.",
+        features: [
+            {
+                icon: "user-circle",
+                title: "Profile",
+                list: [
+                "Experienced in building e-commerce websites",
+                "Has technical knowledge in website development",
+                "Seeks a flexible and customizable search engine solution"
+            ]
+            },
+            {
+                icon: "heart",
+                title: "Preferences",
+                list: [
+                "Developer-friendly documentation and resources",
+                "Support for popular e-commerce frameworks",
+                "Customization options in search algorithms"
+            ]
+            },
+            {
+                icon: "regular fa-face-angry",
+                title: "Frustrations",
+                list: [
+                "Difficulty in finding a search engine that integrates seamlessly with their existing frameworks",
+                "Limited customization options in search engines",
+                "Complex implementation processes"
+            ]
+            },
+            {
+                icon: "asterisk",
+                title: "Behavioural Considerations",
+                list: [
+                "Prioritizes ease of integration",
+                "Expertise in website development",
+                "Focus on flexibility and customization"
+            ]
+            },
+            {
+                icon: "bullseye-pointer",
+                title: "Goals",
+                list: [
+                "Find a search engine solution that is easy to integrate with their existing framework",
+                "Customize and tailor the search functionality according to client requirements",
+                "Improve the overall user experience of e-commerce websites"
+            ]
+            },
+            {
+                icon: "regular fa-location-dot",
+                title: "Where To Find",
+                list: [
+                "Developer communities and forums",
+                "E-commerce development conferences",
+                "Tech blogs and publications"
+            ]
+            }
+        ]
+    }) }}
+
+    {{ macros.feature({
+        tag: "B2B",
+        color: "blue",
+        title: "Digital Marketing Agencies",
+        description: "Digital marketing agencies play a critical role in optimizing e-commerce websites for increased visibility and conversions. They need a search engine solution that can improve search rankings, provide analytics, and drive traffic to their clients' websites.",
+        features: [
+            {
+                icon: "user-circle",
+                title: "Profile",
+                list: [
+                "Offers digital marketing services",
+                "Works with e-commerce clients",
+                "Seeks tools to improve search rankings and website performance"
+            ]
+            },
+            {
+                icon: "heart",
+                title: "Preferences",
+                list: [
+                "SEO optimization features",
+                "Analytics and reporting capabilities",
+                "Integration with popular marketing tools"
+            ]
+            },
+            {
+                icon: "regular fa-face-angry",
+                title: "Frustrations",
+                list: [
+                "Difficulty in finding a search engine solution that aligns with their clients' marketing strategies",
+                "Limited insights on search performance and user behavior",
+                "Lack of tools to drive targeted traffic to e-commerce websites"
+            ]
+            },
+            {
+                icon: "asterisk",
+                title: "Behavioural Considerations",
+                list: [
+                "Expertise in digital marketing strategies",
+                "Focus on search engine optimization",
+                "Need for comprehensive analytics"
+            ]
+            },
+            {
+                icon: "bullseye-pointer",
+                title: "Goals",
+                list: [
+                "Improve search engine rankings for their clients",
+                "Increase website traffic and conversions",
+                "Provide comprehensive analytics and insights"
+            ]
+            },
+            {
+                icon: "regular fa-location-dot",
+                title: "Where To Find",
+                list: [
+                "Digital marketing conferences and events",
+                "Marketing agency directories",
+                "Online marketing communities"
+            ]
+            }
+        ]
+    }) }}
+
+    {{ macros.feature({
+        tag: "B2B",
+        color: "blue",
+        title: "User Experience Designers",
+        description: "User experience designers focus on creating intuitive and user-friendly interfaces. They need a search engine solution that can be seamlessly integrated into their designs and provide a smooth and efficient search experience for website visitors.",
+        features: [
+            {
+                icon: "user-circle",
+                title: "Profile",
+                list: [
+                "Specializes in user experience design",
+                "Works on e-commerce website projects",
+                "Seeks search functionality that enhances the overall user experience"
+            ]
+            },
+            {
+                icon: "regular fa-face-angry",
+                title: "Frustrations",
+                list: [
+                "Difficulty in finding a search engine solution that aligns with their design vision",
+                "Limited customization options in search engines",
+                "Inability to provide a visually appealing search experience"
+            ]
+            },
+            {
+                icon: "heart",
+                title: "Goals",
+                list: [
+                "Create intuitive and visually appealing search experiences",
+                "Improve website navigation and usability",
+                "Seamlessly integrate search functionality into their designs"
+            ]
+            },
+            {
+                icon: "asterisk",
+                title: "Behavioural Considerations",
+                list: [
+                "Expertise in user experience design",
+                "Focus on visual aesthetics and usability",
+                "Need for design flexibility"
+            ]
+            },
+            {
+                icon: "bullseye-pointer",
+                title: "Preferences",
+                list: [
+                "Design customization options",
+                "Support for dynamic and visually appealing search interfaces",
+                "Integration with design tools and frameworks"
+            ]
+            },
+            {
+                icon: "regular fa-location-dot",
+                title: "Where To Find",
+                list: [
+                "UX design conferences and meetups",
+                "Design communities and forums",
+                "UX design blogs and publications"
+            ]
+            }
+        ]
+    }) }}
+
+{% endset %}

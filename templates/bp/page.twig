@@ -1,0 +1,17 @@
+{% extends "bp/layout.twig" %}
+
+
+
+{% block content %}
+    <div id="page">
+        <div class="family {{ tree[section].color }}">
+            <i class="fa fa-{{ tree[section].icon }} fa-background"></i>
+            {{ tree[section].title }}
+        </div>
+        <h1>{{ tree[section].children[page][0] }}</h1>
+        <h2>{{ tree[section].children[page][1] }}</h2>
+        <div id="page-content">
+            {{ content }}
+        </div>
+    </div>
+{% endblock content %}
