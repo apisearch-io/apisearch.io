@@ -8,6 +8,70 @@
     {% import "bp/macros.twig" as macros %}
 
     {{ macros.feature({
+        tag: "Enhanced Search Experience",
+        color: "green",
+        title: "Custom Product Recommendations",
+        description: "Our Custom Product Recommendations feature provides tailored product suggestions based on a user's browsing history and preferences, as well as the ability to create recommendations for a specific set of products. This feature enhances user satisfaction, drives additional sales, and boosts customer loyalty for e-commerce platforms.",
+        features: [
+            {
+                icon: "file-lines",
+                title: "Key Points",
+                list: [
+                "Custom recommendations based on user experience",
+                "Create recommendations for a set of products",
+                "Increased sales and customer retention",
+                "Integration with leading e-commerce platforms"
+            ]
+            },
+            {
+                icon: "circle-dollar",
+                title: "Pricing Strategy",
+                list: [
+                "Monthly subscription based on the number of recommendations delivered",
+                "Additional fees for advanced customization options",
+                "Discounts for annual subscription plans"
+            ]
+            },
+            {
+                icon: "regular fa-swords",
+                title: "Challenges",
+                list: [
+                "Developing effective recommendation algorithms for product relevance",
+                "Managing a growing database of user preferences",
+                "Educating businesses on the potential of personalized product recommendations"
+            ]
+            },
+            {
+                icon: "regular fa-bullhorn",
+                title: "Marketing & Promotion",
+                list: [
+                "Live demonstrations of personalized product recommendations at industry-specific events",
+                "Content marketing through blog articles showcasing the benefits of personalized suggestions",
+                "Targeted social media advertising for online retailers"
+            ]
+            },
+            {
+                icon: "regular fa-user-circle",
+                title: "Target Audience",
+                list: [
+                "E-commerce platforms",
+                "Online retailers",
+                "Websites with diverse product offerings"
+            ]
+            },
+            {
+                icon: "regular fa-list-check",
+                title: "Execution Strategy",
+                list: [
+                "Refine recommendation algorithms to improve product relevance",
+                "Create marketing materials and assets to showcase the benefits of personalized recommendations",
+                "Collaborate with e-commerce platforms for seamless integration"
+            ]
+            }
+        ]
+    }) }}
+
+    {{ macros.feature({
         tag: "Data Analytics",
         color: "blue",
         title: "Advanced Analytics Dashboard",
@@ -135,7 +199,7 @@
 
     {{ macros.feature({
         tag: "Enhanced Search Experience",
-        color: "red",
+        color: "green",
         title: "Customizable Search Filters",
         description: "Our Customizable Search Filters allow businesses to create and modify search filters based on their specific product attributes and categories. This feature empowers businesses to offer a more tailored search experience to their customers, leading to improved conversions and customer satisfaction.",
         features: [
