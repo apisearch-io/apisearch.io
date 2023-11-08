@@ -78,6 +78,55 @@
                 <p>In this analysis, I have identified three competitors for Apisearch. Each of these competitors offers a real-time search engine for e-commerce businesses, but they have different features and strengths. Let's take a closer look at each one.</p>
 
     
+    <div id="chart-block">
+        <canvas id="chart"></canvas>
+        <div class="canvas-legend">
+            <div class="canvas-item">
+                <h4><div style="display: inline-block; background-color: #F38D0D; height: 16px; width: 16px; border-radius: 2px; margin-right: 10px;"></div>Algolia - 63%</h4>
+                <p>A platform for building search that provides solutions to help businesses develop unique search and discovery experiences for customers across different platforms and devices.</p>
+            </div>
+
+            <div class="canvas-item">
+                <h4><div style="display: inline-block; background-color: #FFC276; height: 16px; width: 16px; border-radius: 2px; margin-right: 10px;"></div>Doofinder - 21%</h4>
+                <p>Doofinder is a site search solution that helps eCommerce businesses generate more sales using a smart search engine technology. </p>
+            </div>
+
+            <div class="canvas-item">
+                <h4><div style="display: inline-block; background-color: #FFAD46; height: 16px; width: 16px; border-radius: 2px; margin-right: 10px;"></div>Others - 16%</h4>
+                <p>This segment includes other competitors like Empathy CO, Motive, Luigi's Box, Searchanize and other small options</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('chart');
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    label: 'Quota percentage',
+                    data: [60, 30, 10],
+                    backgroundColor: ['#F38D0D', '#FFC276', '#FFAD46'],
+                    borderWidth: 1,
+                    hoverOffset: 4,
+                    showTooltips: false
+                }]
+            },
+            scales: {
+                x: { display: false },
+                y: { display: false },
+            },
+            options: {
+                plugins: {
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            }
+        });
+    </script>
+
         <div class="card feature-card">
         <div class="card-header">
             <div class="tag tag-brown">Competitor</div>
@@ -94,6 +143,7 @@
                                                             <li>Sophisticated search algorithms</li>
                                                             <li>Personalized recommendations</li>
                                                             <li>AI-powered search features</li>
+                                                            <li>Multisite feature available</li>
                                                     </ul>
                     </div>
                                     <div class="feature">
@@ -104,6 +154,7 @@
                                                             <li>Focus on simplicity and ease of integration</li>
                                                             <li>Advanced search filters and predictive search suggestions</li>
                                                             <li>Integration with AI for conversational search</li>
+                                                            <li>Competitive prices can convince users not using the 100% of available features</li>
                                                     </ul>
                     </div>
                             </div>
@@ -127,6 +178,7 @@
                                                             <li>Efficient search functionality</li>
                                                             <li>Product discovery features</li>
                                                             <li>Seamless integration options</li>
+                                                            <li>Main player in Spain and other countries</li>
                                                     </ul>
                     </div>
                                     <div class="feature">
@@ -137,6 +189,7 @@
                                                             <li>Optimize search performance and relevancy</li>
                                                             <li>Enhance product discovery through personalized recommendations</li>
                                                             <li>Streamline integration with your e-commerce platform</li>
+                                                            <li>Good prices might encourage people to try another option</li>
                                                     </ul>
                     </div>
                             </div>
@@ -160,6 +213,7 @@
                                                             <li>Aggressive price strategies</li>
                                                             <li>Fast and easy integration with main frameworks</li>
                                                             <li>Supported by Empathy Co</li>
+                                                            <li>Only one template with poor UX</li>
                                                     </ul>
                     </div>
                                     <div class="feature">
@@ -179,7 +233,7 @@
 
         <div class="card feature-card">
         <div class="card-header">
-            <div class="tag tag-brown">Competitor</div>
+            <div class="tag tag-brown">Indirect Competitor</div>
             <h4>Elasticsearch</h4>
             <h5>Elasticsearch is an enterprise search solution that provides scalable and distributed real-time search capabilities. It is known for its powerful search engine, extensive scalability options, and flexible data indexing features. Elasticsearch has a large community and ecosystem, making it a popular choice for businesses with complex search requirements.</h5>
         </div>
@@ -193,6 +247,7 @@
                                                             <li>Scalable and distributed search engine</li>
                                                             <li>Flexible data indexing capabilities</li>
                                                             <li>Extensive community and ecosystem</li>
+                                                            <li>Open Source version available</li>
                                                     </ul>
                     </div>
                                     <div class="feature">

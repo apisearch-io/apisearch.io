@@ -7,6 +7,55 @@
 
     {% import "bp/macros.twig" as macros %}
 
+    <div id="chart-block">
+        <canvas id="chart"></canvas>
+        <div class="canvas-legend">
+            <div class="canvas-item">
+                <h4><div style="display: inline-block; background-color: #F38D0D; height: 16px; width: 16px; border-radius: 2px; margin-right: 10px;"></div>Algolia - 63%</h4>
+                <p>A platform for building search that provides solutions to help businesses develop unique search and discovery experiences for customers across different platforms and devices.</p>
+            </div>
+
+            <div class="canvas-item">
+                <h4><div style="display: inline-block; background-color: #FFC276; height: 16px; width: 16px; border-radius: 2px; margin-right: 10px;"></div>Doofinder - 21%</h4>
+                <p>Doofinder is a site search solution that helps eCommerce businesses generate more sales using a smart search engine technology. </p>
+            </div>
+
+            <div class="canvas-item">
+                <h4><div style="display: inline-block; background-color: #FFAD46; height: 16px; width: 16px; border-radius: 2px; margin-right: 10px;"></div>Others - 16%</h4>
+                <p>This segment includes other competitors like Empathy CO, Motive, Luigi's Box, Searchanize and other small options</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('chart');
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    label: 'Quota percentage',
+                    data: [60, 30, 10],
+                    backgroundColor: ['#F38D0D', '#FFC276', '#FFAD46'],
+                    borderWidth: 1,
+                    hoverOffset: 4,
+                    showTooltips: false
+                }]
+            },
+            scales: {
+                x: { display: false },
+                y: { display: false },
+            },
+            options: {
+                plugins: {
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            }
+        });
+    </script>
+
     {{ macros.feature({
         tag: "Competitor",
         color: "brown",
@@ -19,7 +68,8 @@
                 list: [
                 "Sophisticated search algorithms",
                 "Personalized recommendations",
-                "AI-powered search features"
+                "AI-powered search features",
+                "Multisite feature available"
             ]
             },
             {
@@ -28,7 +78,8 @@
                 list: [
                 "Focus on simplicity and ease of integration",
                 "Advanced search filters and predictive search suggestions",
-                "Integration with AI for conversational search"
+                "Integration with AI for conversational search",
+                "Competitive prices can convince users not using the 100% of available features"
             ]
             }
         ]
@@ -46,7 +97,8 @@
                 list: [
                 "Efficient search functionality",
                 "Product discovery features",
-                "Seamless integration options"
+                "Seamless integration options",
+                "Main player in Spain and other countries"
             ]
             },
             {
@@ -55,7 +107,8 @@
                 list: [
                 "Optimize search performance and relevancy",
                 "Enhance product discovery through personalized recommendations",
-                "Streamline integration with your e-commerce platform"
+                "Streamline integration with your e-commerce platform",
+                "Good prices might encourage people to try another option",
             ]
             }
         ]
@@ -73,7 +126,8 @@
                 list: [
                 "Aggressive price strategies",
                 "Fast and easy integration with main frameworks",
-                "Supported by Empathy Co"
+                "Supported by Empathy Co",
+                "Only one template with poor UX"
             ]
             },
             {
@@ -89,7 +143,7 @@
     }) }}
 
     {{ macros.feature({
-        tag: "Competitor",
+        tag: "Indirect Competitor",
         color: "brown",
         title: "Elasticsearch",
         description: "Elasticsearch is an enterprise search solution that provides scalable and distributed real-time search capabilities. It is known for its powerful search engine, extensive scalability options, and flexible data indexing features. Elasticsearch has a large community and ecosystem, making it a popular choice for businesses with complex search requirements.",
@@ -100,7 +154,8 @@
                 list: [
                 "Scalable and distributed search engine",
                 "Flexible data indexing capabilities",
-                "Extensive community and ecosystem"
+                "Extensive community and ecosystem",
+                "Open Source version available"
             ]
             },
             {
