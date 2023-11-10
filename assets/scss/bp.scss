@@ -325,6 +325,10 @@ strong {
     color: var(--light-black);
   }
 
+  a {
+    color: black;
+  }
+
   .feature-grid {
     display: flex;
     flex-wrap: wrap;
@@ -409,4 +413,11 @@ table.pnl {
       background-color: #af7070;
     }
   }
+}
+
+
+img.preview {
+  width: 100%;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
 }

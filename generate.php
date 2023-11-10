@@ -218,6 +218,7 @@ function generateBusinessPlan(Environment $twig)
         'index',
             'overview',
                 'mission-and-vision',
+                'success-cases',
                 'viability-analysis',
                 'business-models',
                 'swot-analysis',
@@ -241,6 +242,7 @@ function generateBusinessPlan(Environment $twig)
                 'regulatory-compliance',
             'financials',
                 'profits-and-losses',
+                'costs-breakdown',
     ] as $page) {
         $content = $twig->render("bp/$page.twig", [
             'pnl' => $dataPerYear,

@@ -3,9 +3,9 @@
         <div class="card-header">
             <div class="tag tag-{{ data.color }}">{{ data.tag }}</div>
             <h4>{{ data.title }}</h4>
-            <h5>{{ data.description }}</h5>
+            <h5>{{ data.description|raw }}</h5>
             {% if data.image %}
-                <img src="../../assets/images/{{ data.image }}" />
+                <img src="../../assets/images/{{ data.image }}" style="max-height: 70px;" />
             {% endif %}
         </div>
         <div class="card-body">

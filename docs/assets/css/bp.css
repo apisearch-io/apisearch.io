@@ -265,6 +265,8 @@ strong {
     font-weight: 300;
     font-size: 1rem;
     color: var(--light-black); }
+  .feature-card a {
+    color: black; }
   .feature-card .feature-grid {
     display: flex;
     flex-wrap: wrap;
@@ -328,5 +330,10 @@ table.pnl {
       background-color: #88e088; }
     table.pnl td.neg, table.pnl th.neg {
       background-color: #af7070; }
+
+img.preview {
+  width: 100%;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px; }
 
 /*# sourceMappingURL=bp.css.map */
