@@ -98,8 +98,12 @@ strong {
 #lateral {
   padding: 20px;
   width: 15%;
-  @media only screen and (max-width: 90em) { /* 540px */
-    width: 29.33%
+  @media only screen and (min-width: 1051px) and (max-width: 1600px) { /* 540px */
+    width: 25%
+  }
+
+  @media only screen and (max-width: 1050px) { /* 540px */
+    display: none;
   }
 
 
@@ -143,9 +147,16 @@ strong {
 #content {
 
   width: 85%;
-  @media only screen and (max-width: 90em) { /* 540px */
-    width: 60.66%
+  margin: 50px 0;
+  @media only screen and (min-width: 1051px) and (max-width: 1600px) { /* 540px */
+    width: 75%;
+    margin: 20px 0;
   }
+
+  @media only screen and (max-width: 1050px) { /* 540px */
+    width: calc(100% - 40px)
+  }
+
   padding: 20px;
 
   .grid {
@@ -396,8 +407,17 @@ strong {
 }
 table.pnl {
   margin: 30px 0;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
   width: 100%;
-  &, th, td {
+
+  tbody {
+    display: table;
+    width: 100%;
+  }
+
+  th, td {
     border: 1px solid black;
     border-collapse: collapse;
   }

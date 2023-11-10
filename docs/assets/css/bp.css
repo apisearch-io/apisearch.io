@@ -116,10 +116,14 @@ strong {
 #lateral {
   padding: 20px;
   width: 15%; }
-  @media only screen and (max-width: 90em) {
+  @media only screen and (min-width: 1051px) and (max-width: 1600px) {
     #lateral {
       /* 540px */
-      width: 29.33%; } }
+      width: 25%; } }
+  @media only screen and (max-width: 1050px) {
+    #lateral {
+      /* 540px */
+      display: none; } }
   #lateral ul li {
     margin-bottom: 15px;
     font-size: .9rem;
@@ -143,11 +147,17 @@ strong {
 
 #content {
   width: 85%;
+  margin: 50px 0;
   padding: 20px; }
-  @media only screen and (max-width: 90em) {
+  @media only screen and (min-width: 1051px) and (max-width: 1600px) {
     #content {
       /* 540px */
-      width: 60.66%; } }
+      width: 75%;
+      margin: 20px 0; } }
+  @media only screen and (max-width: 1050px) {
+    #content {
+      /* 540px */
+      width: calc(100% - 40px); } }
   #content .grid {
     display: grid;
     grid-auto-flow: dense;
@@ -320,8 +330,14 @@ strong {
 
 table.pnl {
   margin: 30px 0;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
   width: 100%; }
-  table.pnl, table.pnl th, table.pnl td {
+  table.pnl tbody {
+    display: table;
+    width: 100%; }
+  table.pnl th, table.pnl td {
     border: 1px solid black;
     border-collapse: collapse; }
   table.pnl td, table.pnl th {
