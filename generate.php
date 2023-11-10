@@ -158,6 +158,61 @@ function copyResources(array $config)
 
 function generateBusinessPlan(Environment $twig)
 {
+    $pl = file_get_contents(__DIR__ . '/templates/bp/pnl.tsv');
+    $plLines = explode("\n", $pl);
+    $plCSV = array_map(fn(string $line) => explode("\t", $line), $plLines);
+    $plCSV = array_map(fn(array $block) => array_slice($block, 1), $plCSV);
+
+    $profits = $plCSV[1];
+    $payrolls = $plCSV[5];
+    $others = $plCSV[11];
+    $infrastructure = $plCSV[12];
+    $legal = $plCSV[13];
+    $data = [$profits, $payrolls, $infrastructure, $legal, $others];
+
+    foreach ($data as &$list) {
+        foreach ($list as &$item) {
+            $item = str_replace('(', '-', $item);
+            $item = str_replace([')', '$', '€', ','], ['', '', ''], $item);
+            $item = floatval($item);
+        }
+    }
+
+    $balances = array_map(null, $data[0], $data[1], $data[2], $data[3], $data[4]);
+    $balances = array_map('array_sum', $balances);
+    $accum = [];
+    $accumNumber = 0;
+    foreach ($balances as $key => &$balance) {
+        $balance = round($balance, 2);
+        $accum[$key] = $accumNumber + $balance;
+        $accumNumber = $accum[$key];
+    }
+
+
+
+    $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    $dataPerYear = [
+        2022 => [
+            array_slice($data[0], 0, 12),
+            array_slice($data[1], 0, 12),
+            array_slice($data[2], 0, 12),
+            array_slice($data[3], 0, 12),
+            array_slice($data[4], 0, 12),
+            array_slice($balances, 0, 12),
+            array_slice($accum, 0, 12),
+        ],
+        2023 => [
+            array_slice($data[0], 12),
+            array_slice($data[1], 12),
+            array_slice($data[2], 12),
+            array_slice($data[3], 12),
+            array_slice($data[4], 12),
+            array_slice($balances, 12),
+            array_slice($accum, 12),
+        ],
+    ];
+
     mkdir(__DIR__ . '/docs/bp');
     foreach ([
         'index',
@@ -169,14 +224,28 @@ function generateBusinessPlan(Environment $twig)
             'product-and-services',
                 'core-offerings',
                 'secondary-offerings',
+                'conversational-search',
                 'customer-service',
-                'industry-overview',
             'market-research',
+                'industry-overview',
                 'target-audience',
                 'market-size-and-trends',
                 'competitor-analysis',
+            'sales-and-marketing',
+                'online-presence',
+                'marketing-ideas',
+                'customer-retention',
+            'operations',
+                'operations-plan',
+                'risk-analysis',
+                'regulatory-compliance',
+            'financials',
+                'profits-and-losses',
     ] as $page) {
-        $content = $twig->render("bp/$page.twig");
+        $content = $twig->render("bp/$page.twig", [
+            'pnl' => $dataPerYear,
+            'months' => $months
+        ]);
         file_put_contents(__DIR__ . "/docs/bp/$page.html", $content);
     }
 }

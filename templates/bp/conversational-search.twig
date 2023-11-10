@@ -1,0 +1,43 @@
+{% extends "bp/page.twig" %}
+
+{% set section = "product" %}
+{% set page = 2 %}
+{% set content %}
+    <p>Conversations will undoubtedly be Apisearch's most important and distinctive project in 2024. The goal of this project is to provide logical support to the traditional keyword search, offering both default semantic search for those clients who wish it, and supporting traditional search clients where the search engine itself detects a lack of results.</p>
+
+    <h3>Problem</h3>
+    <p>The problem is simple. Keyword search is as limited as the user wants to invest in generating synonyms, more detailed descriptions, or internal configurations in the search engine. Users can perform detailed searches in the Apisearch administrator to detect words that return 0 results, but usually, the long tail of unique words that offer no results is disregarded.</p>
+    <p>Another issue is that a keyword search engine only responds to one language. In the case that a person who speaks another language does not know how to find what they are looking for due to language barriers, the system will be unable to react.</p>
+    <p>There is a solution to the problem that can improve this scenario, and that is to add semantic search instead of keyword search, a system that detects when one word is similar to another, making it easier to return possible relevant results in scenarios where traditionally none were shown. The problem with this solution is that it requires a very powerful infrastructure to provide real-time service, and this is something that is not currently considered.</p>
+
+    <h3>Proposal</h3>
+    <p>Apisearch proposes a comprehensive integration system with generative model tools, such as GPT, in which, through a conversation with the client, the system can propose relevant results according to their needs. For this, the system must have the ability to ask the user for relevant information until it has interesting proposals. At this point, it can return these products in a style similar to the current search engine.</p>
+    <p>It is proposed that the client has the ability to define one or several search engines at the same time to measure which of them is more effective, making decisions by measuring metrics such as CTR or CR, and defining each of them with various parameters like the model to use (in case it integrates with several), the way to communicate with the user, or the ability to offer a coupon when deemed appropriate.</p>
+
+    <h3>Features</h3>
+    <p>The conversational search engine proposed by Apisearch will have the following features for the client. All of these will be deployed progressively to ensure that the quality acquired in previous stages is not decreased.</p>
+    <ul>
+        <li>Conversational keyword search. It works the same way as the traditional search engine, accessing products in the same way but delegating to the AI engine to determine what search to perform based on the user's request. This feature can be useful to improve searches in moments when the user is unable to make exact searches, as well as for users who want to search more dynamically using the device's microphone.</li>
+        <li>Integration with the Internet. The system will use the internet when needed to acquire context. Precise implementation is important at this point to avoid generating invented information.</li>
+        <li>Semantic search. Using vector methodologies, a concept map can be generated to search for similar words. This offers very precise solutions in searches where the specified word is not present in the product. This feature requires integration with the AI engine both when indexing and when searching, increasing costs.</li>
+        <li>Conceptual search. Even with all the above points integrated, there will be situations where the user will not be able to find relevant results. And it is by searching for causistics, concepts, or situations. "I have a headache" should be able to offer relevant results for that situation, even if not all keywords are present. This is not solved using semantic search because a circumstance is being proposed to find a remedy, but at no time are related words that may be close in a conceptual map suggested. For this, more exhaustive techniques of model usage will be used to guide, step by step, the generative model, further increasing the cost per conversation.</li>
+        <li>Fine-tuning. Once the client has been able to review conversations and correct erroneous model behaviors, we will have the ability to globally or individually fine-tune the model and train it according to the way it should respond to the end user. This significantly increases the final cost per conversation and opens up a unique customization system in the market, but it would be a way to retain the user, adding a layer of history that helps reduce the chunk rate.</li>
+    </ul>
+
+    <h3>Costs</h3>
+    <p>The costs of this project, aside from implementation costs, are entirely based on the use of artificial intelligence. For now, all development has occurred using the OpenAI paid API, estimating that with the GPT3-turbo model, each conversation could cost 0.01 euros - OpenAI Pricing. We believe this price may pose problems when offering this project to our clients, as adding our margin to the conversation price may exceed what an average user would be willing to pay per conversation.</p>
+    <p>The problem with the pay-per-use model for these technologies is that improving the quality of responses by providing better context to the model directly and substantially increases the cost of the conversation. This, in the long run, means that we have to pass on the increased cost to the client.</p>
+    <p>In Apisearch, we want to invest in having our own model deployed on our infrastructure, using open-source models like Llama2 in its most extensive version. Using this methodology would force us to spend an entire infrastructure to serve the first client, but in the long run, it would benefit us completely. This structure would allow us to grow in quality and infrastructure usage without having to increase the monthly recurring price, having the ability to, from certain clients onwards, have much more margin per conversation.</p>
+    <p>We estimate that each cluster could cost between 1000 and 3000 euros per month, depending on the power of both the model and the dedicated infrastructure.</p>
+
+    <h3>Deployment Plan</h3>
+    <p>Deploying the phases mentioned above would give us time and space to react to errors, fine-tune the model, and improve certain scenarios where the search engine does not behave as expected.</p>
+    <p>It would also greatly help gradually educate both the client and the end user on this new feature that currently is not present in any search engine on the market.</p>
+    <p>Being the first in this would be key to attracting new clients who want to try it and experiment.</p>
+
+    <h3>Current Status</h3>
+    <p>Currently, work has already been done to have a functional prototype of points 1 and 3. We believe that with a good integration of point 4, point 2 will only be necessary and useful for parsing information from blogs and customized feeds.</p>
+    <p>Right now, in Apisearch, we have conducted searches, receiving very positive feedback, and acknowledging that we need more time and resources to finish the work and go into production with some trial clients.</p>
+    <p>One of the problems we are encountering is that all development is being done with the premise of not excessively increasing the price per conversation, significantly limiting the quality of the responses. Improving in this aspect would greatly help us focus on quality rather than relative price.</p>
+    <p>We believe that by the end of the year, we will already have a functional prototype in production with the first clients.</p>
+{% endset %}

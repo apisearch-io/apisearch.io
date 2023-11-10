@@ -3,7 +3,7 @@
 
 
 {% block content %}
-    <div id="page">
+    <div id="{{ fullsize ? "fullsize" : "page" }}">
         <div class="family {{ tree[section].color }}">
             <i class="fa fa-{{ tree[section].icon }} fa-background"></i>
             {{ tree[section].title }}

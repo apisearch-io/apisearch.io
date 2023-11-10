@@ -3,8 +3,7 @@
 
 
 {% block content %}
-
-    <div class="grid">
+    <div id="index" class="grid">
         {% for card in tree %}
             <div class="card">
                 <div class="card-header">
@@ -15,7 +14,7 @@
                 <div class="card-body">
                     <ul>
                         {% for child in card.children %}
-                        <li><a href="{{ child[2] }}">
+                        <li><a href="{{ child[2] }}.html">
                                 <span>{{ "%02d"|format(loop.index) }}</span>
                                 <span>{{ child[0] }}</span>
                                 <i class="fa-regular fa-circle-check"></i>
