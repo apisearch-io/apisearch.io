@@ -19,6 +19,7 @@ $pages = $config['pages'];
 
 exec("rm -Rf " . __DIR__ . "/$target");
 mkdir(__DIR__ . "/$target");
+echo 'Generating website...' . PHP_EOL . PHP_EOL;
 
 foreach ($languages as $language) {
     $languageTranslations = Yaml::parse(file_get_contents(__DIR__ . "/languages/$language.yml"));
@@ -64,7 +65,7 @@ foreach ($languages as $language) {
     generateCNAME();
     generateBusinessPlan($twig);
 
-    echo "Generated $numberOfPages pages for language $language" . PHP_EOL;
+    echo "Generated $numberOfPages pages for language $language" . PHP_EOL . PHP_EOL;
 }
 
 copyResources($config);

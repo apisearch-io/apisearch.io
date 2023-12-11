@@ -2,6 +2,8 @@
   "require": {
     "symfony/yaml": "*",
     "symfony/finder": "*",
-    "twig/twig": "*"
+    "twig/twig": "*",
+    "twig/intl-extra": "*",
+    "league/commonmark": "*"
   }
 }

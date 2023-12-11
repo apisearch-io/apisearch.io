@@ -1,0 +1,15 @@
+{% extends "layout.twig" %}
+
+
+{% block content %}
+    <div class="home">
+        <h2 class="post-list-heading">Posts</h2>
+        <ul class="post-list">
+            {% for post in posts %}
+                {% include "list_post.twig" %}
+            {% endfor %}
+        </ul>
+        <p class="rss-subscribe">subscribe <a href="/blog/feed.xml">via RSS</a></p>
+    </div>
+
+{% endblock content %}

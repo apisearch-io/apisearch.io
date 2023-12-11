@@ -1,0 +1,23 @@
+{% extends "layout.twig" %}
+
+
+{% block content %}
+    <a class="back-to-all-posts" href="index.html">
+        Todos los artículos
+    </a>
+    <div id="post">
+        <h1>{{ post.title }}</h1>
+        <p class="author">
+            <img src="../assets/authors/{{ post.author.0 }}.jpeg">
+            <span>
+                Escrito por <strong>{{ post.author.1 }}</strong><br>
+                {{ post.date|format_datetime(pattern='d MMMM, Y', locale='es') }}
+            </span>
+        </p>
+
+        <div class="content">
+            {{ post.content|raw }}
+        </div>
+    </div>
+
+{% endblock content %}
