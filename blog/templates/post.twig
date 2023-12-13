@@ -1,6 +1,7 @@
 {% set title = post.title ?? '' %}
 {% set description = post.description ?? '' %}
 {% set keywords = post.keywords ?? '' %}
+{% set url = post.url %}
 
 {% extends "layout.twig" %}
 
@@ -24,5 +25,4 @@
             {{ post.content|raw }}
         </div>
     </div>
-
 {% endblock content %}
