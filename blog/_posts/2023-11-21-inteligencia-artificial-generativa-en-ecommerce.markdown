@@ -1,5 +1,6 @@
 ---
 title:  "¿Cómo impactará la inteligencia artificial generativa en el mundo de los ecommerce?"
+description: ""
 date:   2023-10-05 16:04:52 +0100
 author: [mmoreram, Marc Morera]
 published: false

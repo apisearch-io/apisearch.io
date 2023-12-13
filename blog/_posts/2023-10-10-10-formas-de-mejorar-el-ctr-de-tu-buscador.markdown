@@ -1,5 +1,6 @@
 ---
 title:  "10 formas de mejorar el CTR de tu buscador"
+description: ""
 date:   2023-10-10 16:04:52 +0100
 author: [mmoreram, Marc Morera]
 ---

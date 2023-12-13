@@ -1,6 +1,7 @@
 ---
 title:  "7 formas de utilizar la inteligencia artificial en tu tienda online"
 keywords: "inteligencia artificial, chatgpt, modelos generativos, búsqueda por imágen, busqueda semántica"
+description: ""
 date:   2023-12-12 15:36:00 +0100
 author: [mmoreram, Marc Morera]
 reading_time: 5

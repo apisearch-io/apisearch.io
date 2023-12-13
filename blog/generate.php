@@ -41,7 +41,7 @@ foreach ($files as $file) {
     $fileName = explode('.', $file->getFilename(), 2)[0];
     $slug = substr($fileName, 11);
     $url = 'https://apisearch.io/blog/' . $slug;
-    $urls[] = $url;
+    $urls[$url] = $yaml['date'];
     $yaml['url'] = $slug .'.html';
     $body = $converter->convert($parts[2]);
     $post = array_merge(
@@ -72,19 +72,19 @@ file_put_contents(__DIR__ . '/../docs/blog/index.html', $twig->render('home.twig
 
 generateSitemap($urls);
 copyResources();
+generateRSS($posts);
 
 
 function generateSitemap(array $urls)
 {
-    $lastMod = (new \DateTime())->format('Y-m-d');
     $content = '<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
-    foreach ($urls as $url) {
+    foreach ($urls as $url => $updatedAt) {
         $content .= "
 <url>
     <loc>$url</loc>
-    <lastmod>$lastMod</lastmod>
+    <lastmod>$updatedAt</lastmod>
 </url>";
     }
     $content .= '
@@ -98,4 +98,28 @@ function copyResources()
     $sourcePath = __DIR__ . '/assets';
     $targetPath = __DIR__ . '/../docs/assets/blog';
     exec("cp -R $sourcePath $targetPath");
+}
+
+function generateRSS(array $posts)
+{
+    $content = '<rss version="2.0">
+    <channel>
+        <title>Blog dedicado al mundo del ecommerce y los buscadores para tiendas online.</title>
+        <link>https://apisearch.io/blog</link>
+        <description>Blog dedicado al mundo del ecommerce y los buscadores para tiendas online, así como a novedades en inteligencia artificial</description>
+        <language>es</language>';
+
+    foreach ($posts as $post) {
+        $pubDate = (new \DateTime($post['date']))->format('D, d M Y H:i:s O');
+        $content .= "<item>
+                <title>{$post['title']}</title>
+                <link>https://apisearch.io/blog/{$post['url']}</link>
+                <description>{$post['description']}</description>
+                <pubDate>$pubDate</pubDate>
+            </item>";
+    }
+
+    $content .= '</channel></rss>';
+
+    file_put_contents(__DIR__ . "/../docs/blog/feed.xml", $content);
 }

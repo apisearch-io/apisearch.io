@@ -1,6 +1,7 @@
 ---
 title:  "10 cosas a tener en cuenta en un buscador"
 keywords: "claves buscador, buscador personalizable, buscador inteligente, reglas de negocio"
+description: ""
 date:   2023-10-10 16:04:52 +0100
 author: [mmoreram, Marc Morera]
 reading_time: 3

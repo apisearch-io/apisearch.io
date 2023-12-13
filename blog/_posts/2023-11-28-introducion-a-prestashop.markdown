@@ -1,6 +1,7 @@
 ---
 title:  "Introducción a Prestashop. Ventajas y desventajas de este CMS."
 date:   2023-10-10 16:04:52 +0100
+description: ""
 author: [mmoreram, Marc Morera]
 ---
 El mundo del comercio electrónico se ha convertido en un pilar fundamental para muchas empresas y emprendedores. En este contexto, plataformas como PrestaShop han ganado relevancia al ofrecer soluciones sólidas para la creación y gestión de tiendas en línea. En este artículo, exploraremos qué es PrestaShop, cómo se instala y cuáles son sus competidores principales, además de analizar detalladamente sus ventajas y desventajas.
