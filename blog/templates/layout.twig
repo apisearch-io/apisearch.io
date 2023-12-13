@@ -3,7 +3,8 @@
 {% set keywords = keywords ?? '' %}
 
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
@@ -21,7 +22,16 @@
     <script type="application/ld+json">
         {"headline":"Apisearch Blog | {{ title }}","@type":"WebSite","description":"{{ description }}","url":"https://apisearch.io/blog/{{ url }}","name":"Apisearch Blog | {{ title }}","@context":"https://schema.org"}</script>
     <!-- End Jekyll SEO tag -->
-    <link rel="stylesheet" href="../assets/css/blog.css"><link type="application/atom+xml" rel="alternate" href="https://apisearch.io/blog/feed.xml" title="Apisearch Blog" /></head>
+    <link rel="stylesheet" href="../assets/css/blog.css"><link type="application/atom+xml" rel="alternate" href="https://apisearch.io/blog/feed.xml" title="Apisearch Blog" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9TMLLP7STF"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-9TMLLP7STF');
+    </script>
+</head>
 <body>
 {% include "header.twig" %}
 <main class="page-content" aria-label="Content">
