@@ -22,7 +22,10 @@ echo 'Generating blog...' . PHP_EOL . PHP_EOL;
 mkdir(__DIR__ . '/../docs/blog');
 $files = Finder::create()
     ->in(__DIR__ . '/_posts')
-    ->files();
+    ->files()
+    ->sort(function(\SplFileInfo $file1, \SplFileInfo $file2) {
+        return $file1->getFilename() < $file2->getFilename();
+    });
 
 $posts = [];
 $urls = [];
@@ -48,20 +51,27 @@ foreach ($files as $file) {
         ]
     );
 
-    file_put_contents(__DIR__ . "/../docs/blog/$slug.html", $twig->render('post.twig', [
+    $html = $twig->render('post.twig', [
         'post' => $post
-    ]));
+    ]);
+
+    $html = str_replace('src="assets/', 'src="../assets/blog/', $html);
+    file_put_contents(__DIR__ . "/../docs/blog/$slug.html", $html);
 
     $posts[] = $post;
     echo '> ' . $yaml['title'] . PHP_EOL;
 }
 
 file_put_contents(__DIR__ . '/../docs/blog/index.html', $twig->render('home.twig', [
-    'posts' => $posts
+    'posts' => $posts,
+    'title' => 'Blog dedicado al mundo del ecommerce y los buscadores para tiendas online.',
+    'description' => 'Blog dedicado al mundo del ecommerce y los buscadores para tiendas online, así como a novedades en inteligencia artificial',
+    'keywords' => 'Apisearch, ecommerce, tiendas online, inteligencia artificial'
 ]));
 
 
 generateSitemap($urls);
+copyResources();
 
 
 function generateSitemap(array $urls)
@@ -81,4 +91,11 @@ function generateSitemap(array $urls)
 </urlset>';
 
     file_put_contents(__DIR__ . "/../docs/sitemap_blog.xml", $content);
+}
+
+function copyResources()
+{
+    $sourcePath = __DIR__ . '/assets';
+    $targetPath = __DIR__ . '/../docs/assets/blog';
+    exec("cp -R $sourcePath $targetPath");
 }

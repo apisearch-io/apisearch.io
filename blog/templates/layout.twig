@@ -1,21 +1,25 @@
+{% set title = title ?? '' %}
+{% set description = description ?? '' %}
+{% set keywords = keywords ?? '' %}
 
 <!DOCTYPE html>
 <html lang="en"><head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
-    <title>Apisearch Blog | Blog dedicado al mundo del ecommerce y los buscadores para tiendas online.</title>
+    <title>Apisearch Blog | {{ title }}</title>
     <meta property="og:title" content="Apisearch Blog" />
     <meta property="og:locale" content="es_ES" />
-    <meta name="description" content="Blog dedicado al mundo del ecommerce y los buscadores para tiendas online." />
-    <meta property="og:description" content="Blog dedicado al mundo del ecommerce y los buscadores para tiendas online." />
-    <link rel="canonical" href="https://apisearch.io/blog/" />
-    <meta property="og:url" content="https://apisearch.io/blog/" />
+    <meta name="description" content="{{ description }}" />
+    <meta name="keywords" content="Apisearch, tiendas online, buscador, ecommerce, {{ keywords }}" />
+    <meta property="og:description" content="{{ description }}" />
+    <link rel="canonical" href="https://apisearch.io/blog/{{ url }}" />
+    <meta property="og:url" content="https://apisearch.io/blog/{{ url }}" />
     <meta property="og:site_name" content="Apisearch Blog" />
     <meta name="twitter:card" content="summary" />
-    <meta property="twitter:title" content="Apisearch Blog" />
+    <meta property="twitter:title" content="Apisearch Blog | {{ title }}" />
     <script type="application/ld+json">
-        {"headline":"Apisearch Blog","@type":"WebSite","description":"Blog dedicado al mundo del ecommerce y los buscadores para tiendas online.","url":"https://apisearch.io/blog/","name":"Apisearch Blog","@context":"https://schema.org"}</script>
+        {"headline":"Apisearch Blog | {{ title }}","@type":"WebSite","description":"{{ description }}","url":"https://apisearch.io/blog/{{ url }}","name":"Apisearch Blog | {{ title }}","@context":"https://schema.org"}</script>
     <!-- End Jekyll SEO tag -->
     <link rel="stylesheet" href="../assets/css/blog.css"><link type="application/atom+xml" rel="alternate" href="https://apisearch.io/blog/feed.xml" title="Apisearch Blog" /></head>
 <body>

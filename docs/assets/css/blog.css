@@ -456,6 +456,13 @@ table td {
       font-weight: 600;
       line-height: 15px; }
 
+#post h2 {
+  margin-top: 50px; }
+
+#post .content img {
+  display: block;
+  margin: 0 auto; }
+
 .author {
   display: flex;
   flex-direction: row;

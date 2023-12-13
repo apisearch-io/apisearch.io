@@ -1,9 +1,13 @@
+{% set title = post.title ?? '' %}
+{% set description = post.description ?? '' %}
+{% set keywords = post.keywords ?? '' %}
+
 {% extends "layout.twig" %}
 
 
 {% block content %}
     <a class="back-to-all-posts" href="index.html">
-        Todos los artículos
+        Ver todos los artículos
     </a>
     <div id="post">
         <h1>{{ post.title }}</h1>
@@ -11,11 +15,12 @@
             <img src="../assets/authors/{{ post.author.0 }}.jpeg">
             <span>
                 Escrito por <strong>{{ post.author.1 }}</strong><br>
-                {{ post.date|format_datetime(pattern='d MMMM, Y', locale='es') }}
+                {{ post.date|format_datetime(pattern='d MMMM, Y', locale='es') }}<br>
             </span>
         </p>
 
         <div class="content">
+            <small>Tiempo estimado de lectura: {{ post.rading_time ?? 5 }} minutos</small><br><br><br>
             {{ post.content|raw }}
         </div>
     </div>

@@ -1,7 +1,9 @@
 ---
 title:  "10 cosas a tener en cuenta en un buscador"
+keywords: "claves buscador, buscador personalizable, buscador inteligente, reglas de negocio"
 date:   2023-10-10 16:04:52 +0100
 author: [mmoreram, Marc Morera]
+reading_time: 3
 ---
 Tener un buen buscador es importantísimo a la hora de publicar tu tienda en línea. Las personas que deseen comprar
 querrán encontrar aquello que están buscando de forma fácil y, sobre todo, rápida. En el mercado encontrarás algunas
