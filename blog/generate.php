@@ -81,6 +81,7 @@ function generateSitemap(array $urls)
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
     foreach ($urls as $url => $updatedAt) {
+        $updatedAt = (new \DateTime($updatedAt))->format('Y-m-d');
         $content .= "
 <url>
     <loc>$url</loc>
