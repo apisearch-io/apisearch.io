@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-    <loc>file:///var/www/apisearch/apisearch.io/docs</loc>
+    <loc>https://apisearch.io</loc>
     <lastmod>2023-12-28</lastmod>
 </url>
 <url>
-    <loc>file:///var/www/apisearch/apisearch.io/docs/terminos-y-condiciones</loc>
+    <loc>https://apisearch.io/terminos-y-condiciones</loc>
     <lastmod>2023-12-28</lastmod>
 </url>
 <url>
-    <loc>file:///var/www/apisearch/apisearch.io/docs/politica-de-privacidad</loc>
+    <loc>https://apisearch.io/politica-de-privacidad</loc>
     <lastmod>2023-12-28</lastmod>
 </url>
 <url>
-    <loc>file:///var/www/apisearch/apisearch.io/docs/prestashop</loc>
+    <loc>https://apisearch.io/prestashop</loc>
     <lastmod>2023-12-28</lastmod>
 </url>
 <url>
-    <loc>file:///var/www/apisearch/apisearch.io/docs/shopify</loc>
+    <loc>https://apisearch.io/shopify</loc>
     <lastmod>2023-12-28</lastmod>
 </url>
 <url>
-    <loc>file:///var/www/apisearch/apisearch.io/docs/woocommerce</loc>
+    <loc>https://apisearch.io/woocommerce</loc>
     <lastmod>2023-12-28</lastmod>
 </url>
 <url>
-    <loc>file:///var/www/apisearch/apisearch.io/docs/google-shopping</loc>
+    <loc>https://apisearch.io/google-shopping</loc>
     <lastmod>2023-12-28</lastmod>
 </url>
 <url>
-    <loc>file:///var/www/apisearch/apisearch.io/docs/mabisy</loc>
+    <loc>https://apisearch.io/mabisy</loc>
     <lastmod>2023-12-28</lastmod>
 </url>
 <url>
-    <loc>file:///var/www/apisearch/apisearch.io/docs/caso-exito-carethy</loc>
+    <loc>https://apisearch.io/caso-exito-carethy</loc>
     <lastmod>2023-12-28</lastmod>
 </url>
 </urlset>
