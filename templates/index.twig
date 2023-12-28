@@ -2,16 +2,13 @@
 
 {% block content %}
 
-<section class="bg-cover 2xl:bg-contain bg-top bg-no-repeat bg-as-primary-color">
+<section id="top-banner" class="bg-cover 2xl:bg-contain bg-top bg-no-repeat bg-as-primary-color mb-30">
     <div class="container px-4 mx-auto">
 
         <div id="top-header" class="pt-12 text-center">
             <div id="demo" class="max-w-lg md:max-w-2xl xl:max-w-4xl mx-auto mb-8 as-secondary-color text-center" style="display: flex; flex-direction: column; align-items: center">
                 <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-300">Búsqueda en tiempo real para impulsar tus ventas</h1>
                 <h2 class="text-xl sm:text-2xl md:text:3xl leading-relaxed as-secondary-color font-thin" style="max-width: 500px;">Vende hasta un 30% más y descubre nuevas oportunidades de venta</h2>
-                <!-- TrustBox widget - Micro Review Count -->
-                <img class="my-3" style="max-width: 200px;" src="{{ assets_path }}/images/trustpilot.webp?hash={{ hash }}" alt="Puntuación de Apisearch en Trustpilot" />
-                <!-- End TrustBox widget -->
             </div>
             <div>
                 <a class="to-cloud block sm:inline-block py-4 px-8 mb-4 sm:mb-0 sm:mr-3 text-lg text-white text-center font-semibold leading-none as-button-secondary-color rounded" href="{{ config.demo_form_url }}" target="_blank">
@@ -22,25 +19,25 @@
     </div>
 
 
-    <div class="relative mt-32 mx-auto">
+    <div class="relative mt-8 mx-auto">
 
-        <div id="stack-slider-wrapper" class="py-3 lg:max-w-5xl lg:mx-auto">
-            <div class="relative stack-slider" style="z-index: 2">
-                <img class="stack-slide with-shadow" src="{{ assets_path }}/images/previews/carethy.webp?hash={{ hash }}" alt="Representación del buscador Apisearch en desktop en Carethy" />
-                <img class="stack-slide with-shadow" src="{{ assets_path }}/images/previews/siroko.webp?hash={{ hash }}" alt="Representación del buscador Apisearch en desktop en Siroko" />
-                <img class="stack-slide with-shadow" src="{{ assets_path }}/images/previews/bassols.webp?hash={{ hash }}" alt="Representación del buscador Apisearch en desktop en Bassols" />
-                <img class="stack-slide with-shadow" src="{{ assets_path }}/images/previews/corbetos.webp?hash={{ hash }}" alt="Representación del buscador Apisearch en desktop en Corbetos" />
+        <div id="stack-slider-wrapper-disabled" class="py-3 lg:max-w-7xl lg:mx-auto">
+            <div class="relative stack-slider-disabled" style="z-index: 2; margin-bottom: -80px">
+                <img class="stack-slide-disabled with-shadow" src="{{ assets_path }}/images/previews/carethy-new.webp?hash={{ hash }}" alt="Representación del buscador Apisearch en desktop en Carethy"
+                    style="margin: 0 20px; max-width: calc(100% - 40px);"
+                />
             </div>
         </div>
     </div>
-</section>
 
+</section>
 
 {% include "blocks/features.twig" %}
 {% include "blocks/index/start-now.twig" %}
 {% include "blocks/index/testimonials.twig" %}
-{% include "blocks/index/prices.twig" %}
-{% include "blocks/index/integrations.twig" %}
+{% include "blocks/prices.twig" %}
+{% include "blocks/contact.html.twig" %}
+{% include "blocks/integrations.twig" %}
 {% include "blocks/index/faqs.twig" %}
 
 {% endblock content %}

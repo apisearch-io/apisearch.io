@@ -1,14 +1,15 @@
 <section id="main-nav-section" class="bg-cover 2xl:bg-contain bg-top bg-no-repeat">
-    <nav id="main-nav" class="container px-4 mx-auto flex justify-between items-center py-6"><a class="text-3xl font-semibold leading-none" href="{{ root_path }}">
+    <nav id="main-nav" class="container px-4 mx-auto flex justify-between items-center py-6" style="column-gap: 15px;"><a class="text-3xl font-semibold leading-none" href="{{ root_path }}">
             <img class="logo-white" src="{{ assets_path }}/images/logo-apisearch-new.webp?hash={{ hash }}" alt="Logo de Apisearch" width="200">
         </a>
         <div class="lg:hidden flex">
             <a class="to-cloud inline-block px-4 py-3 text-xs font-semibold leading-none text-white rounded as-secondary-color as-button-secondary-color" href="{{ config.demo_form_url }}" target="_blank">{{ t.menu.ask_a_demo }}</a>
         </div>
         <ul class="hidden lg:flex lg:items-center lg:w-auto lg:space-x-12">
-            <li><a class="text-sm text-white" href="{{ root_path }}#features">Funcionalidades</a></li>
-            <li><a class="text-sm text-white" href="{{ root_path }}#prices">Precios</a></li>
+            <li><a class="text-sm text-white" href="#features">Funcionalidades</a></li>
+            <li><a class="text-sm text-white" href="#prices">Precios</a></li>
             <li class="cursor-pointer"><span class="text-sm text-white" onclick="openSubMenu(event, 'main-nav-integrations');">Integraciones</span></li>
+            <li><a class="text-sm text-white" href="#contact">Contacta</a></li>
             <li><a class="text-sm text-white" href="https://apisearch.io/blog" target="_blank">Blog</a></li>
         </ul>
         <div class="hidden lg:block">

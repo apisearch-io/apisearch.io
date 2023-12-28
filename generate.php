@@ -10,8 +10,7 @@ $config = Yaml::parse(file_get_contents(__DIR__ . '/config.yml'));
 $config['assets'] = trim($config['assets'] ?? 'assets', '/');
 $config['target'] = trim($config['target'] ?? 'public', '/');
 $config['languages'] = $config['languages'] ?? 'en';
-$config['files'] = $config['files'] ?? [];
-
+$config['telf'] = "644 30 14 02";
 
 $target = trim($config['target'], '/');
 $languages = $config['languages'];
@@ -104,8 +103,8 @@ function generatePageInLanguage(
     $target = $config['target'];
     $assets = $config['assets'];
     $isRootLanguage = $language === $config['root_language'];
-    // $rootPath = 'file:///var/www/apisearch/apisearch.io/docs';
-    $rootPath = 'https://apisearch.io';
+    $rootPath = 'file:///var/www/apisearch/apisearch.io/docs';
+    // $rootPath = 'https://apisearch.io';
     $languagePath = $isRootLanguage
         ? ''
         : "/$language";

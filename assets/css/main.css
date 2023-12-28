@@ -12,10 +12,10 @@
   color: white; }
 
 .as-black {
-  color: #1a1a1a; }
+  color: #101010; }
 
 .as-background-black {
-  background-color: #1a1a1a; }
+  background-color: #101010; }
 
 .as-light {
   color: #C2C1C2; }
@@ -210,5 +210,21 @@
   border-left: 12px solid transparent;
   transform: rotate(-70deg);
   content: ''; }
+
+.as-background-black {
+  background-image: url(file:///var/www/apisearch/apisearch.io/assets/images/backgrounds/tech-pattern-1.png);
+  background-size: auto;
+  background-repeat: repeat-x;
+  background-position: bottom; }
+
+#top-banner {
+  background-image: url(file:///var/www/apisearch/apisearch.io/assets/images/backgrounds/pattern-2.png);
+  background-repeat: repeat;
+  background-size: auto; }
+
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both; }
 
 /*# sourceMappingURL=main.css.map */

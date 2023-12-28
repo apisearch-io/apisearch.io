@@ -1,0 +1,23 @@
+<section class="pt-24 pb-32 overflow-hidden {{ black ? 'as-background-black' : '' }}" id="contact">
+    <div class="container mx-auto px-4">
+        <div class="mb-20 md:mb-40">
+            <h3 class="mb-6 mx-auto font-heading font-thin text-center text-5xl sm:text-6xl md:text-7xl {{ black ? 'text-white' : 'text-gray-900'}}">Contacta con nosotros</h3>
+            <p class="{{ black ? 'text-white' : 'text-black'}} mb-2 text-lg">Uno de nuestros grandes pilares como empresa es el trabajo que hacemos para que puedas tener tu buscador funcionando con todas las garantías. Para esto, estamos contigo en todo el proceso de configruación, puesta a producción y seguimiento del servicio.</p>
+            <p class="{{ black ? 'text-white' : 'text-black'}} text-lg">Para cualquier duda que tengas, para contarnos qué echas en falta en tu buscador actual o simplemente para que te asesoremos, solo tienes que llamarnos o mandarnos un correo.</p>
+        </div>
+        <div class="flex flex-wrap -m-6">
+            <div class="w-full md:w-1/2 p-6">
+                <div class="md:max-w-xs mx-auto">
+                    <h3 class="mb-4 font-heading font-medium text-2xl {{ black ? 'text-white' : 'text-gray-900'}}">España</h3>
+                    <p class="text-lg {{ black ? 'text-white' : 'text-gray-700'}}">Carrer Conxita Supervia 3, 2-1, 08028, Barcelona</p>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 p-6">
+                <div class="md:max-w-xs mx-auto">
+                    <a href="mailto: info@apisearch.io" class="mb-2.5 font-heading font-medium text-2xl {{ black ? 'text-white' : 'text-gray-900'}} block">info@apisearch.io</a>
+                    <a href="tel: +34{{ config.telf }}" class="font-heading font-medium text-2xl as-secondary-color">+34 {{ config.telf }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
