@@ -50,7 +50,6 @@
 
     if (!popupWasDeleted) {
         const scrollListener = function() {
-            console.log(window.scrollY);
             if (window.scrollY >= 2000) {
                 showPopup();
                 window.removeEventListener('scroll', scrollListener);
@@ -58,6 +57,7 @@
         }
 
         function showPopup() {
+            dataLayer.push({'event': 'popup_open'});
             Array.prototype.forEach.call(document.getElementsByClassName('popup'), function(el) {
                 el.style.display = 'flex';
             });
