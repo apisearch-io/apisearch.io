@@ -1,0 +1,79 @@
+<div id="popup-brevo-background" class="popup"></div>
+<div id="popup-brevo" class="popup">
+    <div class="close" onclick="hidePopup()">Cerrar</div>
+    <iframe loading="lazy" width="540" height="305" src="https://693dce96.sibforms.com/serve/MUIFALS1HgyhEpcWnonnufhovUb6pXMTkCgSsqQvvY__mvsK-nIWsDYrSRKn3iGDv3ajMV2WfvNPpfbAUiC-mRLmHxpJKwEltntzevUHNcP2_W_IvoPAmsO8rdvE0zo5XcWgs1ks33BKEFVyRXxdvEXZhGUL0DGhWype21Q_AsJOGGMgQg5JsoPN-rS4byvlqHFk-obiQeLKMe_n" frameborder="0" scrolling="auto" allowfullscreen style="display: block;margin-left: auto;margin-right: auto;max-width: 100%;"></iframe>
+</div>
+
+<style>
+    #popup-brevo-background{
+        display: none;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: black;
+        opacity: .8;
+        z-index: 10000000;
+    }
+
+    #popup-brevo {
+        display: none;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10000000;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    #popup-brevo iframe {
+        height: 670px;
+        z-index: 100002;
+    }
+
+    #popup-brevo .close {
+        color: white;
+        margin: 0 auto;
+        font-weight: 500;
+        font-size: 20px;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+
+    const popupWasDeletedName = 'brevo-popup-deleted';
+    const popupWasDeleted = !sessionStorage.getItem(popupWasDeletedName);
+
+    if (!popupWasDeleted) {
+        const scrollListener = function() {
+            console.log(window.scrollY);
+            if (window.scrollY >= 2000) {
+                showPopup();
+                window.removeEventListener('scroll', scrollListener);
+            }
+        }
+
+        function showPopup() {
+            Array.prototype.forEach.call(document.getElementsByClassName('popup'), function(el) {
+                el.style.display = 'flex';
+            });
+        }
+
+        function hidePopup() {
+            Array.prototype.forEach.call(document.getElementsByClassName('popup'), function(el) {
+                el.style.display = 'none';
+            });
+            sessionStorage.setItem(popupWasDeletedName, 'true');
+        }
+
+        window.addEventListener('scroll', scrollListener);
+        document.getElementById('popup-brevo').addEventListener('click', function(_) {
+            hidePopup();
+        });
+    }
+
+</script>
