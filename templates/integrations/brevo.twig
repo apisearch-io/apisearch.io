@@ -46,7 +46,7 @@
 <script>
 
     const popupWasDeletedName = 'brevo-popup-deleted';
-    const popupWasDeleted = sessionStorage.getItem(popupWasDeletedName);
+    const popupWasDeleted = localStorage.getItem(popupWasDeletedName);
 
     if (!popupWasDeleted) {
         const scrollListener = function() {
@@ -67,7 +67,7 @@
             Array.prototype.forEach.call(document.getElementsByClassName('popup'), function(el) {
                 el.style.display = 'none';
             });
-            sessionStorage.setItem(popupWasDeletedName, 'true');
+            localStorage.setItem(popupWasDeletedName, 'true');
         }
 
         window.addEventListener('scroll', scrollListener);
