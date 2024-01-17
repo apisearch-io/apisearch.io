@@ -1,0 +1,26 @@
+{% extends "landing-layout.twig" %}
+
+{% block content %}
+
+    <section class="bg-cover 2xl:bg-contain bg-top bg-no-repeat bg-as-primary-color">
+        <div class="container px-4 mx-auto">
+
+            <div id="top-header" class="pt-12 text-center" style="color: white!important;">
+                <div id="demo" class="max-w-lg md:max-w-2xl xl:max-w-4xl mx-auto mb-8 as-secondary-color text-center" style="display: flex; flex-direction: column; align-items: center">
+                    <img style="max-width: 300px;" class="mb-10" src="{{ assets_path }}/logos/apisearch-long-logo-white.png" />
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-300">Prueba Apisearch</h1>
+                    <h2 class="text-xl sm:text-2xl md:text:3xl leading-relaxed as-secondary-color font-thin" style="max-width: 800px;">El mejor buscador para tu tienda online este 2024. Prueba durante 60 días y descubre cómo tus ventas empiezan a crecer.</h2>
+                </div>
+                <div>
+                    <a class="to-cloud block sm:inline-block py-4 px-8 mb-4 sm:mb-0 sm:mr-3 text-lg text-white text-center font-semibold leading-none as-button-secondary-color rounded" href="{{ config.demo_form_url }}" target="_blank">{{ t.menu.ask_a_demo }}</a>
+                </div>
+
+                {% include "blocks/call_to_action.html.twig" %}
+            </div>
+        </div>
+
+        {% include "blocks/banner_devices.html.twig" with { shop: "carethy" } %}
+    </section>
+
+    {% include "blocks/start/features.html.twig" %}
+{% endblock %}

@@ -81,6 +81,14 @@ urls:
       description: Mejora tu buscador durante este 2024 cambiando a Apisearch, el buscador con mejor calidad precio del mercado.
       keywords: Apisearch, doofinder, alternativa a doofinder, alternativa doofinder, tienda online
 
+  start:
+    - Empieza a utilizar Apisearch durante 60 dias gratis
+    - empieza-con-apisearch
+    -
+      title: "Empieza a utilizar Apisearch durante 60 dias gratis"
+      description: Empieza a utilizar Apisearch durante 60 días gratis. Experimenta cómo puedes incrementar tus ventas con el mejor buscador para tu tienda online para este 2024.
+      keywords: Apisearch, prueba buscador, empieza
+
 index:
   header:
     title_1: Escribe lo que quieras
