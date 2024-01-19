@@ -12,15 +12,23 @@
                     <h2 class="text-xl sm:text-2xl md:text:3xl leading-relaxed as-secondary-color font-thin" style="max-width: 800px;">El mejor buscador para tu tienda online este 2024. Prueba durante 60 días y descubre cómo tus ventas empiezan a crecer.</h2>
                 </div>
                 <div>
-                    <a class="to-cloud block sm:inline-block py-4 px-8 mb-4 sm:mb-0 sm:mr-3 text-lg text-white text-center font-semibold leading-none as-button-secondary-color rounded" href="{{ config.demo_form_url }}" target="_blank">{{ t.menu.ask_a_demo }}</a>
+                    <a class="with-strong-shadow to-cloud block sm:inline-block py-4 px-8 mb-4 sm:mb-0 sm:mr-3 text-lg text-white text-center font-semibold leading-none as-button-secondary-color rounded" href="{{ config.demo_form_url }}" target="_blank">{{ t.menu.ask_a_demo }}</a>
                 </div>
 
                 {% include "blocks/call_to_action.html.twig" %}
             </div>
         </div>
 
-        {% include "blocks/banner_devices.html.twig" with { shop: "carethy" } %}
     </section>
 
+    {% include "blocks/testimonials.html.twig" %}
+    {% include "blocks/banner_devices.html.twig" with { shop: "carethy" } %}
     {% include "blocks/start/features.html.twig" %}
+
+    <style>
+        body {
+            background-color: #683257!important;
+        }
+    </style>
 {% endblock %}
+

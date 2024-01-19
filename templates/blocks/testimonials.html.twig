@@ -1,0 +1,103 @@
+<div class="container px-4 mx-auto" style="margin-top: 80px;">
+    <div class="testimonials">
+        <div class="testimonial with-shadow">
+            <img src="{{ assets_path }}/images/clients/buscorepuestos.png" />
+            <div class="testimonial-text">Marc es todo un profesional, nos ha ayudado muchísimo con el buscador de nuestra plataforma y UX. Hemos trabajado en todo momento codo con codo y los resultados son muy notables, disponemos de miles de artículos y el tiempo de carga sigue siendo óptimo.</div>
+            <div class="testimonial-name">Manuel Pérez</div>
+            <div class="testimonial-company">CEO en Buscorepuestos.com</div>
+            <div class="testimonial-stars">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+            </div>
+        </div>
+
+        <div class="testimonial with-shadow">
+            <img src="{{ assets_path }}/images/clients/holaprincesa.png" />
+            <div class="testimonial-text">A día de hoy, es el buscador que mejor nos ha funcionado en nuestra tienda online Hola Princesa. Además, el servicio al cliente es de 10, te ayudan a resolver todas tus incidencias y escuchan tus propuestas para ponértelas en marcha lo más rápido posible.</div>
+            <div class="testimonial-name">Ulises</div>
+            <div class="testimonial-company">CEO en holaprincesa.es</div>
+            <div class="testimonial-stars">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+            </div>
+        </div>
+
+        <div class="testimonial with-shadow">
+            <img src="{{ assets_path }}/images/clients/neomusica.jpeg" />
+            <div class="testimonial-text">En neomusica.es, encontramos en Apisearch mucho más que un simple buscador. Desde su implementación, nuestras búsquedas en línea se han convertido en una experiencia fluida y veloz. Encontrar productos musicales es ahora más fácil que nunca, gracias a los resultados instantáneos y precisos que ofrece Apisearch.</div>
+            <div class="testimonial-name">Marcos Luque</div>
+            <div class="testimonial-company">CEO en Neomúsica.com</div>
+            <div class="testimonial-stars">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .testimonials {
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+        .testimonials {
+            justify-content: center;
+            flex-direction: row;
+            column-gap: 15px;
+        }
+    }
+
+    .testimonial {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .testimonial img {
+        height: 70px;
+        width: 70px;
+        border-radius: 100px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .testimonial-text {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 15px;
+        flex: 1;
+    }
+
+    .testimonial-name {
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+
+    .testimonial-company {
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+
+    .testimonial-stars {
+        margin-top: 10px;
+    }
+
+    .testimonial-stars i {
+        color: rgb(245, 26, 164);
+    }
+</style>
