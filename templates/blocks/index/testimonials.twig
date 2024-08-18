@@ -5,58 +5,27 @@
                 <div class="h-full md:max-w-lg">
                     <div class="flex flex-wrap h-full -m-6">
                         <div class="w-full p-6">
-                            <h3 class="mb-6 text-5xl md:text-6xl font-100">Esto opinan nuestros clientes</h3>
+                            <h3 class="mb-6 text-5xl md:text-6xl font-100">{{ t.testimonials.title }}</h3>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="w-full md:w-1/2 p-6">
                 <div class="flex flex-wrap justify-center md:max-w-lg md:mx-auto divide-y divide-gray-200">
-                    <div class="w-full lg:w-auto">
+                    {% for testimonial in t.testimonials.testimonials %}
+                    <div class="w-full lg:w-auto mt-4 pt-4">
                         <div class="pb-7">
-                            <p class="mb-6 text-black text-base">
-                                “Un servicio supercompetente!
-                                Apisearch nos ha sorprendido para bien, teniendo las mismas funcionalidades que otra herramienta del mismo sector y a la mitad de precio.
-                                Muy atentos con las necesidades y en constante mejora.
-                                Un año ya con ellos y encantados.
-                                Muy recomendable.”</p>
+                            <p class="mb-6 text-black text-base">“{{ testimonial.body|raw }}”</p>
                             <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
                             <div class="flex flex-wrap -m-1.5">
                                 <div class="w-auto p-1.5">
-                                    <p class="font-heading text-gray-900 font-semibold text-lg">Carlos</p>
-                                    <p class="text-sm text-gray-600">Marketing en Pampling</p>
+                                    <p class="font-heading text-gray-900 font-semibold text-lg">{{ testimonial.author }}</p>
+                                    <p class="text-sm text-gray-600">{{ testimonial.position }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full lg:w-auto mt-4 pt-4">
-                        <div class="py-7">
-                            <p class="mb-6 text-black text-base">“A día de hoy, es el buscador que mejor nos ha funcionado en nuestra tienda online Hola Princesa.
-                                Además, el servicio al cliente es de 10, te ayudan a resolver todas tus incidencias y escuchan tus propuestas para ponértelas en marcha lo más rápido posible.”</p>
-                            <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
-                            <div class="flex flex-wrap -m-1.5">
-                                <div class="w-auto p-1.5">
-                                    <p class="font-heading text-gray-900 font-semibold text-lg">Ulises</p>
-                                    <p class="text-sm text-gray-600">CEO en Holaprincesa</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-full lg:w-auto mt-4 pt-4">
-                        <div class="py-7">
-                            <p class="mb-6 text-black text-base">“Optimización, Rapidez y Eficiencia
-                                Tanto como usuaria como profesional del sector, Apisearch es una herramienta óptima y rápida en el mercado de buscadores.
-                                La personalización o IA que ofrece en las búsquedas hace que la experiencia de compra en un e-commerce mejore sustancialmente.
-                                Todo esto, y con un equipo detrás tan implicado, humano y eficiente es difícil no recomendarlo!”</p>
-                            <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
-                            <div class="flex flex-wrap -m-1.5">
-                                <div class="w-auto p-1.5">
-                                    <p class="font-heading text-gray-900 font-semibold text-lg">Manuel Perez</p>
-                                    <p class="text-sm text-gray-600">CEO en Buscorepuestos</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

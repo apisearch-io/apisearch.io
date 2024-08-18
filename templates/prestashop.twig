@@ -7,8 +7,8 @@
 
             <div id="top-header" class="pt-12 text-center">
                 <div id="demo" class="max-w-lg md:max-w-2xl xl:max-w-4xl mx-auto mb-8 as-secondary-color text-center" style="display: flex; flex-direction: column; align-items: center">
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-300">El mejor buscador inteligente para Prestashop</h1>
-                    <h2 class="text-xl sm:text-2xl md:text:3xl leading-relaxed as-secondary-color font-thin" style="max-width: 800px;">Vende hasta un 30% más y descubre nuevas oportunidades de venta con nuestro módulo avanzado para Prestashop</h2>
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-300">{{ t.header.title }}</h1>
+                    <h2 class="text-xl sm:text-2xl md:text:3xl leading-relaxed as-secondary-color font-thin" style="max-width: 800px;">{{ t.header.subtitle }}</h2>
                 </div>
 
                 {% include "blocks/contact_top.html.twig" %}
@@ -23,7 +23,7 @@
     {% include "blocks/prestashop/start-now.twig" %}
     {% include "blocks/contact.html.twig" %}
     {% include "blocks/prices.twig" %}
-    {% include "blocks/prestashop/faqs.twig" %}
+    {% include "blocks/faqs.twig" %}
 
 {% endblock content %}
 

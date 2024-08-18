@@ -9,7 +9,7 @@
                 <div class="flex flex-row flex-wrap justify-around">
 
                     <div class="w-1/3 lg:w-auto mb-4">
-                        <h5 class="mb-4 text-lg font-bold">Integraciones</h5>
+                        <h5 class="mb-4 text-lg font-bold">{{ t.footer.integrations }}</h5>
                         <ul class="space-y-3 mb-6">
                             <li><a href="{{ url("prestashop") }}">Prestashop</a></li>
                             <li><a href="{{ url("shopify") }}">Shopify</a></li>
@@ -19,7 +19,7 @@
                         </ul>
                     </div>
                     <div class="w-1/2 lg:w-auto mb-12">
-                        <h5 class="mb-4 text-lg font-bold">Recursos</h5>
+                        <h5 class="mb-4 text-lg font-bold">{{ t.footer.resources }}</h5>
                         <ul class="space-y-3">
                             <li><a class="as-primary-color" target="_blank" href="https://apisearch.io/blog">Blog</a></li>
                             <li><a class="as-primary-color" target="_blank" href="https://www.linkedin.com/company/18418235">Linkedin</a></li>
@@ -27,9 +27,9 @@
                         </ul>
                     </div>
                     <div class="w-1/2 lg:w-auto mb-4">
-                        <h5 class="mb-4 text-lg font-bold">Empresa</h5>
+                        <h5 class="mb-4 text-lg font-bold">{{ t.footer.company }}</h5>
                         <ul class="space-y-3">
-                            <li><a class="as-primary-color" href="#contact">Contacta</a></li>
+                            <li><a class="as-primary-color" href="#contact">{{ t.footer.contact }}</a></li>
                             <li><a class="as-primary-color" href="{{ url("terms_and_conditions") }}">{{ urlname("terms_and_conditions") }}</a></li>
                             <li><a class="as-primary-color" href="{{ url("privacy_policy") }}">{{ urlname("privacy_policy") }}</a></li>
                         </ul>

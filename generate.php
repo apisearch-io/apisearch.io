@@ -53,7 +53,8 @@ foreach ($languages as $language) {
             $language,
             array_merge(
                 $languageTranslations[$page] ?? [],
-                $languageTranslations['global'] ?? []
+                $languageTranslations['blocks'] ?? [],
+                    $languageTranslations['global'] ?? []
             ),
             $config,
             $languageTranslations['urls'] ?? []
@@ -62,7 +63,7 @@ foreach ($languages as $language) {
 
     generateSitemap($config, $urls);
     generateCNAME();
-    generateBusinessPlan($twig);
+    // generateBusinessPlan($twig);
 
     echo "Generated $numberOfPages pages for language $language" . PHP_EOL . PHP_EOL;
 }

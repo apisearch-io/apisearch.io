@@ -6,11 +6,14 @@
             <a class="to-cloud inline-block px-4 py-3 text-xs font-semibold leading-none text-white rounded as-secondary-color as-button-secondary-color" href="{{ config.demo_form_url }}" target="_blank">{{ t.menu.ask_a_demo }}</a>
         </div>
         <ul class="hidden lg:flex lg:items-center lg:w-auto lg:space-x-12">
-            <li><a class="text-sm text-white" href="#features">Funcionalidades</a></li>
-            <li><a class="text-sm text-white" href="#prices">Precios</a></li>
-            <li class="cursor-pointer"><span class="text-sm text-white" onclick="openSubMenu(event, 'main-nav-integrations');">Integraciones</span></li>
-            <li><a class="text-sm text-white" href="#contact">Contacta</a></li>
-            <li><a class="text-sm text-white" href="https://apisearch.io/blog" target="_blank">Blog</a></li>
+            <li><a class="text-sm text-white" href="#features">{{ t.nav.features }}</a></li>
+            <li><a class="text-sm text-white" href="#prices">{{ t.nav.prices }}</a></li>
+            <li class="cursor-pointer"><span class="text-sm text-white" onclick="openSubMenu(event, 'main-nav-integrations');">{{ t.nav.integrations }}</span></li>
+            <li><a class="text-sm text-white" href="#contact">{{ t.nav.contact }}</a></li>
+            <li><a class="text-sm text-white" href="https://apisearch.io/blog" target="_blank">{{ t.nav.blog }}</a></li>
+            <li class="text-sm text-white">
+                <a href="/" target="_blank">es</a>&nbsp;|&nbsp;<a href="/en" target="_blank">en</a>
+            </li>
         </ul>
         <div class="hidden lg:block">
             <a class="inline-block px-4 py-3 text-xs font-semibold leading-none text-white rounded as-secondary-color as-button-secondary-color to-cloud" href="{{ config.demo_form_url }}" target="_blank">{{ t.menu.ask_a_demo }}</a>
@@ -24,29 +27,29 @@
                     <a href="{{ url("prestashop") }}">
                         <img src="{{ assets_path }}/images/integrations/prestashop.webp?hash={{ hash }}" style="filter: brightness(0) invert(1)" alt="Logo de Prestashop" loading="lazy">
                     </a>
-                    <div>Utiliza nuestro plugin para la versión 1.7 y 8 de Prestashop</div>
-                    <a href="{{ url("prestashop") }}">+ Leer más</a>
+                    <div>{{ t.nav.prestashop }}</div>
+                    <a href="{{ url("prestashop") }}">{{ t.nav.read_more }}</a>
                 </div>
                 <div class="integration">
                     <a href="{{ url("shopify") }}">
                         <img src="{{ assets_path }}/images/integrations/shopify-transparent.webp?hash={{ hash }}" style="filter: brightness(0) invert(1)" alt="Logo de Shopify" loading="lazy">
                     </a>
-                    <div>No necesitas plugin para añadir a tu tienda Shopify un buscador de primera</div>
-                    <a href="{{ url("shopify") }}">+ Leer más</a>
+                    <div>{{ t.nav.shopify }}</div>
+                    <a href="{{ url("shopify") }}">{{ t.nav.read_more }}</a>
                 </div>
                 <div class="integration">
                     <a href="{{ url("woocommerce") }}">
                         <img src="{{ assets_path }}/images/integrations/woocommerce.webp?hash={{ hash }}" alt="Logo de Woocommerce" loading="lazy">
                     </a>
-                    <div>Nunca había sido tan fácil instalar un buscador en tu tienda Woocommerce</div>
-                    <a href="{{ url("woocommerce") }}">+ Leer más</a>
+                    <div>{{ t.nav.woocommerce }}</div>
+                    <a href="{{ url("woocommerce") }}">{{ t.nav.read_more }}</a>
                 </div>
                 <div class="integration">
                     <a href="{{ url("google_shopping") }}">
                         <img src="{{ assets_path }}/images/integrations/google-shopping.webp?hash={{ hash }}" style="filter: brightness(0) invert(1)" alt="Logo de Google Shopping" loading="lazy">
                     </a>
-                    <div>Con tan solo 1 feed de Google Merchant, ya puedes tener tu buscador funcionando</div>
-                    <a href="{{ url("google_shopping") }}">+ Leer más</a>
+                    <div>{{ t.nav.google_shopping }}</div>
+                    <a href="{{ url("google_shopping") }}">{{ t.nav.read_more }}</a>
                 </div>
             </div>
         </div>

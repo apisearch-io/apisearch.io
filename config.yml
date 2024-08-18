@@ -7,9 +7,9 @@ apisearch:
 cluster_url: https://apisearch.cloud
 demo_form_url: https://www.apisearch.cloud/es/signup
 
-languages: [es]
+languages: [es, en]
 root_language: es
-pages: [index, terms_and_conditions, privacy_policy, prestashop, shopify, woocommerce, google_shopping, mabisy, success_carethy, start]
+pages: [index, terms_and_conditions, privacy_policy, prestashop, shopify, woocommerce, google_shopping, start]
 assets: assets
 files: [robots.txt]
 target: docs
