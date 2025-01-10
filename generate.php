@@ -79,6 +79,9 @@ function compileTranslations(
         if (is_array($translation)) {
             compileTranslations($twig, $translation);
         } else {
+            if (is_null($translation)) {
+                throw new \Exception('Translation missing');
+            }
             $translation = $twig->render($twig->createTemplate($translation));
         }
     }

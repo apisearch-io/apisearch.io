@@ -147,14 +147,14 @@ blocks:
     bullet_3: Analítica durante 12 meses
     bullet_4: ¡Vende hasta un 30% más!
     box_1:
-      title: 5€ / 10K peticiones
-      subtitle_1: Planes a partir de 100€. Se factura por petición
-      subtitle_2: Precio por petición 0.0005€
-      subtitle_3: 30 días gratis. No se requiere tarjeta de crédito
-    box_2:
       title: Paquete enterprise
-      subtitle_1: Tráfico ilimitado, productos ilimitados. Contáctanos para trabajar en su caso.
-      subtitle_2: Multisite y implementaciones a medida.
+      subtitle_1: Planes a partir de 100€.
+      subtitle_2: Buscador predictivo, precios B2B, diseño custom
+      subtitle_3: Tráfico ilimitado, productos ilimitados. Contáctanos para trabajar en su caso.
+    box_2:
+      title: Paquete multisite
+      subtitle_1: Múltiples tiendas, múltiples idiomas e implementaciones a medida.
+      subtitle_2: Tráfico ilimitado, productos ilimitados. Contáctanos para trabajar en su caso.
 
   contact:
     title: Contacta con nosotros
