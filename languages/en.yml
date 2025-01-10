@@ -12,7 +12,7 @@ global:
     link3: Clients
     sign_in: Sign in
     get_in_touch: Talk to us via
-    ask_a_demo: Try it free for 60 days
+    ask_a_demo: Try it free for 30 days
     whatsapp: Talk to us via WhatsApp
   common:
     got_questions:
@@ -99,11 +99,11 @@ urls:
     -
 
   start:
-    - Start Using Apisearch for Free for 60 Days
+    - Start Using Apisearch for Free for 30 Days
     - empieza-con-apisearch
     -
-      title: "Start Using Apisearch for Free for 60 Days"
-      description: Start using Apisearch for free for 60 days. Experience how you can increase your sales with the best search engine for your online store in 2024.
+      title: "Start Using Apisearch for Free for 30 Days"
+      description: Start using Apisearch for free for 30 days. Experience how you can increase your sales with the best search engine for your online store in 2024.
       keywords: Apisearch, search engine trial, get started
 
 blocks:
@@ -148,12 +148,12 @@ blocks:
       title: €5 / 10K requests
       subtitle_1: Up to one million requests per month. Price per request
       subtitle_2: "Price per request: €0.0005"
-      subtitle_3: 60 days free, no credit card required
+      subtitle_3: 30 days free, no credit card required
     box_2:
       title: Enterprise Package
       subtitle_1: Unlimited traffic, unlimited products. Contact us to discuss your case.
       subtitle_2: Multisite and custom implementations.
-      subtitle_3: 60 days free, no credit card required
+      subtitle_3: 30 days free, no credit card required
 
   contact:
     title: Contact Us
@@ -252,7 +252,7 @@ prestashop:
       a: Yes. In our admin panel, you can see the search performance, including what is being searched for, new sales opportunities, and even the conversion rate.
     q5:
       q: Can I try the search engine before paying?
-      a: Of course. Our main goal is for the search engine to help you sell more. Try it free for 60 days and decide whether to continue after seeing the results in your online store.
+      a: Of course. Our main goal is for the search engine to help you sell more. Try it free for 30 days and decide whether to continue after seeing the results in your online store.
     q6:
       q: Will I get help setting it up?
       a: Yes. At Apisearch, we are developing a knowledge base integrated with AI so that you are never alone. If you can't resolve your issues, there will always be someone available to provide support.
@@ -289,7 +289,7 @@ shopify:
       a: Yes. In our admin panel, you can see the search performance, including what is being searched for, new sales opportunities, and even the conversion rate.
     q5:
       q: Can I try the search engine before paying?
-      a: Of course. Our main goal is for the search engine to help you sell more. Try it free for 60 days and decide whether to continue after seeing the results in your online store.
+      a: Of course. Our main goal is for the search engine to help you sell more. Try it free for 30 days and decide whether to continue after seeing the results in your online store.
     q6:
       q: Will I get help setting it up?
       a: Yes. At Apisearch, we are developing a knowledge base integrated with AI so that you are never alone. If you can't resolve your issues, there will always be someone available to provide support.
@@ -325,7 +325,7 @@ woocommerce:
       a: Yes. In our admin panel, you can see the search performance, including what is being searched for, new sales opportunities, and even the conversion rate.
     q5:
       q: Can I try the search engine before paying?
-      a: Of course. Our main interest is that the search engine helps you sell more. Try it free for 60 days and decide whether to continue after seeing the results in your online store.
+      a: Of course. Our main interest is that the search engine helps you sell more. Try it free for 30 days and decide whether to continue after seeing the results in your online store.
     q6:
       q: Will I have help setting it up?
       a: Yes. At Apisearch, we are developing a comprehensive knowledge base integrated with AI so that you are never alone. And if you still can't resolve your issues, there will always be someone available to offer support.
@@ -362,7 +362,7 @@ google_shopping:
       a: Yes. In our admin panel, you can see the search performance, including what is being searched for, new sales opportunities, and even the conversion rate.
     q5:
       q: Can I try the search engine before paying?
-      a: Of course. Our main interest is that the search engine helps you sell more. Try it free for 60 days and decide whether to continue after seeing the results in your online store.
+      a: Of course. Our main interest is that the search engine helps you sell more. Try it free for 30 days and decide whether to continue after seeing the results in your online store.
     q6:
       q: Will I have help setting it up?
       a: Yes. At Apisearch, we are developing a comprehensive knowledge base integrated with AI so that you are never alone. And if you still can't resolve your issues, there will always be someone available to offer support.

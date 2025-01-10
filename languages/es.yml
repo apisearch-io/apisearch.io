@@ -12,7 +12,7 @@ global:
     link3: Clientes
     sign_in: Acceder
     get_in_touch: Escríbenos en
-    ask_a_demo: Pruébalo gratis 60 días
+    ask_a_demo: Pruébalo gratis 30 días
     whatsapp: Háblanos por whatsapp
   common:
     got_questions:
@@ -101,11 +101,11 @@ urls:
     -
 
   start:
-    - Empieza a utilizar Apisearch durante 60 dias gratis
+    - Empieza a utilizar Apisearch durante 30 dias gratis
     - empieza-con-apisearch
     -
-      title: "Empieza a utilizar Apisearch durante 60 dias gratis"
-      description: Empieza a utilizar Apisearch durante 60 días gratis. Experimenta cómo puedes incrementar tus ventas con el mejor buscador para tu tienda online para este 2024.
+      title: "Empieza a utilizar Apisearch durante 30 dias gratis"
+      description: Empieza a utilizar Apisearch durante 30 días gratis. Experimenta cómo puedes incrementar tus ventas con el mejor buscador para tu tienda online para este 2024.
       keywords: Apisearch, prueba buscador, empieza
 
 blocks:
@@ -150,12 +150,12 @@ blocks:
       title: 5€ / 10K peticiones
       subtitle_1: Hasta 1 millón de peticiones al mes. Se factura por petición
       subtitle_2: Precio por petición 0.0005€
-      subtitle_3: 60 días gratis. No se requiere tarjeta de crédito
+      subtitle_3: 30 días gratis. No se requiere tarjeta de crédito
     box_2:
       title: Paquete enterprise
       subtitle_1: Tráfico ilimitado, productos ilimitados. Contáctanos para trabajar en su caso.
       subtitle_2: Multisite y implementaciones a medida.
-      subtitle_3: 60 días gratis, No se requiere tarjeta de crédito
+      subtitle_3: 30 días gratis, No se requiere tarjeta de crédito
 
   contact:
     title: Contacta con nosotros
@@ -254,7 +254,7 @@ prestashop:
       a: Si. En nuestro panel de administración podrás ver el rendimiento del buscador, incluyendo qué buscan, nuevas oportunidades de venta y hasta el porcentage de conversión.
     q5:
       q: ¿Podré probar el buscador antes de pagar?
-      a: Por supuesto. Nuestro mayor interés que el buscador pueda ayudarte a vender más. Pruébalo durante 60 días, y decide si continuar trás ver los resultados en tu tienda online.
+      a: Por supuesto. Nuestro mayor interés que el buscador pueda ayudarte a vender más. Pruébalo durante 30 días, y decide si continuar trás ver los resultados en tu tienda online.
     q6:
       q: ¿Tendré ayuda para configurarlo?
       a: Si. En Apisearch estamos desarrollando toda una base de conocimiento integrada con IA para que no estés solo en ningún caso. Y si finalmente no puedes solucionar tus dudas, siempre tendrás una persona detrás dando soporte.
@@ -290,7 +290,7 @@ shopify:
       a: Si. En nuestro panel de administración podrás ver el rendimiento del buscador, incluyendo qué buscan, nuevas oportunidades de venta y hasta el porcentage de conversión.
     q5:
       q: ¿Podré probar el buscador antes de pagar?
-      a: Por supuesto. Nuestro mayor interés que el buscador pueda ayudarte a vender más. Pruébalo durante 60 días, y decide si continuar trás ver los resultados en tu tienda online.
+      a: Por supuesto. Nuestro mayor interés que el buscador pueda ayudarte a vender más. Pruébalo durante 30 días, y decide si continuar trás ver los resultados en tu tienda online.
     q6:
       q: ¿Tendré ayuda para configurarlo?
       a: Si. En Apisearch estamos desarrollando toda una base de conocimiento integrada con IA para que no estés solo en ningún caso. Y si finalmente no puedes solucionar tus dudas, siempre tendrás una persona detrás dando soporte.
@@ -326,7 +326,7 @@ woocommerce:
       a: Si. En nuestro panel de administración podrás ver el rendimiento del buscador, incluyendo qué buscan, nuevas oportunidades de venta y hasta el porcentage de conversión.
     q5:
       q: ¿Podré probar el buscador antes de pagar?
-      a: Por supuesto. Nuestro mayor interés que el buscador pueda ayudarte a vender más. Pruébalo durante 60 días, y decide si continuar trás ver los resultados en tu tienda online.
+      a: Por supuesto. Nuestro mayor interés que el buscador pueda ayudarte a vender más. Pruébalo durante 30 días, y decide si continuar trás ver los resultados en tu tienda online.
     q6:
       q: ¿Tendré ayuda para configurarlo?
       a: Si. En Apisearch estamos desarrollando toda una base de conocimiento integrada con IA para que no estés solo en ningún caso. Y si finalmente no puedes solucionar tus dudas, siempre tendrás una persona detrás dando soporte.
@@ -363,7 +363,7 @@ google_shopping:
       a: Si. En nuestro panel de administración podrás ver el rendimiento del buscador, incluyendo qué buscan, nuevas oportunidades de venta y hasta el porcentage de conversión.
     q5:
       q: ¿Podré probar el buscador antes de pagar?
-      a: Por supuesto. Nuestro mayor interés que el buscador pueda ayudarte a vender más. Pruébalo durante 60 días, y decide si continuar trás ver los resultados en tu tienda online.
+      a: Por supuesto. Nuestro mayor interés que el buscador pueda ayudarte a vender más. Pruébalo durante 30 días, y decide si continuar trás ver los resultados en tu tienda online.
     q6:
       q: ¿Tendré ayuda para configurarlo?
       a: Si. En Apisearch estamos desarrollando toda una base de conocimiento integrada con IA para que no estés solo en ningún caso. Y si finalmente no puedes solucionar tus dudas, siempre tendrás una persona detrás dando soporte.
