@@ -10,7 +10,7 @@ $config = Yaml::parse(file_get_contents(__DIR__ . '/config.yml'));
 $config['assets'] = trim($config['assets'] ?? 'assets', '/');
 $config['target'] = trim($config['target'] ?? 'public', '/');
 $config['languages'] = $config['languages'] ?? 'en';
-$config['telf'] = "+34 633374204";
+$config['support_email'] = "soporte@apisearch.io";
 
 $target = trim($config['target'], '/');
 $languages = $config['languages'];
